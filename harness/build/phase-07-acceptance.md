@@ -9,5 +9,6 @@
 | P7-ART-01 | Original low-resolution dungeon surface atlas structure is prepared. | Asset/registry inspection and build | Local original pixel-art atlas source and matching region metadata are present and build-safe. | PASS |
 | P7-REG-01 | Existing game remains playable on the Phaser 4 WebGL path. | `npm run typecheck`, `npm run lint`, `npm test`, `npm run build`, browser inspection | Required commands pass; representative corridor and door fixtures render with no console errors. | PASS |
 | P7-DOC-01 | Rendering, art, architecture, and implementation evidence are documented. | File inspection | Governing docs and build log contain the contract, art posture, and verification evidence. | PASS |
-| P7-VCS-01 | Goal changes are present on `main` through a feature branch and PR. | GitHub/Git inspection | Feature branch commit, PR targeting `main`, no configured remote checks, and implementation merged at `f49deb3`; final `main` at `c5c4d0f`. | PASS |
+| P7-VCS-01 | Goal changes are present on `main` through a feature branch and PR. | GitHub/Git inspection | Feature branch commit, PR targeting `main`, no configured remote checks; implementation and acceptance-record PRs merged into `main`. | PASS |
+
 
