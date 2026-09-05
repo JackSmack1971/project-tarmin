@@ -10,7 +10,7 @@
 | A6 | Reduced motion preserves the static pass and changes only transition timing. | Browser toggle plus renderer state inspection. | pass |
 | A7 | Required checks pass. | `npm run typecheck`, `npm run lint`, `npm test`, `npm run test:browser`, `npm run build`. | pass |
 | A8 | Documentation and runtime evidence are recorded. | This file, owned docs, context, and `harness/build-log.md`. | pass |
-| A9 | Feature branch, PR to `main`, passing checks, and merged `main`. | Git and remote inspection. | pending |
+| A9 | Feature branch, PR to `main`, passing checks, and merged `main`. | PR #12 squash-merged; local `main` and `origin/main` both resolve to `887c4c44b39652de1098f8f34212f70874dd1d72`. | pass |
 
 The missing uncommitted `public/assets/entities/ashbound-warden.svg` is a
 pre-existing worktree condition and is tracked separately from this phase.
