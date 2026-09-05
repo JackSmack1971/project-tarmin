@@ -1,0 +1,26 @@
+Expected production-source bundle contents after download
+
+sbs_-_tiny_texture_pack_2_-_128x128.zip
+sbs_-_dungeon_crawler_pack_-_walls.zip
+sbs_-_dungeon_crawler_pack_-_windows.zip
+SBS_-_Cave_Walls_Addon.zip
+Fire Spritesheet.zip
+kenney_fantasy-ui-borders.zip
+flare_window.png
+flare_tekstuur.png
+flare_window_glow.png
+fantasy-torch-pack-1.zip
+lofifirstpersonhand.png
+weaponspell1.png
+weaponspell2.png
+weaponspell3.png
+weaponstaff.png
+fantasy-fps-hands-raw.zip
+doomgeonkit.zip
+SOURCE_MANIFEST.json
+SOURCE_MANIFEST.csv
+LICENSES.md
+
+Optional when -FullTextureResolutions is used:
+sbs_-_tiny_texture_pack_2_-_256x256.zip
+sbs_-_tiny_texture_pack_2_-_512x512.zip

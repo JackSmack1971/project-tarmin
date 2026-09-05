@@ -13,3 +13,7 @@ The first-person frame is deliberately claustrophobic and slightly irregular. Ne
 ## Entity silhouettes
 
 State-backed entities use original low-resolution pixel art with crisp nearest-neighbor sampling. The Ashbound Warden sheet is a compact two-frame silhouette: ash-gray skull and armor, ember-orange eyes and axe accents, and near-black outlines that remain readable against compressed portal materials. Near encounters may occupy a strong portion of the first portal; distance scaling must make farther entities smaller and dimmer without reducing them to an unreadable speck. Animation is a subtle alternating stance, never a gameplay timer or combat signal. Keep silhouettes subordinate to portal boundaries, blocker edges, and the combat HUD.
+
+## Source gathering
+
+Candidate source packs are gathered and tracked through `project-tarmin-asset-source-downloader/`. Its downloaded archives are staging/reference material only; runtime art must remain original or appropriately licensed and must be reviewed before promotion into `public/`. Keep source URLs, creators, licenses, and intended uses synchronized in the downloader manifests and license notes.
