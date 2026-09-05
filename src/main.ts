@@ -21,9 +21,18 @@ const game = new Phaser.Game({
 
 const ui = document.createElement("section");
 ui.className = "shell-ui";
-ui.innerHTML = `<div class="start-panel" data-start><p class="eyebrow">PROJECT TARMIN</p><h1>THE UNDERCRYPT</h1><p>Enter a seed, then descend into the dark.</p><form><label for="seed">RUN SEED</label><input id="seed" name="seed" value="7391" autocomplete="off" inputmode="numeric"><button type="submit">BEGIN DESCENT</button><button type="button" data-generate>GENERATE SEED</button></form><p class="hint">W / S move · A / D turn · Esc pause</p></div>
-<div class="hud" data-hud hidden><div><span class="eyebrow">THE UNDERCRYPT</span><strong data-floor></strong></div><div class="hud-stats"><span data-health></span><span data-left>LEFT · EMPTY</span><span data-right>RIGHT · EMPTY</span><span data-ring>RING · EMPTY</span></div><button type="button" data-pause>PAUSE</button><p class="feedback" data-feedback aria-live="polite"></p></div>
-<div class="pause-panel" data-pause-panel hidden><p class="eyebrow">RUN PAUSED</p><h2>THE TORCH HOLDS</h2><button type="button" data-resume>RESUME</button><label><input type="checkbox" data-motion> REDUCED MOTION</label><p class="hint">Your run is unchanged while paused.</p></div>`;
+ui.innerHTML = `<div class="start-panel" data-start><p class="eyebrow">AN ORIGINAL DUNGEON DESCENT</p><h1>THE UNDERCRYPT</h1><p class="lede">A torch, a sealed passage, and whatever waits below.</p><form><label for="seed">RUN SEED</label><input id="seed" name="seed" value="7391" autocomplete="off" inputmode="numeric"><div class="start-actions"><button type="submit">BEGIN DESCENT</button><button type="button" data-generate>GENERATE SEED</button></div></form><p class="hint">W / S move · A / D turn · Q / E ring · Esc pause</p></div>
+<div class="hud" data-hud hidden aria-label="Run information">
+  <header class="hud-header"><div><span class="eyebrow">THE UNDERCRYPT</span><strong data-floor></strong></div><div class="location" data-location></div><button type="button" class="pause-button" data-pause>PAUSE <span>ESC</span></button></header>
+  <aside class="equipment equipment-left" aria-label="Left hand equipment"><span class="slot-label">LEFT HAND</span><strong data-left>EMPTY</strong><small data-left-detail>—</small></aside>
+  <aside class="equipment equipment-right" aria-label="Right hand equipment"><span class="slot-label">RIGHT HAND</span><strong data-right>EMPTY</strong><small data-right-detail>—</small></aside>
+  <section class="vitals" aria-label="Player vitality"><span class="slot-label">VITALITY</span><strong data-health></strong><div class="health-bar"><i data-health-bar></i></div></section>
+  <section class="ring-dock" aria-label="Ring inventory"><div class="ring-heading"><span class="slot-label">THE RING</span><span data-ring-count></span></div><strong data-ring>EMPTY</strong><div class="ring-items" data-ring-items></div><p class="ring-hint">Q / E select · Z / X equip · R use</p></section>
+  <section class="combat-card" data-combat hidden aria-label="Combat status"><div><span class="slot-label">THREAT IN VIEW</span><strong data-encounter-name></strong></div><div class="threat-health"><span data-encounter-health></span><i data-threat-bar></i></div><p data-combat-hint>SPACE left strike · F right strike · X retreat</p></section>
+  <p class="feedback" data-feedback aria-live="polite"></p>
+  <p class="controls">W/S MOVE <i>·</i> A/D TURN <i>·</i> Q/E RING <i>·</i> P PICK UP <i>·</i> ESC PAUSE</p>
+</div>
+<div class="pause-scrim" data-pause-scrim hidden></div><div class="pause-panel" data-pause-panel hidden role="dialog" aria-modal="true" aria-labelledby="pause-title"><p class="eyebrow">RUN PAUSED</p><h2 id="pause-title">THE TORCH HOLDS</h2><p class="pause-copy">The dungeon waits exactly where you left it.</p><button type="button" data-resume>RESUME DESCENT</button><label><input type="checkbox" data-motion> REDUCED MOTION</label><p class="hint">Keyboard focus is held by this panel.</p></div>`;
 document.body.append(ui);
 const start = ui.querySelector("[data-start]") as HTMLElement;
 const hud = ui.querySelector("[data-hud]") as HTMLElement;
@@ -31,10 +40,20 @@ const pausePanel = ui.querySelector("[data-pause-panel]") as HTMLElement;
 const seed = ui.querySelector("#seed") as HTMLInputElement;
 const feedback = ui.querySelector("[data-feedback]") as HTMLElement;
 const floor = ui.querySelector("[data-floor]") as HTMLElement;
+const location = ui.querySelector("[data-location]") as HTMLElement;
 const health = ui.querySelector("[data-health]") as HTMLElement;
+const healthBar = ui.querySelector("[data-health-bar]") as HTMLElement;
 const left = ui.querySelector("[data-left]") as HTMLElement;
 const right = ui.querySelector("[data-right]") as HTMLElement;
 const ring = ui.querySelector("[data-ring]") as HTMLElement;
+const ringCount = ui.querySelector("[data-ring-count]") as HTMLElement;
+const ringItems = ui.querySelector("[data-ring-items]") as HTMLElement;
+const combatCard = ui.querySelector("[data-combat]") as HTMLElement;
+const encounterName = ui.querySelector("[data-encounter-name]") as HTMLElement;
+const encounterHealth = ui.querySelector("[data-encounter-health]") as HTMLElement;
+const threatBar = ui.querySelector("[data-threat-bar]") as HTMLElement;
+const leftDetail = ui.querySelector("[data-left-detail]") as HTMLElement;
+const rightDetail = ui.querySelector("[data-right-detail]") as HTMLElement;
 const motion = ui.querySelector("[data-motion]") as HTMLInputElement;
 const emit = (name: string, detail?: unknown): void => { window.dispatchEvent(new CustomEvent(name, { detail })); };
 ui.querySelector("form")?.addEventListener("submit", (event) => { event.preventDefault(); emit("tarmin-start", normalizeSeed(seed.value)); });
@@ -45,17 +64,22 @@ motion.addEventListener("change", () => emit("tarmin-motion", motion.checked));
 window.addEventListener("tarmin-mode", (event) => {
   const mode = (event as CustomEvent<string>).detail;
   const running = mode !== "menu";
-  start.hidden = running; hud.hidden = !running; pausePanel.hidden = mode !== "paused";
+  start.hidden = running; hud.hidden = !running; pausePanel.hidden = mode !== "paused"; (ui.querySelector("[data-pause-scrim]") as HTMLElement).hidden = mode !== "paused";
   if (mode === "paused") (ui.querySelector("[data-resume]") as HTMLButtonElement).focus();
 });
 window.addEventListener("tarmin-state", (event) => {
-  const detail = (event as CustomEvent<{ floor: number; turn: number; health: number; feedback: string; seed: number; leftHand: string | null; rightHand: string | null; ring: readonly string[]; selectedRingIndex: number }>).detail;
+  const detail = (event as CustomEvent<{ floor: number; turn: number; health: number; maxHealth: number; feedback: string; seed: number; facing: string; position: { x: number; y: number }; leftHand: string | null; rightHand: string | null; leftDetail: string; rightDetail: string; ring: readonly string[]; selectedRingIndex: number; encounter: { name: string; health: number; maxHealth: number } | null }>).detail;
   floor.textContent = `FLOOR ${detail.floor} · TURN ${detail.turn} · SEED ${detail.seed}`;
-  health.textContent = `VITALITY ${detail.health}/10`;
+  location.textContent = `${detail.position.x},${detail.position.y} · FACING ${detail.facing.toUpperCase()}`;
+  health.textContent = `${detail.health}/${detail.maxHealth}`;
+  healthBar.style.width = `${Math.max(0, Math.min(100, detail.health / detail.maxHealth * 100))}%`;
   feedback.textContent = detail.feedback;
-  left.textContent = `LEFT · ${detail.leftHand ?? "EMPTY"}`;
-  right.textContent = `RIGHT · ${detail.rightHand ?? "EMPTY"}`;
-  ring.textContent = `RING · ${detail.ring.length ? `${detail.ring[detail.selectedRingIndex] ?? ""} (${detail.selectedRingIndex + 1}/${detail.ring.length})` : "EMPTY"}`;
+  left.textContent = detail.leftHand ?? "EMPTY"; right.textContent = detail.rightHand ?? "EMPTY";
+  leftDetail.textContent = detail.leftDetail; rightDetail.textContent = detail.rightDetail;
+  ringCount.textContent = `${detail.ring.length}/6`; ring.textContent = detail.ring.length ? detail.ring[detail.selectedRingIndex] ?? "EMPTY" : "EMPTY";
+  ringItems.replaceChildren(...detail.ring.map((item, index) => { const marker = document.createElement("span"); marker.className = index === detail.selectedRingIndex ? "selected" : ""; marker.textContent = item.slice(0, 1); marker.setAttribute("aria-label", `${item}${index === detail.selectedRingIndex ? ", selected" : ""}`); return marker; }));
+  combatCard.hidden = !detail.encounter;
+  if (detail.encounter) { encounterName.textContent = detail.encounter.name; encounterHealth.textContent = `${detail.encounter.health}/${detail.encounter.maxHealth} HP`; const threat = detail.encounter.health / detail.encounter.maxHealth * 100; threatBar.style.background = `linear-gradient(to right, var(--ember) ${threat}%, #402019 ${threat}%)`; }
 });
 window.addEventListener("tarmin-start", () => { document.body.classList.add("in-run"); });
 void game;

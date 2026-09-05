@@ -160,3 +160,21 @@
 - Checks: `npm run typecheck` passed; `npm run lint` passed; `npm test` passed (10 files, 35 tests); `npm run test:browser` truthfully reported no automated browser suite; `npm run build` passed with the existing Vite chunk-size warning. Deterministic simulation and entity projection tests remained green. The uncommitted deletion of `public/assets/entities/ashbound-warden.svg` was preserved and is not part of this phase.
 - Acceptance: `harness/build/phase-11-atmosphere-acceptance.md` records A1–A9 as passed. PRs #12, #13, and #14 were squash-merged; local `main` and `origin/main` matched at final verification.
 
+## Phase 12 Phaser bundle chunking
+
+- Scope: remove Vite's production chunk-size warning without changing gameplay or Phaser runtime behavior.
+- Change: added `vite.config.ts` with a dedicated `phaser` vendor chunk and an 1800 kB warning threshold matching Phaser 4.2.1's intentional monolithic browser distribution. Application code is now independently cacheable at approximately 29 kB; the Phaser vendor chunk is approximately 1.68 MB.
+- Checks: `npm run typecheck`, `npm run lint`, `npm test`, and `npm run build` passed. Production build completed with no chunk-size warning. `npm run test:browser` remains the documented manual-browser-verification notice; no browser-visible behavior was changed.
+
+## Phase 13 Warden asset restoration
+
+- Restored the tracked, project-authored `public/assets/entities/ashbound-warden.svg` that the worktree had deleted while `MainScene` continued to load it. The two-frame 64×48 sheet matches the existing 32×48 billboard crop contract; no renderer fallback or gameplay change was introduced.
+- Checks: `npm run typecheck`, `npm test` (10 files, 35 tests), and `npm run build` passed. Local Vite served `/` with HTTP 200 and served the Warden SVG with HTTP 200, `image/svg+xml`, and two animation frames. In-app browser connection was unavailable because its endpoint refused connection, so no new browser-visible/console-error claim is made here.
+
+## Phase 14 interface composition
+
+- Scope: redesign the shell so the textured first-person dungeon is the dominant experience, with compact state-derived vitality, hand equipment, ring, location/facing, feedback, and encounter information across menu, exploration, combat, and pause.
+- Change: moved status and combat presentation out of sparse Phaser text into a responsive HTML/CSS instrument panel; retained authoritative state in `src/sim/` and existing event/command boundaries. Added shared visual language for menu/pause, explicit accessible labels/live feedback, focus-preserving pause, reduced-motion preference handling, and target/larger desktop layout rules. Removed non-debug in-world HUD labels from `MainScene`; added a guarded presentation transition timeout fallback.
+- Documentation: added `docs/INPUT_AND_UI.md`, extended `docs/ART_DIRECTION.md`, and added `harness/build/phase-14-interface-composition-acceptance.md`.
+- Browser: fresh Chromium-compatible Playwright session at `http://127.0.0.1:5173/`; 1280×720 menu and active HUD, seeded `7391` ArrowUp encounter, pause/resume focus, reduced motion, and 1600×900/1920×1080 responsive snapshots exercised. Canvas measured 1229×691 at 1280 and 1760×990 at 1920. Encounter showed the visible Ashbound Warden with a compact 5/5 threat card. Console had 0 errors and 0 warnings. Browser output screenshots: `phase-14-combat-1280.png`, `phase-14-pause-1280.png`, `phase-14-combat-1920.png`.
+
