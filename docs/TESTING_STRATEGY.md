@@ -30,3 +30,10 @@ npm run build
 ```
 
 The `test:browser` status check does not replace the Chromium procedure above.
+
+Atmosphere browser evidence must include a near/bright material state, a
+deep/distant corridor state, an encounter and post-defeat state, a movement
+transition, and reduced-motion mode. Record WebGL context, route or fixture,
+input sequence, visible state, screenshot path, and console errors. Static
+filters and lighting are presentation-only, so deterministic simulation tests
+must still compare canonical state before and after the same command sequence.
