@@ -1,7 +1,7 @@
 import { visibleCellKind, type GameState, type Point } from "../../sim/state";
 import { intervalQuads, PORTAL_FRAMES, type PortalQuad } from "../../game/portalProjection";
 import { materialFor } from "../materials";
-import type { SceneDescription, ScenePrimitive, SceneSurface } from "../scene";
+import type { ProjectedFeature, SceneDescription, ScenePrimitive, SceneSurface } from "../scene";
 
 export type RenderPrimitive = ScenePrimitive;
 export const PERSPECTIVE_TRANSITION_MS = 140;
@@ -17,6 +17,7 @@ function sidePoint(state: GameState, distance: number, side: "left" | "right"): 
 
 export function projectDungeon(state: GameState): SceneDescription {
   const result: ScenePrimitive[] = [];
+  const features: ProjectedFeature[] = [];
   const forward = DELTAS[state.player.facing];
   const cells = [1, 2, 3, 4].map((distance) => {
     const point = { x: state.player.position.x + forward.x * distance, y: state.player.position.y + forward.y * distance };
@@ -27,6 +28,9 @@ export function projectDungeon(state: GameState): SceneDescription {
   for (let index = startIndex; index >= 0; index -= 1) {
     const cell = cells[index];
     const quads = intervalQuads(PORTAL_FRAMES[index], PORTAL_FRAMES[index + 1]);
+    if (cell.kind === "passage" || cell.kind === "open-door") {
+      features.push({ kind: "archway", depth: cell.distance, cell: cell.point, quad: [{ x: PORTAL_FRAMES[index + 1].left, y: PORTAL_FRAMES[index + 1].top }, { x: PORTAL_FRAMES[index + 1].right, y: PORTAL_FRAMES[index + 1].top }, { x: PORTAL_FRAMES[index + 1].right, y: PORTAL_FRAMES[index + 1].bottom }, { x: PORTAL_FRAMES[index + 1].left, y: PORTAL_FRAMES[index + 1].bottom }], lightLevel: DEPTH_LIGHT_LEVELS[cell.distance - 1] ?? DEPTH_LIGHT_LEVELS[DEPTH_LIGHT_LEVELS.length - 1] });
+    }
     addPrimitive(result, state, cell.distance, cell.point, "ceiling", cell.kind, quads.ceiling);
     addPrimitive(result, state, cell.distance, cell.point, "floor", cell.kind, quads.floor);
     const leftPoint = sidePoint(state, cell.distance, "left");
@@ -38,7 +42,7 @@ export function projectDungeon(state: GameState): SceneDescription {
       addPrimitive(result, state, cell.distance, cell.point, "front", cell.kind, [{ x: frame.left, y: frame.top }, { x: frame.right, y: frame.top }, { x: frame.right, y: frame.bottom }, { x: frame.left, y: frame.bottom }]);
     }
   }
-  return { primitives: result };
+  return { primitives: result, features };
 }
 
 function stableVariation(state: GameState, point: Point, surface: SceneSurface): number {

@@ -1,7 +1,9 @@
 [CmdletBinding()]
 param(
   [string]$ArchivePath,
-  [string]$OutputPath
+  [string]$OutputPath,
+  [string]$ArchitectureArchivePath,
+  [string]$ArchwayOutputPath
 )
 
 Set-StrictMode -Version Latest
@@ -9,6 +11,8 @@ $ErrorActionPreference = "Stop"
 
 if ([string]::IsNullOrWhiteSpace($ArchivePath)) { $ArchivePath = Join-Path $PSScriptRoot "downloads\sbs_-_tiny_texture_pack_2_-_128x128.zip" }
 if ([string]::IsNullOrWhiteSpace($OutputPath)) { $OutputPath = Join-Path $PSScriptRoot "..\public\assets\dungeon\dungeon-surfaces.png" }
+if ([string]::IsNullOrWhiteSpace($ArchitectureArchivePath)) { $ArchitectureArchivePath = Join-Path $PSScriptRoot "downloads\sbs_-_dungeon_crawler_pack_-_windows.zip" }
+if ([string]::IsNullOrWhiteSpace($ArchwayOutputPath)) { $ArchwayOutputPath = Join-Path $PSScriptRoot "..\public\assets\dungeon\archway-stone.png" }
 
 if (!(Test-Path -LiteralPath $ArchivePath -PathType Leaf)) {
   throw "Tiny Texture Pack 2 archive not found: $ArchivePath"
@@ -51,6 +55,7 @@ function Get-PaletteIndex([System.Drawing.Color]$Color, [int]$Count) {
 }
 
 $archive = [System.IO.Compression.ZipFile]::OpenRead((Resolve-Path -LiteralPath $ArchivePath))
+$architectureArchive = $null
 $atlas = New-Object System.Drawing.Bitmap 136, 68
 try {
   $atlasGraphics = [System.Drawing.Graphics]::FromImage($atlas)
@@ -119,6 +124,44 @@ try {
     $atlas.SetPixel($darknessX + $pixel, $darknessY + 32, $atlas.GetPixel($darknessX + $pixel, $darknessY + 31))
   }
 
+  if (Test-Path -LiteralPath $ArchitectureArchivePath -PathType Leaf) {
+    $architectureArchive = [System.IO.Compression.ZipFile]::OpenRead((Resolve-Path -LiteralPath $ArchitectureArchivePath))
+    $doorSource = Get-SourceBitmap $architectureArchive "Brick 1 - Decorations/Door/Layer 1/Layer 1 - Brick Door - Center.png"
+    try {
+      $ironPalette = @("#111714", "#26322b", "#45564a", "#6b7b69", "#93a187") | ForEach-Object { [System.Drawing.ColorTranslator]::FromHtml($_) }
+      for ($y = 0; $y -lt 32; $y += 1) {
+        for ($x = 0; $x -lt 32; $x += 1) {
+          $color = $doorSource.GetPixel([Math]::Min(127, 20 + [Math]::Floor($x * 88 / 32)), [Math]::Min(127, 12 + [Math]::Floor($y * 116 / 32)))
+          $luminance = (0.2126 * $color.R) + (0.7152 * $color.G) + (0.0722 * $color.B)
+          $index = [Math]::Min($ironPalette.Count - 1, [Math]::Floor(([Math]::Max(0, [Math]::Min(255, (($luminance - 92) * 1.55) + 92)) / 256) * $ironPalette.Count))
+          $atlas.SetPixel(1 + $x, 35 + $y, $ironPalette[$index])
+        }
+      }
+    } finally { $doorSource.Dispose() }
+
+    $archSource = Get-SourceBitmap $architectureArchive "Brick 1 - Decorations/Door/Layer 1/Layer 1 - Brick Door - Center.png"
+    try {
+      $archway = New-Object System.Drawing.Bitmap 64, 64
+      try {
+        $stonePalette = @("#111714", "#29301f", "#4e5a38", "#75834d") | ForEach-Object { [System.Drawing.ColorTranslator]::FromHtml($_) }
+        for ($y = 0; $y -lt 64; $y += 1) {
+          for ($x = 0; $x -lt 64; $x += 1) {
+            $outer = if ($y -lt 32) { [Math]::Pow(($x - 31.5) / 28.5, 2) + [Math]::Pow(($y - 31.5) / 31.5, 2) -le 1 } else { $x -ge 3 -and $x -le 60 }
+            $inner = if ($y -lt 33) { [Math]::Pow(($x - 31.5) / 21.5, 2) + [Math]::Pow(($y - 34) / 23, 2) -lt 1 } else { $x -ge 15 -and $x -le 48 }
+            if (-not $outer -or $inner) { $archway.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(0, 0, 0, 0)); continue }
+            $color = $archSource.GetPixel(($x * 2) + 1, ($y * 2) + 1)
+            $luminance = (0.2126 * $color.R) + (0.7152 * $color.G) + (0.0722 * $color.B)
+            $index = [Math]::Min($stonePalette.Count - 1, [Math]::Floor(([Math]::Max(0, [Math]::Min(255, (($luminance - 100) * 1.4) + 100)) / 256) * $stonePalette.Count))
+            $archway.SetPixel($x, $y, $stonePalette[$index])
+          }
+        }
+        $archwayDirectory = Split-Path -Parent $ArchwayOutputPath
+        New-Item -ItemType Directory -Force -Path $archwayDirectory | Out-Null
+        $archway.Save($ArchwayOutputPath, [System.Drawing.Imaging.ImageFormat]::Png)
+      } finally { $archway.Dispose() }
+    } finally { $archSource.Dispose() }
+  }
+
   $outputDirectory = Split-Path -Parent $OutputPath
   New-Item -ItemType Directory -Force -Path $outputDirectory | Out-Null
   $atlas.Save($OutputPath, [System.Drawing.Imaging.ImageFormat]::Png)
@@ -126,4 +169,5 @@ try {
 } finally {
   $atlas.Dispose()
   $archive.Dispose()
+  if ($null -ne $architectureArchive) { $architectureArchive.Dispose() }
 }

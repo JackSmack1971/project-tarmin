@@ -15,6 +15,11 @@ The simulation must not import Phaser or call `Math.random()`. Coordinates remai
 
 `src/renderer/scene.ts` is the renderer-neutral scene contract. `projectDungeon()` owns spatial visibility, occlusion, normalized portal geometry, and far-to-near topology; it returns scene primitives whose `geometry` is separate from `material`, `lightLevel`, and stable presentation `variation`. `src/game/MainScene.ts` loads the data-only atlas and creates one Mesh2D object per scene primitive, with two triangles and atlas UVs; it may tint for depth and draw diagnostic/boundary strokes, but it may not recalculate dungeon topology or authoritatively mutate state. `src/renderer/materials.ts`, `src/renderer/assets/dungeonAtlas.ts`, and `src/renderer/meshGeometry.ts` are framework-independent presentation registries/helpers.
 
+`SceneDescription.features` is a separate renderer-neutral architectural-feature
+layer. Its archways are derived only from visible passage cells, reuse portal geometry,
+and are cut off by the same nearest opaque wall/closed-door boundary. They are
+presentation overlays, not materials, simulation entities, or a second coordinate model.
+
 `src/renderer/entities/entityProjection.ts` is the renderer-neutral entity layer. It consumes explicit state-backed source descriptors, projects integer positions into portal depth and billboard quads, filters opaque-geometry occlusion, and produces deterministic far-to-near `EntityBillboard` values. Phaser selects sprite assets and presentation frames only; it never creates or removes authoritative entities and never uses animation timing to alter state.
 
 `GameState.monsters` is the authoritative dungeon-world collection. Each monster instance has a stable ID, content definition ID, integer position, current health, and defeated flag. `encounter` is only the active combat projection consumed by the current input/HUD seam; movement looks up an undefeated world instance, and combat writes health and defeat back to that instance before clearing the projection. World item instances carry an integer position while uncollected; `loot` contains their IDs for the current ground-item interaction and pickup changes ownership to the ring.

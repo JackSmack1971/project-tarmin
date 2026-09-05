@@ -20,6 +20,15 @@ export interface ScenePrimitive {
   readonly variation: number;
 }
 
+export interface ProjectedFeature {
+  readonly kind: "archway";
+  readonly depth: number;
+  readonly cell: Point;
+  readonly quad: PortalQuad;
+  readonly lightLevel: number;
+}
+
 export interface SceneDescription {
   readonly primitives: readonly ScenePrimitive[];
+  readonly features: readonly ProjectedFeature[];
 }

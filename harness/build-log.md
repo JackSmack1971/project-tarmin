@@ -1,5 +1,13 @@
 # Build log
 
+## Asset Integration Phase 2
+
+- Scope: promote transformed Old School Dungeon Crawler Pack architectural art while preserving the Phase 1 environment-atlas contract; add presentation-only archway projection for visible openings.
+- Change: `derive_dungeon_atlas.ps1` now remaps the approved brick-door source into the existing semantic `iron-door` swatch and emits a transparent 64×64 `archway-stone.png`. Added renderer-neutral `ProjectedFeature` values to `SceneDescription`; features reuse visible portal frames and inherit the nearest opaque cutoff. Phaser renders the archway asset between surfaces and entities; blockers retain their semantic geometry and outline.
+- Tests/checks: focused projection tests passed (5); full `npm test` passed (12 files, 54 tests); `npm run typecheck`, `npm run lint`, `npm run build`, and `git diff --check` passed. Build retains the existing Phaser chunk-size warning.
+- Browser: Chromium acceptance passed (3 tests, 56.6s) with zero application console/page errors. Captures: `harness/evidence/phase-2-open-passage.png`, `phase-2-closed-iron-door.png`, `phase-2-turn-opening.png`, and `phase-2-deep-corridor.png`. The full suite initially hit a transient Playwright web-server shutdown (`ERR_CONNECTION_REFUSED`); rerun against a clean 4173 server passed all three tests.
+- Provenance: source archive SHA-256 `9235E70894E8ED15D979F1A50B840D86CFD544DEB946F7BE52A7ECF3DD8F670F`; atlas output SHA-256 `F42608BA729A1193D4C8A6E76FEE83F5E103B9BDC05129C2D91211CA7A1B1720`; archway output SHA-256 `87A4D9BA8A5E0E982F9F9ED02CB4B4F3F27EB58931A496A396A03DDF70FBCB76`.
+
 ## Phase 1
 
 - Baseline: empty worktree except `AGENTS.md`; no existing commands or implementation.
