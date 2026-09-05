@@ -147,3 +147,8 @@
 
 - Delivery: committed as `7aa916d` on `feature/entity-billboards`, pushed, opened PR #9 targeting `main`, and squash-merged. GitHub reports merge commit `9413b59c1b3ff6391ca5bc3128ca4d075125dccc`; local `main` and `origin/main` both resolve to that SHA. No GitHub Actions workflows or required remote checks are configured.
 
+## Asset source downloader
+
+- Added `project-tarmin-asset-source-downloader/` as the durable source-gathering tool. Its PowerShell workflow was run for the current CC0/public-domain source set; downloaded archives, copied manifests, and the generated source bundle are present as local staging material.
+- Kept scripts, manifests, expected files, README, and license notes versionable while ignoring generated `downloads/` and `project-tarmin-source-packs.zip`. Added `docs/ASSET_SOURCE_WORKFLOW.md` and harness context so future asset needs can extend both download scripts with synchronized provenance records.
+

@@ -1,0 +1,192 @@
+[
+  {
+    "id": "tiny-texture-pack-2",
+    "title": "Tiny Texture Pack 2 (128x128 production set)",
+    "author": "Screaming Brain Studios",
+    "license": "CC0 1.0 / Public Domain",
+    "source_page": "https://opengameart.org/content/tiny-texture-pack-2",
+    "files": [
+      {
+        "name": "sbs_-_tiny_texture_pack_2_-_128x128.zip",
+        "url": "https://opengameart.org/sites/default/files/sbs_-_tiny_texture_pack_2_-_128x128.zip"
+      }
+    ],
+    "optional_files": [
+      {
+        "name": "sbs_-_tiny_texture_pack_2_-_256x256.zip",
+        "url": "https://opengameart.org/sites/default/files/sbs_-_tiny_texture_pack_2_-_256x256.zip"
+      },
+      {
+        "name": "sbs_-_tiny_texture_pack_2_-_512x512.zip",
+        "url": "https://opengameart.org/sites/default/files/sbs_-_tiny_texture_pack_2_-_512x512.zip"
+      }
+    ],
+    "targets": [
+      "wall_crypt_blocks_a.png",
+      "wall_crypt_blocks_b.png",
+      "floor_flagstone_a.png",
+      "ceiling_stone.png"
+    ]
+  },
+  {
+    "id": "old-school-dungeon-crawler-pack",
+    "title": "Old School Dungeon Crawler Pack",
+    "author": "Screaming Brain Studios",
+    "license": "CC0 1.0 / Public Domain",
+    "source_page": "https://opengameart.org/content/old-school-dungeon-crawler-pack",
+    "files": [
+      {
+        "name": "sbs_-_dungeon_crawler_pack_-_walls.zip",
+        "url": "https://opengameart.org/sites/default/files/sbs_-_dungeon_crawler_pack_-_walls.zip"
+      },
+      {
+        "name": "sbs_-_dungeon_crawler_pack_-_windows.zip",
+        "url": "https://opengameart.org/sites/default/files/sbs_-_dungeon_crawler_pack_-_windows.zip"
+      },
+      {
+        "name": "SBS_-_Cave_Walls_Addon.zip",
+        "url": "https://screamingbrainstudios.com/sbs_-_cave_walls_addon/"
+      }
+    ],
+    "targets": [
+      "door_iron.png",
+      "archway_stone.png"
+    ]
+  },
+  {
+    "id": "ps1-fire",
+    "title": "PS1 Fire",
+    "author": "Limphands",
+    "license": "CC0 / Public Domain",
+    "source_page": "https://limphands.itch.io/ps1-fire",
+    "manual_download": {
+      "filename": "Fire Spritesheet.zip",
+      "purchase_page": "https://limphands.itch.io/ps1-fire/purchase",
+      "reason": "itch.io generates the free-file URL after the 'No thanks, just take me to the downloads' interaction."
+    },
+    "targets": [
+      "fx_torch_flame.png"
+    ]
+  },
+  {
+    "id": "fantasy-ui-borders",
+    "title": "Fantasy UI Borders",
+    "author": "Kenney",
+    "license": "CC0 1.0",
+    "source_page": "https://opengameart.org/content/fantasy-ui-borders",
+    "files": [
+      {
+        "name": "kenney_fantasy-ui-borders.zip",
+        "url": "https://opengameart.org/sites/default/files/kenney_fantasy-ui-borders.zip"
+      }
+    ],
+    "targets": [
+      "ui_hud_frame.png"
+    ]
+  },
+  {
+    "id": "flare-windows",
+    "title": "Flare windows",
+    "author": "Blarumyrran",
+    "license": "CC0 / Public Domain",
+    "source_page": "https://opengameart.org/content/flare-windows",
+    "files": [
+      {
+        "name": "window.png",
+        "url": "https://opengameart.org/sites/default/files/window.png"
+      },
+      {
+        "name": "tekstuur.png",
+        "url": "https://opengameart.org/sites/default/files/tekstuur.png"
+      },
+      {
+        "name": "window_glow.png",
+        "url": "https://opengameart.org/sites/default/files/window_glow.png"
+      }
+    ],
+    "targets": [
+      "ui_hud_frame.png"
+    ]
+  },
+  {
+    "id": "fantasy-torch-pack-1",
+    "title": "Fantasy Torch Pack 1",
+    "author": "rubberduck",
+    "license": "CC0",
+    "source_page": "https://opengameart.org/content/fantasy-torch-pack-1",
+    "files": [
+      {
+        "name": "fantasy-torch-pack-1.zip",
+        "url": "https://opengameart.org/sites/default/files/fantasy-torch-pack-1.zip"
+      }
+    ],
+    "targets": [
+      "torch_sconce.png"
+    ]
+  },
+  {
+    "id": "lo-fi-first-person-hand",
+    "title": "Lo Fi First Person Hand",
+    "author": "Ragnar Random",
+    "license": "CC0",
+    "source_page": "https://opengameart.org/node/134125",
+    "files": [
+      {
+        "name": "lofifirstpersonhand.png",
+        "url": "https://opengameart.org/sites/default/files/lofifirstpersonhand.png"
+      }
+    ],
+    "targets": [
+      "fp_hands_empty.png"
+    ]
+  },
+  {
+    "id": "fantasy-fps-hands",
+    "title": "Fantasy FPS Hands",
+    "author": "Ragnar Random",
+    "license": "CC0",
+    "source_page": "https://opengameart.org/content/fantasy-fps-hands",
+    "files": [
+      {
+        "name": "weaponspell1.png",
+        "url": "https://opengameart.org/sites/default/files/weaponspell1.png"
+      },
+      {
+        "name": "weaponspell2.png",
+        "url": "https://opengameart.org/sites/default/files/weaponspell2.png"
+      },
+      {
+        "name": "weaponspell3.png",
+        "url": "https://opengameart.org/sites/default/files/weaponspell3.png"
+      },
+      {
+        "name": "weaponstaff.png",
+        "url": "https://opengameart.org/sites/default/files/weaponstaff.png"
+      },
+      {
+        "name": "raw.zip",
+        "url": "https://opengameart.org/sites/default/files/raw.zip"
+      }
+    ],
+    "targets": [
+      "fp_torch.png",
+      "fp_hands_empty.png (reference/raw material)"
+    ]
+  },
+  {
+    "id": "1-bit-doomgeon-kit",
+    "title": "1-Bit Doomgeon Kit",
+    "author": "B77345-100 / BUTTERHANDS",
+    "license": "CC0",
+    "source_page": "https://opengameart.org/content/1-bit-doomgeon-kit",
+    "files": [
+      {
+        "name": "doomgeonkit.zip",
+        "url": "https://opengameart.org/sites/default/files/doomgeonkit.zip"
+      }
+    ],
+    "targets": [
+      "enemy_ashbound_warden.png (reference only; final should be original)"
+    ]
+  }
+]

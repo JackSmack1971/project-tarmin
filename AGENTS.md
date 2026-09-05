@@ -34,6 +34,7 @@ Before changing a subsystem, read its governing document:
 * content/data → `docs/CONTENT_MODEL.md`
 * controls/HUD/inventory UX → `docs/INPUT_AND_UI.md`
 * visuals/audio → `docs/ART_DIRECTION.md`, `docs/AUDIO_DIRECTION.md`
+* asset sourcing/provenance → `docs/ASSET_SOURCE_WORKFLOW.md`
 * testing/completion → `docs/TESTING_STRATEGY.md`, `docs/DEFINITION_OF_DONE.md`
 * browser/performance/accessibility → applicable files in `docs/`
 * unresolved/durable decisions → `docs/OPEN_QUESTIONS.md`, `docs/DECISIONS.md`
