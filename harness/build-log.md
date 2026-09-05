@@ -88,6 +88,14 @@
 - Responsive browser sizing: Chromium viewport set to 1280×720, 1600×900, and 1920×1080; the shell remained usable at each representative size.
 - Checks: `npm run typecheck` passed; `npm run lint` passed; `npm test -- --run` passed (19 tests); `npm run test:browser` completed its repository-provided manual-phase notice; `npm run build` passed with the existing Phaser chunk-size warning. Static scans found no `Math.random()` in `src/sim` or `src/renderer`, and no Phaser imports there. Git status/diff remains unavailable because this workspace has no `.git` directory.
 
+## Phase 7 renderer-neutral scene/material contract
+
+- Scope: separate portal geometry/topology from renderer-neutral material and presentation metadata; no simulation rules or gameplay mechanics changed.
+- Change: `projectDungeon()` now returns a `SceneDescription` of primitives with independent normalized geometry, source cell, material ID, light level, and seed/floor/cell/surface-derived variation. Added material registry and original 8×8 surface atlas metadata/source for crypt stone, burial masonry, basalt, timber/iron doors, floor, ceiling, and darkness.
+- Tests: `npm test -- --run` passed (29 tests); projection tests cover deterministic signatures, far-to-near ordering, opaque termination, and geometry equality across different seeds while metadata varies. Material tests cover atlas-region completeness and role selection.
+- Checks: `npm run typecheck` passed; `npm run lint` passed; `npm run build` passed with the existing Phaser chunk-size warning. Static scan found no `Math.random()` or Phaser imports in `src/sim` or `src/renderer`.
+- Browser: fallback Playwright inspection at `http://127.0.0.1:5173/?fixture=straight-corridor` confirmed WebGL context, 1280×720 canvas, visible depth 4, and 0 console errors/warnings; `?fixture=closed-door&perspectiveDebug=1` confirmed depth-1 front closed-door termination and 0 console errors/warnings. Fresh base-route inspection clicked Begin Descent, pressed ArrowUp, and observed integer position `(1,1)`, turn `1`, and the existing Ashbound Warden encounter. Captures: `phase-07-straight-corridor.png`, `phase-07-closed-door.png`.
+
 ## Phase 05 combat, inventory, and content
 
 - Change: added typed item/monster definitions, deterministic weighted loot tables, registry validation, serializable xorshift32 state, runtime item IDs, monster IDs, left/right equipment references, bounded ring inventory, consumable use, pickup/drop, and authoritative combat events.

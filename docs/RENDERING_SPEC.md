@@ -1,15 +1,14 @@
 # Rendering specification
 
-The game uses a pseudo-3D first-person portal projection. `src/renderer/perspective/` produces normalized, deterministic render primitives from simulation state; `src/game/MainScene.ts` maps those primitives into Phaser graphics. Phaser owns no dungeon topology, collision, combat, inventory, or random decisions.
+The game uses a pseudo-3D first-person portal projection. `src/renderer/perspective/` produces a renderer-neutral `SceneDescription` from simulation state; `src/game/MainScene.ts` maps that description into Phaser graphics.
 
-The production renderer is Phaser 4.2.1 with an explicit `Phaser.WEBGL` game configuration. The scene uses standard Phaser 4 graphics, text, shape, camera, scale, and tween APIs. Portal geometry remains normalized and is scaled into the logical 1280×720 presentation surface.
+Each scene primitive has two deliberately separate concerns:
 
-Rendering changes must preserve:
+- `geometry`: integer-grid source cell, normalized depth/surface, and normalized quad;
+- presentation metadata: visible cell kind, material identity, depth-derived light level, and a stable variation selector.
 
-- nested portal-frame contraction and far-to-near primitive ordering;
-- integer grid coordinates and discrete cardinal movement;
-- presentation-only movement transitions, including the 1 ms reduced-motion path;
-- menu, exploration, combat, pause, and HUD readability;
-- framework-independent simulation imports and seeded determinism.
+`projectDungeon()` remains the spatial source of truth. It emits far-to-near portal intervals and stops at the nearest opaque wall or closed door. It must not import Phaser, call `Math.random()`, mutate simulation state, or depend on frame timing. `primitiveSignature()` is a compact deterministic diagnostic for geometry and metadata regression tests.
 
-Canvas is not the production path. Browser verification must confirm that the game canvas has a WebGL rendering context and that the core menu, exploration, combat, pause, and reduced-motion flows remain usable.
+Material IDs are stable contracts, not artwork. The data-only material registry points to regions in the original low-resolution atlas at `public/assets/dungeon/dungeon-surfaces.svg`; fallback colors keep the current graphics adapter usable while textured rendering remains a later presentation concern. Variation is derived from seed, floor, source cell, and surface through a stable hash.
+
+The production renderer is Phaser 4.2.1 with explicit `Phaser.WEBGL`; normalized portal geometry is scaled into the logical 1280×720 presentation surface. Browser verification must confirm WebGL and representative corridor/door states.
