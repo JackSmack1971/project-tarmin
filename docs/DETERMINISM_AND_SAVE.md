@@ -5,6 +5,11 @@ state, content/rules version, and ordered commands. Monster health/defeat and
 world-item positions are part of that canonical state, so retreat, re-entry,
 defeat, and pickup remain deterministic and survive JSON serialization.
 
+The fixed one-floor population is seeded content: seven monster instances use
+stable IDs and positions, and loot tables use weighted entries selected only by
+the simulation RNG. Presentation timing and billboard assets cannot alter
+which instance or item is selected.
+
 `runStatus` is also canonical. Defeat sets health to zero, clears the active
 encounter, emits terminal events, and rejects later commands without mutating
 state. The canonical objective records Star-Forged Seal possession, the fixed

@@ -32,3 +32,9 @@
 - Decision: store explicit monster instances in canonical `GameState.monsters` and use the existing `encounter` field only as an active combat projection. Store uncollected ground items as world-positioned item instances referenced by `loot` IDs.
 - Consequences: movement queries undefeated monster instances; combat synchronizes health and defeat before clearing active combat; revisiting a defeated cell cannot respawn its monster; pickup is location-bound. `rulesVersion` remains unchanged because this goal does not add save migrations.
 - Preserved contracts: seeded deterministic RNG, renderer-neutral serializable state, current combat/inventory commands, and the existing Phaser presentation/input seam.
+
+## MVP content population
+
+- Status: approved implementation decision for the one-floor content slice.
+- Decision: use seven fixed monster instances across the Ashbound Warden, Glass Mireling, and Gloam Scavenger definitions; expand the registry to six useful item definitions and use weighted seeded loot tables.
+- Consequences: the east branch is opened as fixed map content so the added encounters are reachable, while the Warden's guaranteed Seal preserves the existing objective/exit route. No roaming AI, procedural generation, multi-floor progression, saves, or final balance pass is introduced.

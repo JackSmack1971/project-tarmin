@@ -1,5 +1,44 @@
 # Progress log
 
+## MVP content population iteration 1 — baseline and acceptance reconciliation
+
+- Action: read the current objective, reconciled the stale persistent-world goal
+  record, inspected content, simulation, renderer, docs, and Git state, and
+  created `harness/build/mvp-content-population-acceptance.md`.
+- Observation: the registry has two monster definitions and four item
+  definitions, but `createInitialState()` instantiates only one Warden and the
+  renderer projects only the active encounter with a Warden fallback asset.
+- Verification: worktree is clean on `main`; existing persistence/objective
+  tests and project structure confirm the authoritative state seams. Missing
+  `docs/GAME_DESIGN.md` is pre-existing and not required to invent for this
+  slice.
+- Decision: run the baseline suite, then add only fixed data and minimal
+  renderer/content plumbing needed for live 3-type/6–8-instance and 6–8-item
+  population, with deterministic route tests before delivery actions.
+- Blocker / failure classification: none yet.
+- Next uncertainty: reachable fixed coordinates, minimal additional definitions,
+  and loot/encounter sequencing that preserves the objective route.
+
+## MVP content population iteration 2 — implementation and verification
+
+- Action: added the Gloam Scavenger definition, seven fixed persistent monster
+  records, Rimeglass Knife and Ashen Mail, weighted deterministic loot
+  selection, a fixed east map branch, definition-driven billboard assets,
+  focused tests, and current content/architecture/determinism/testing/README
+  documentation.
+- Observation: focused tests passed 31 tests, then the full suite passed 50;
+  typecheck, lint, browser-status, build, diff check, and simulation boundary
+  scans passed.
+- Verification: fresh Chromium at 1280×720/WebGL entered the Glass Mireling
+  and Gloam Scavenger, defeated/picked up Mireling loot, revisited its cell
+  without respawn, then completed the Warden/Seal/exit route. Console errors and
+  warnings were zero. Captures are recorded in the acceptance matrix.
+- Decision: local acceptance CP-01 through CP-10 passes. Proceed to focused
+  commit, PR, required-check inspection, merge, and merged-main verification.
+- Blocker / failure classification: none. `npm run test:browser` remains the
+  documented manual-status notice, supplemented by the Chromium evidence above.
+- Next uncertainty: remote branch/PR state and merged-main verification.
+
 ## Persistent dungeon-world iteration 1 — baseline and contract
 
 - Action: read the pasted objective, inspected the clean `main` tree and current simulation/presentation contracts, reconciled the stale goal record, and created the persistent-world acceptance matrix.

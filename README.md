@@ -12,6 +12,10 @@ test:browser` is the documented manual-browser status notice, not an automated
 suite.
 
 The MVP is one complete deterministic floor: defeat the Ashbound Warden, pick
-up the Star-Forged Seal, explore to exit `(2,4)`, and enter it to complete the
-run. The exit remains locked without the seal; victory disables normal
-gameplay and offers same-seed or new-seed restart.
+up the Star-Forged Seal, explore the fixed east branch with Glass Mirelings and
+Gloam Scavengers, reach exit `(2,4)`, and enter it to complete the run. Seven
+persistent monster instances and six useful item definitions exercise the
+combat, loot, and inventory loop; defeated enemies do not respawn and ground
+loot stays at its dungeon position until pickup. The exit remains locked
+without the seal; victory disables normal gameplay and offers same-seed or
+new-seed restart.
