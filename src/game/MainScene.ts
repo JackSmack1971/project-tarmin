@@ -2,20 +2,16 @@ import Phaser from "phaser";
 import { createInitialState, executeCommand, type Command, type GameEvent, type GameState } from "../sim/state";
 import { InputController, type InputMode } from "../input/input-controller";
 import { DUNGEON_PALETTE, paletteHex, shadeColor } from "./palette";
-import { frameToPixels, intervalQuads, PORTAL_FRAMES, type PortalFrame, type PortalPoint } from "./portalProjection";
+import { frameToPixels, intervalQuads, PORTAL_FRAMES, type PortalFrame, type PortalQuad } from "./portalProjection";
 import { createRenderFixture, renderFixtureFromLocation } from "./renderFixtures";
 import { PERSPECTIVE_TRANSITION_MS, projectDungeon } from "../renderer/perspective/perspectiveRenderer";
-import { MATERIALS } from "../renderer/materials";
+import { meshVertices, QUAD_INDICES } from "../renderer/meshGeometry";
 import { itemById } from "../content/items";
+import { DUNGEON_SURFACE_ATLAS } from "../renderer/assets/dungeonAtlas";
 
 function screenFrame(frame: PortalFrame, viewport: { left: number; top: number; width: number; height: number }): PortalFrame {
   const pixels = frameToPixels(frame, viewport.width, viewport.height);
   return { left: pixels.left + viewport.left, right: pixels.right + viewport.left, top: pixels.top + viewport.top, bottom: pixels.bottom + viewport.top };
-}
-
-function fillQuad(world: Phaser.GameObjects.Graphics, quad: readonly PortalPoint[], color: number): void {
-  world.fillStyle(color, 1);
-  world.fillPoints(quad.map(({ x, y }) => new Phaser.Math.Vector2(x, y)), true);
 }
 
 export class MainScene extends Phaser.Scene {
@@ -27,6 +23,10 @@ export class MainScene extends Phaser.Scene {
   private inputController!: InputController;
 
   constructor() { super("main"); }
+
+  preload(): void {
+    this.load.svg("dungeon-surfaces", DUNGEON_SURFACE_ATLAS.source);
+  }
 
   create(): void {
     this.cameras.main.setBackgroundColor(DUNGEON_PALETTE.backgroundVoid);
@@ -127,7 +127,6 @@ export class MainScene extends Phaser.Scene {
     this.children.removeAll();
     const { width, height } = this.scale;
     const viewport = { left: 96, top: 76, width: width - 192, height: height - 226 };
-    const world = this.add.graphics();
     const scene = projectDungeon(this.state);
     const primitives = scene.primitives;
     Object.defineProperty(window, "__TARMIN_RENDERER__", {
@@ -155,11 +154,17 @@ export class MainScene extends Phaser.Scene {
     });
 
     for (const primitive of primitives) {
-      const depthTone = primitive.lightLevel;
-      const points = primitive.geometry.quad.map((point) => ({ x: viewport.left + point.x * viewport.width, y: viewport.top + point.y * viewport.height }));
+      const points = primitive.geometry.quad.map((point) => ({ x: viewport.left + point.x * viewport.width, y: viewport.top + point.y * viewport.height })) as unknown as PortalQuad;
       const isOpening = primitive.kind === "passage" || primitive.kind === "open-door";
-      const color = primitive.geometry.surface === "front" && isOpening ? DUNGEON_PALETTE.visibilityTerminus : shadeColor(MATERIALS[primitive.material].fallbackColor, depthTone);
-      fillQuad(world, points, primitive.geometry.surface === "front" && isOpening ? DUNGEON_PALETTE.visibilityTerminus : color);
+      const mesh = this.add.mesh2d(0, 0, "dungeon-surfaces", meshVertices(points, primitive.material), [...QUAD_INDICES]) as Phaser.GameObjects.Mesh2D & { setTint(color: number): Phaser.GameObjects.Mesh2D };
+      mesh.setTint(shadeColor(0xffffff, primitive.lightLevel));
+      mesh.setRenderAsTriangles(true);
+      if (primitive.geometry.surface === "front" && isOpening) mesh.setTint(shadeColor(0xffffff, 0.08));
+    }
+
+    const world = this.add.graphics();
+    for (const primitive of primitives) {
+      const points = primitive.geometry.quad.map((point) => ({ x: viewport.left + point.x * viewport.width, y: viewport.top + point.y * viewport.height }));
       if (primitive.geometry.surface === "front" || primitive.kind === "closed-door") { world.lineStyle(2, primitive.kind === "closed-door" ? DUNGEON_PALETTE.door : DUNGEON_PALETTE.boundary, 0.9); world.strokePoints(points.map(({ x, y }) => new Phaser.Math.Vector2(x, y)), true); }
     }
 

@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="8" viewBox="0 0 64 8" shape-rendering="crispEdges">
   <title>Original eight-swatch dungeon surface atlas</title>
   <rect width="64" height="8" fill="#0e110b"/>
-  <path fill="#4a4a2c" d="M0 0h8v8H0zM1 1h3v1H1zM5 4h2v2H5z"/>
-  <path fill="#3e3d2b" d="M8 0h8v8H8zM9 2h6v1H9zM11 5h3v1h-3z"/>
-  <path fill="#242820" d="M16 0h8v8h-8zM17 1h1v5h-1zM21 3h2v1h-2z"/>
-  <path fill="#665735" d="M24 0h8v8h-8zM25 1h1v6h-1zM28 0h1v8h-1zM31 2h1v5h-1z"/>
-  <path fill="#4b4e43" d="M32 0h8v8h-8zM34 0h1v8h-1zM37 1h1v6h-1zM32 3h8v1h-8z"/>
-  <path fill="#343629" d="M40 0h8v8h-8zM41 2h2v1h-2zM45 5h2v1h-2z"/>
-  <path fill="#202519" d="M48 0h8v8h-8zM49 1h6v1h-6zM51 5h3v1h-3z"/>
+  <rect x="0" width="8" height="8" fill="#4a4a2c"/><path fill="#747449" d="M1 1h3v1H1zM5 4h2v2H5z"/><path fill="#2c2d1d" d="M0 6h2v1H0zM6 0h2v1H6z"/>
+  <rect x="8" width="8" height="8" fill="#3e3d2b"/><path fill="#656440" d="M9 2h6v1H9zM11 5h3v1h-3z"/><path fill="#27281d" d="M8 6h2v1H8z"/>
+  <rect x="16" width="8" height="8" fill="#242820"/><path fill="#454b38" d="M17 1h1v5h-1zM21 3h2v1h-2z"/><path fill="#151a14" d="M19 7h4v1h-4z"/>
+  <rect x="24" width="8" height="8" fill="#665735"/><path fill="#92774a" d="M25 1h1v6h-1zM28 0h1v8h-1zM31 2h1v5h-1z"/><path fill="#403421" d="M24 4h1v4h-1z"/>
+  <rect x="32" width="8" height="8" fill="#4b4e43"/><path fill="#777966" d="M34 0h1v8h-1zM37 1h1v6h-1zM32 3h8v1h-8z"/><path fill="#2b2e28" d="M32 6h2v2h-2z"/>
+  <rect x="40" width="8" height="8" fill="#343629"/><path fill="#555842" d="M41 2h2v1h-2zM45 5h2v1h-2z"/><path fill="#202318" d="M40 0h1v8h-1z"/>
+  <rect x="48" width="8" height="8" fill="#202519"/><path fill="#3c4330" d="M49 1h6v1h-6zM51 5h3v1h-3z"/><path fill="#131710" d="M48 6h2v2h-2z"/>
   <rect x="56" width="8" height="8" fill="#0e110b"/>
 </svg>
