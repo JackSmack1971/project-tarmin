@@ -60,3 +60,9 @@ buttons from a fresh page and record the terminal mode/state plus console errors
 The reproducible terminal-panel routes are `?fixture=defeated` and
 `?fixture=victorious`; these are presentation fixtures only, while authoritative
 transition proof remains in simulation tests.
+
+The complete one-floor run additionally requires deterministic proof that the
+Warden yields the Star-Forged Seal, pickup records objective possession, the
+fixed exit at `(2,4)` stays non-victorious without it, and successful entry
+records objective completion and victory. The browser route is: Begin Descent,
+ArrowUp, four Space attacks, P, then Right/Up/Up/Left/Up/Right/Up.

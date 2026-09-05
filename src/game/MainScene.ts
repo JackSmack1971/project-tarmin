@@ -96,12 +96,14 @@ export class MainScene extends Phaser.Scene {
     const event = events.find((candidate) => candidate.type === "runVictorious")
       ?? events.find((candidate) => candidate.type === "runDefeated")
       ?? events.find((candidate) => candidate.type === "playerDefeated")
+      ?? events.find((candidate) => candidate.type === "exitLocked")
       ?? (events.some((candidate) => candidate.type === "monsterDefeated") && events.some((candidate) => candidate.type === "itemAcquired")
         ? events.find((candidate) => candidate.type === "monsterDefeated")
         : events.find((candidate) => candidate.type === "monsterDefeated" || candidate.type === "itemAcquired"))
       ?? events[0];
     if (!event) return this.feedback;
     if (event.type === "movementBlocked") return "The way is sealed.";
+    if (event.type === "exitLocked") return "The exit rejects you. Find the Star-Forged Seal.";
     if (event.type === "encounterStarted") return `${event.name} bars the passage.`;
     if (event.type === "hit") return `Hit for ${event.damage}.`;
     if (event.type === "monsterAttack") return `The monster strikes for ${event.damage}.`;
@@ -220,6 +222,7 @@ export class MainScene extends Phaser.Scene {
         ring: this.state.ring,
         selectedRingIndex: this.state.selectedRingIndex,
         loot: this.state.loot,
+        objective: this.state.objective,
         entities: entities.map((entity) => ({ id: entity.id, definitionId: entity.definitionId, depth: entity.depth, lightLevel: entity.lightLevel })),
         atmosphere: { torchLight: true, fogTreatment: true, colorGrade: true, vignette: true, reducedMotionIndependent: true }
       })
@@ -249,7 +252,7 @@ export class MainScene extends Phaser.Scene {
     if (this.perspectiveDebug) this.addDebugLabel(`POS ${this.state.player.position.x},${this.state.player.position.y}  FACING ${this.state.player.facing.toUpperCase()}  PRIMITIVES ${primitives.length}`, viewport.left + 8, viewport.top + viewport.height - 24);
     world.lineStyle(2, DUNGEON_PALETTE.boundary, 0.9);
     world.strokeRect(viewport.left, viewport.top, viewport.width, viewport.height);
-    window.dispatchEvent(new CustomEvent("tarmin-state", { detail: { floor: this.state.floor, turn: this.state.turn, health: this.state.playerHealth, maxHealth: this.state.playerMaxHealth, seed: this.state.seed, runStatus: this.state.runStatus, facing: this.state.player.facing, position: this.state.player.position, feedback: this.feedback, leftHand: this.itemName(this.state.leftHand), rightHand: this.itemName(this.state.rightHand), leftDetail: this.itemDetail(this.state.leftHand), rightDetail: this.itemDetail(this.state.rightHand), ring: this.state.ring.map((id) => this.itemName(id) ?? "UNKNOWN"), selectedRingIndex: this.state.selectedRingIndex, encounter: this.state.encounter ? { name: this.state.encounter.name, health: this.state.encounter.health, maxHealth: this.state.encounter.maxHealth } : null } }));
+    window.dispatchEvent(new CustomEvent("tarmin-state", { detail: { floor: this.state.floor, turn: this.state.turn, health: this.state.playerHealth, maxHealth: this.state.playerMaxHealth, seed: this.state.seed, runStatus: this.state.runStatus, facing: this.state.player.facing, position: this.state.player.position, feedback: this.feedback, leftHand: this.itemName(this.state.leftHand), rightHand: this.itemName(this.state.rightHand), leftDetail: this.itemDetail(this.state.leftHand), rightDetail: this.itemDetail(this.state.rightHand), ring: this.state.ring.map((id) => this.itemName(id) ?? "UNKNOWN"), selectedRingIndex: this.state.selectedRingIndex, objective: { acquired: this.state.objective.acquired, complete: this.state.objective.complete, exit: this.state.objective.exit }, encounter: this.state.encounter ? { name: this.state.encounter.name, health: this.state.encounter.health, maxHealth: this.state.encounter.maxHealth } : null } }));
   }
 
   private renderEntities(entities: readonly EntityBillboard[], viewport: { left: number; top: number; width: number; height: number }, frame: 0 | 1): void {

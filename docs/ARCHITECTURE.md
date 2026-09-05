@@ -5,8 +5,9 @@ Project Tarmin has one authoritative simulation boundary: `src/sim/` owns canoni
 `GameState.runStatus` is the authoritative run lifecycle: `playing`, `defeated`,
 or `victorious`. A terminal state clears active combat, rejects subsequent
 commands without advancing the turn, and is exposed to the shell as a terminal
-input/presentation mode. `completeRun()` is the framework-independent victory
-hook for the next dungeon-objective goal; rendering cannot declare victory.
+input/presentation mode. The one-floor run records a Star-Forged Seal objective
+and fixed exit at `(2,4)` in canonical state; entering the exit only completes
+the run after the seal is possessed. Rendering cannot declare victory.
 
 The browser shell uses Vite and Phaser 4.2.1. Phaser is presentation infrastructure only: it renders the framework-independent perspective primitives and presents simulation events. The production game configuration explicitly selects WebGL; it does not use Canvas fallback or move rules into scenes.
 
@@ -17,6 +18,10 @@ The simulation must not import Phaser or call `Math.random()`. Coordinates remai
 `src/renderer/entities/entityProjection.ts` is the renderer-neutral entity layer. It consumes explicit state-backed source descriptors, projects integer positions into portal depth and billboard quads, filters opaque-geometry occlusion, and produces deterministic far-to-near `EntityBillboard` values. Phaser selects sprite assets and presentation frames only; it never creates or removes authoritative entities and never uses animation timing to alter state.
 
 `GameState.monsters` is the authoritative dungeon-world collection. Each monster instance has a stable ID, content definition ID, integer position, current health, and defeated flag. `encounter` is only the active combat projection consumed by the current input/HUD seam; movement looks up an undefeated world instance, and combat writes health and defeat back to that instance before clearing the projection. World item instances carry an integer position while uncollected; `loot` contains their IDs for the current ground-item interaction and pickup changes ownership to the ring.
+
+The Warden's deterministic loot is the Star-Forged Seal. Objective possession
+and completion are state-backed, so reaching the exit without the seal emits a
+locked-exit event and remains playable.
 
 The camera presentation pass is also non-authoritative. `MainScene` owns only
 cosmetic torch, fog, and WebGL filter objects after consuming the renderer-neutral
