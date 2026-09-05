@@ -37,3 +37,7 @@ transition, and reduced-motion mode. Record WebGL context, route or fixture,
 input sequence, visible state, screenshot path, and console errors. Static
 filters and lighting are presentation-only, so deterministic simulation tests
 must still compare canonical state before and after the same command sequence.
+
+Phase 15 also records 1280×720, 1600×900, and 1920×1080 Chromium runs. The
+internal logical canvas is expected to remain 1280×720 under FIT scaling; this
+is a presentation check, not a simulation-resolution change.

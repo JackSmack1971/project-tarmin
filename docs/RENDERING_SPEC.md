@@ -33,6 +33,12 @@ No filter is time-driven; `update()` is used only for the presentation-only
 billboard frame selector. Reduced motion keeps the static atmosphere and only
 shortens the existing transition veil.
 
+The material UV adapter resolves atlas coordinates through the material registry,
+then applies a quarter-pixel inset to all four corners. This keeps material IDs
+and atlas coordinates from drifting apart as the authored atlas evolves. Phaser
+display objects are rebuilt only after a state or mode change; the frame loop
+updates billboard crops only.
+
 Fog and vignette are compositional treatments, not a second visibility system.
 They must preserve portal boundaries, closed-door outlines, active entity
 silhouettes, and interaction-critical HUD readability. The default stack stays

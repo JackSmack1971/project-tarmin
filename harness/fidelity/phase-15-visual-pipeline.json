@@ -1,0 +1,29 @@
+{
+  "skill": "browser-game-fidelity",
+  "status": "COMPLETE",
+  "baseline": {
+    "revision": "main at b5ae662",
+    "url": "http://127.0.0.1:5174/",
+    "browser": "Chromium",
+    "viewports": ["1280x720", "1600x900", "1920x1080"],
+    "seed": 7391,
+    "deviceScaleFactor": 1,
+    "before": "Existing Phase 14 WebGL renderer; all local checks passed; test:browser is a manual notice."
+  },
+  "claims": [
+    {"kind":"objective_visual","observation":"Textured portal materials, dark far aperture, near wall, blocker, and door remain distinct.","verification":"Fresh fixture routes straight-corridor, wall-1, left-opening-1, and closed-door at 1280x720; renderer metadata and screenshots phase-15-corridor-1280.png, phase-15-wall-blocked-1280.png, phase-15-turn-opening-1280.png, phase-15-closed-door-1280.png.","status":"matched"},
+    {"kind":"objective_visual","observation":"The state-backed Ashbound Warden is visible at encounter depth with compact HUD hierarchy.","verification":"Fresh seed 7391, Begin Descent, ArrowUp; WebGL true, entity depth 1, encounter health 5/5; screenshot phase-15-encounter-1280.png.","status":"matched"},
+    {"kind":"objective_gameplay","observation":"Paced combat removes the entity when canonical encounter state is defeated.","verification":"Repeated Space inputs with waits reduced encounter to null; renderer reported entities [] and loot item-loot-5; screenshot phase-15-defeated-1280.png.","status":"matched"},
+    {"kind":"objective_visual","observation":"Pause and reduced-motion surfaces remain readable.","verification":"Escape opened pause; reduced-motion checkbox reported true and transitionDuration 1; screenshots phase-15-pause-1280.png and phase-15-reduced-motion-pause-1280.png.","status":"matched"},
+    {"kind":"objective_visual","observation":"FIT scaling preserves a 1280x720 internal WebGL canvas at larger supported viewports.","verification":"Fresh straight-corridor pages at 1600x900 and 1920x1080 reported WebGL true, canvas 1280x720, visibleDepth 4; screenshots phase-15-exploration-1600.png and phase-15-exploration-1920.png.","status":"matched"},
+    {"kind":"objective_gameplay","observation":"Blocked movement and turning/opening remain discrete and state-backed.","verification":"Fixture and fresh-run renderer metadata preserved integer position/facing/turn; blocked feedback was observed as The way is sealed.; no console errors.","status":"matched"}
+  ],
+  "verification": {
+    "runtime": "Fresh Chromium sessions against Vite at 5174 with WebGL context inspection and repeated deterministic seed flow.",
+    "repeatable": true,
+    "console": "No application console errors observed in reviewed sessions.",
+    "checks": ["npm run typecheck", "npm run lint", "npm test", "npm run test:browser", "npm run build"]
+  },
+  "failures": ["npm run test:browser is a repository-provided manual status notice, not an automated browser suite."],
+  "notes": "Headless GPU ReadPixels warnings, if emitted by screenshot capture, are environment diagnostics and are not application console errors."
+}

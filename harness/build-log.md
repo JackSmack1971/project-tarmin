@@ -178,3 +178,11 @@
 - Documentation: added `docs/INPUT_AND_UI.md`, extended `docs/ART_DIRECTION.md`, and added `harness/build/phase-14-interface-composition-acceptance.md`.
 - Browser: fresh Chromium-compatible Playwright session at `http://127.0.0.1:5173/`; 1280×720 menu and active HUD, seeded `7391` ArrowUp encounter, pause/resume focus, reduced motion, and 1600×900/1920×1080 responsive snapshots exercised. Canvas measured 1229×691 at 1280 and 1760×990 at 1920. Encounter showed the visible Ashbound Warden with a compact 5/5 threat card. Console had 0 errors and 0 warnings. Browser output screenshots: `phase-14-combat-1280.png`, `phase-14-pause-1280.png`, `phase-14-combat-1920.png`.
 
+## Phase 15 visual pipeline hardening
+
+- Branch: `feature/phase-15-visual-pipeline`; baseline `main` was clean at `b5ae662`.
+- Change: atlas UV lookup now resolves the material registry's `atlasRegion`; torch warmth is a semantic palette token; state-change rendering destroys transient display objects and clears entity references; billboard crop frames are passed from the update-time presentation clock; explicit display depth keeps near billboards above far ones.
+- Checks: baseline and post-change `npm run typecheck`, `npm run lint`, `npm test` (35 tests), and `npm run build` passed. `npm run test:browser` exited 0 with its documented manual-browser notice. Structural scan found explicit `Phaser.WEBGL`, Mesh2D production surfaces, no `fillPoints`, no `Phaser.CANVAS`, no `performance.now()`, no Phaser imports in simulation/renderer-neutral code, and no `Math.random()` in authoritative code.
+- Browser: fresh Chromium at `http://127.0.0.1:5174/`, device scale 1, seed 7391. At 1280×720, straight corridor reported WebGL and visible depth 4; wall/door/opening fixtures reported correct front termination; fresh Begin + ArrowUp showed the Warden at depth 1; paced Space combat ended with `encounter:null`, `entities:[]`, and loot; Escape and reduced-motion reported paused mode, checked reduced motion, and 1 ms transition duration. At 1600×900 and 1920×1080, the internal canvas remained 1280×720 with WebGL and corridor depth 4. Reviewed sessions had no application console errors.
+- Evidence: `harness/build/phase-15-visual-pipeline-acceptance.md`, `harness/fidelity/phase-15-visual-pipeline.json`, and browser captures named in the acceptance record.
+
