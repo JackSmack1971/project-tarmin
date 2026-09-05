@@ -1,7 +1,11 @@
 import { ITEM_DEFINITIONS, itemById, type ItemDefinition } from "./items";
 import { MONSTER_DEFINITIONS, type MonsterDefinition } from "./monsters";
 export interface LootEntry { readonly itemId: string; readonly weight: number; readonly quantity?: number; }
-export const LOOT_TABLES: Readonly<Record<string, readonly LootEntry[]>> = { "warden-cache": [{ itemId: "star-forged-seal", weight: 1 }], "mireling-cache": [{ itemId: "star-forged-seal", weight: 1 }, { itemId: "moss-tonic", weight: 2 }] };
+export const LOOT_TABLES: Readonly<Record<string, readonly LootEntry[]>> = {
+  "warden-cache": [{ itemId: "star-forged-seal", weight: 1 }],
+  "mireling-cache": [{ itemId: "moss-tonic", weight: 2 }, { itemId: "rimeglass-knife", weight: 1 }],
+  "scavenger-cache": [{ itemId: "ashen-mail", weight: 1 }, { itemId: "moss-tonic", weight: 2 }, { itemId: "rimeglass-knife", weight: 1 }]
+};
 export interface ContentRegistry { readonly items: readonly ItemDefinition[]; readonly monsters: readonly MonsterDefinition[]; readonly lootTables: Readonly<Record<string, readonly LootEntry[]>>; }
 export const CONTENT: ContentRegistry = { items: ITEM_DEFINITIONS, monsters: MONSTER_DEFINITIONS, lootTables: LOOT_TABLES };
 export function validateContent(registry: ContentRegistry = CONTENT): readonly string[] {

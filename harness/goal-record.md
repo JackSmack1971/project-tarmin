@@ -2,74 +2,85 @@
 
 ## Goal and observable outcome
 
-Replace fixture-style encounter spawning with a persistent authoritative dungeon-world model. Monster instances retain stable identity, definition, position, health, and defeated state; world items retain their dungeon location until collected. Movement and combat query that world state, so defeated monsters never respawn and surviving monsters retain health across retreat/re-entry.
+Populate the completed one-floor MVP with the minimum encounter and loot
+variety needed for meaningful replayability: integrate the Glass Mireling,
+retain the Ashbound Warden, add only justified MVP content, and keep the full
+objective/exit/victory route completable.
 
 ## Status
 
-Complete — implementation, verification, PR #19 merge, and merged-main verification are complete.
-
-## Owner / resumption note
-
-Continue from the current `main` worktree. Read this record, `harness/progress-log.md`, and `harness/build/persistent-dungeon-world-acceptance.md` before each iteration.
+Active — baseline reconciled; implementation and delivery remain.
 
 ## Constraints and authorization
 
-Repository-local implementation, tests, documentation, browser verification, feature branch, commit, PR creation, and merge to `main` are explicitly in scope. Preserve TypeScript, Vite, Phaser, framework-independent deterministic serializable simulation, integer cardinal grid movement, turn-based combat, inventory behavior, and current rendering/input architecture. External delivery actions must be verified at each boundary.
+Preserve the TypeScript/Vite/Phaser architecture, pure deterministic
+simulation, canonical serializable state, integer cardinal movement,
+turn-based combat, persistent world instances, spatial ground-item persistence,
+and non-respawning defeated enemies. The user explicitly authorizes local
+implementation, tests, documentation, focused branch/commit, PR to `main`,
+merge after required checks, and merged-main verification.
 
 ## Non-goals
 
-No multi-floor progression, procedural dungeon generation, save migrations, final art/audio, sophisticated roaming AI, or large content expansion.
+No roaming/generalized AI, procedural generation, multi-floor progression,
+saves, final asset replacement, elaborate audio, huge bestiary, or final
+balance work.
 
-## Acceptance criteria and required evidence
+## Acceptance criteria
 
-See `harness/build/persistent-dungeon-world-acceptance.md`. All applicable rows must pass, including focused persistence tests, existing simulation regressions, project checks, browser verification required by `docs/TESTING_STRATEGY.md`, current documentation, and verified merged-main state.
-
-## Stopping conditions
-
-All acceptance rows have independent evidence; no introduced or inconclusive failure remains; documentation and build log are current; the focused branch has been committed, PR'd to `main`, merged after required checks, and the merged result is verified on local `main`.
+See `harness/build/mvp-content-population-acceptance.md`. The matrix covers
+registry validity, roughly three monster types, 6–8 live monster instances,
+6–8 useful item definitions across all requested roles, deterministic loot and
+RNG, stable persistent instances, spatial loot persistence, no respawn,
+completable objective route, focused tests, project checks, Chromium review,
+current docs/build log, and verified merged-main delivery.
 
 ## State location and tracking decision
 
-The repository's existing tracked `harness/goal-record.md`, `harness/progress-log.md`, and `harness/build-log.md` are the durable state convention. No new private state or credentials are stored.
+The existing tracked `harness/goal-record.md`, `harness/progress-log.md`, and
+`harness/build-log.md` are the durable state convention. No credentials or
+private payloads are stored.
 
-## Baseline
+## Baseline facts
 
-- Repository revision: clean `main`, matching `origin/main` before this goal.
-- Validation: baseline and merged-main command results and exact browser observations are recorded in the progress log and build log.
-- Pre-existing failures: routed docs `docs/GAME_DESIGN.md`, `docs/CONTENT_MODEL.md`, and `docs/DETERMINISM_AND_SAVE.md` are absent; `npm run test:browser` is a documented manual-browser status notice.
+- Clean local `main` at the current merged MVP state.
+- Registry contains Ashbound Warden, Glass Mireling, four item definitions,
+  and two loot tables; only the Warden is instantiated in `createInitialState`.
+- Existing world state, deterministic RNG, objective, exit, and persistent
+  monster/item mechanics are authoritative and must be extended minimally.
+- Renderer currently projects only the active encounter and has a Warden-only
+  sprite fallback; browser verification must establish the appropriate live
+  presentation path for the populated floor.
+- `docs/GAME_DESIGN.md` is absent despite the root routing note; do not invent
+  a replacement unless the implementation needs a durable gameplay rule that
+  belongs there. Existing gameplay/content docs remain authoritative.
 
-## Facts
+## Open uncertainties
 
-- `GameState.encounter` is the only monster runtime state and is synthesized by coordinate-specific `encounterAt()`.
-- `GameState.loot` is an unlocated string list; `ItemInstance.position` exists but initial/world loot does not use it.
-- `MainScene` projects only the active encounter, so presentation can continue consuming a compatible authoritative state shape.
-
-## Assumptions
-
-- The existing one-floor fixture map remains the content scope; the guarded tile becomes one explicit world monster instance.
-- Existing `encounter` remains as the active-combat projection for compatibility with current rendering/input code, while the persistent world collection is authoritative.
-
-## Unknowns ranked by consequence
-
-1. Exact state shape and transition synchronization between persistent monsters and active encounter — high consequence; resolve through focused simulation tests and serializable round-trip checks.
-2. Loot representation needed to preserve current pickup/drop behavior while adding location — medium consequence; resolve through focused state-transition tests.
-3. Browser-facing changes required by the compatible state projection — low consequence; resolve with a fresh Chromium flow after simulation work.
+1. Exact reachable coordinates and encounter ordering for 6–8 instances while
+   preserving the existing exit route and win condition.
+2. Minimal additional item definitions and deterministic loot distribution that
+   exercise weapon/defense/consumable/treasure roles without balance claims.
+3. Smallest renderer/content presentation change needed to show Mirelings and
+   ground loot without making presentation authoritative.
 
 ## Evidence index
 
-- `harness/build/persistent-dungeon-world-acceptance.md`
+- `harness/build/mvp-content-population-acceptance.md`
 - `harness/progress-log.md`
 - `harness/build-log.md`
-- relevant source and test files under `src/sim/`, `src/content/`, and `src/game/`
+- `src/content/registry.ts`, `src/content/monsters.ts`, `src/content/items.ts`
+- `src/sim/state.ts` and focused simulation/content tests
+- fresh Chromium captures and runtime state observations
 
-## Open blockers
+## Stopping conditions
 
-None. PR #19 merged successfully; no remote checks are configured, and all required local checks passed.
+Every applicable acceptance row passes independently; no introduced or
+inconclusive failure remains; docs and build log are current; the focused
+branch is committed, PR'd, merged after required checks, and local `main`
+matches the merged remote result.
 
-## Last verified iteration
+## Next action
 
-Merged-main verification at `91ace85`: all required commands passed, and fresh Chromium confirmed encounter, defeat, loot, and no-respawn revisit behavior.
-
-## Next action and why it is highest value
-
-No next action. The acceptance matrix is fully passed and local `main` matches `origin/main` at the merged result.
+Run the recorded baseline checks, then choose the smallest content/world
+population design supported by reachable-map and renderer evidence.

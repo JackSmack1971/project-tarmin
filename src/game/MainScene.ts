@@ -8,6 +8,7 @@ import { PERSPECTIVE_TRANSITION_MS, projectDungeon } from "../renderer/perspecti
 import { billboardFrameAt, projectEntities, type EntityBillboard } from "../renderer/entities/entityProjection";
 import { meshVertices, QUAD_INDICES } from "../renderer/meshGeometry";
 import { itemById } from "../content/items";
+import { monsterById } from "../content/monsters";
 import { DUNGEON_SURFACE_ATLAS } from "../renderer/assets/dungeonAtlas";
 
 function screenFrame(frame: PortalFrame, viewport: { left: number; top: number; width: number; height: number }): PortalFrame {
@@ -34,6 +35,8 @@ export class MainScene extends Phaser.Scene {
   preload(): void {
     this.load.svg("dungeon-surfaces", DUNGEON_SURFACE_ATLAS.source);
     this.load.image("ashbound-warden", "/assets/entities/ashbound-warden.svg");
+    this.load.image("glass-mireling", "/assets/entities/glass-mireling.svg");
+    this.load.image("gloam-scavenger", "/assets/entities/gloam-scavenger.svg");
   }
 
   update(time: number): void {
@@ -199,7 +202,8 @@ export class MainScene extends Phaser.Scene {
     const viewport = portalViewport(width, height);
     const scene = projectDungeon(this.state);
     const primitives = scene.primitives;
-    const entities = projectEntities(this.state, this.state.encounter ? [{ id: this.state.encounter.id, definitionId: this.state.encounter.definitionId, presentationId: "warden", kind: "monster", position: this.state.encounter.position }] : []);
+    const encounterDefinition = this.state.encounter ? monsterById(this.state.encounter.definitionId) : undefined;
+    const entities = projectEntities(this.state, this.state.encounter && encounterDefinition ? [{ id: this.state.encounter.id, definitionId: this.state.encounter.definitionId, presentationId: encounterDefinition.presentationId, kind: "monster", position: this.state.encounter.position }] : []);
     Object.defineProperty(window, "__TARMIN_RENDERER__", {
       configurable: true,
       get: () => Object.freeze({
@@ -262,7 +266,7 @@ export class MainScene extends Phaser.Scene {
       const right = Math.max(...points.map((point) => point.x));
       const top = Math.min(...points.map((point) => point.y));
       const bottom = Math.max(...points.map((point) => point.y));
-      const sprite = this.add.image((left + right) / 2, (top + bottom) / 2, entity.presentationId === "warden" ? "ashbound-warden" : "ashbound-warden");
+      const sprite = this.add.image((left + right) / 2, (top + bottom) / 2, entity.presentationId === "warden" ? "ashbound-warden" : entity.presentationId === "mireling" ? "glass-mireling" : "gloam-scavenger");
       sprite.setCrop(frame * 32, 0, 32, 48);
       // Keep near billboards above far billboards independent of display-list order.
       sprite.setDisplaySize(right - left, bottom - top).setDepth(100 + PORTAL_FRAMES.length - entity.depth);

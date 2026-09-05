@@ -4,7 +4,9 @@ import { CONTENT, validateContent } from "./registry";
 describe("content registry", () => {
   it("contains representative, valid content", () => {
     expect(validateContent(CONTENT)).toEqual([]);
-    expect(CONTENT.items.map((item) => item.category)).toEqual(["weapon", "defense", "consumable", "treasure"]);
+    expect(CONTENT.monsters.map((monster) => monster.id)).toEqual(["ashbound-warden", "glass-mireling", "gloam-scavenger"]);
+    expect(CONTENT.items).toHaveLength(6);
+    expect(new Set(CONTENT.items.map((item) => item.category))).toEqual(new Set(["weapon", "defense", "consumable", "treasure"]));
   });
   it("detects duplicate IDs, missing references, ranges, and malformed loot", () => {
     const invalid = { ...CONTENT, items: [...CONTENT.items, { ...CONTENT.items[0] }], monsters: [{ ...CONTENT.monsters[0], lootTableId: "missing", vitality: 0 }], lootTables: { bad: [{ itemId: "missing", weight: 0 }] } };

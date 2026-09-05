@@ -23,6 +23,12 @@ The Warden's deterministic loot is the Star-Forged Seal. Objective possession
 and completion are state-backed, so reaching the exit without the seal emits a
 locked-exit event and remains playable.
 
+The MVP population is fixed content rather than an AI or procedural system:
+seven world monster records reference three registry definitions, and six item
+definitions cover weapon, defense, consumable, and treasure roles. The east
+branch is part of the fixed map so the additional encounters are reachable;
+the renderer still observes only the active encounter projection.
+
 The camera presentation pass is also non-authoritative. `MainScene` owns only
 cosmetic torch, fog, and WebGL filter objects after consuming the renderer-neutral
 scene and entity projections. Camera filters may grade or darken pixels, but

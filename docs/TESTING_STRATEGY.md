@@ -66,3 +66,13 @@ Warden yields the Star-Forged Seal, pickup records objective possession, the
 fixed exit at `(2,4)` stays non-victorious without it, and successful entry
 records objective completion and victory. The browser route is: Begin Descent,
 ArrowUp, four Space attacks, P, then Right/Up/Up/Left/Up/Right/Up.
+
+## MVP content population verification
+
+Content tests assert three monster definitions, seven stable world instances,
+six item definitions spanning all four roles, valid loot references, and
+deterministic weighted loot. Simulation tests exercise the fixed east branch,
+Mireling encounter identity, persistence, and same-seed command equality. The
+Chromium review additionally traverses the branch, shows Mireling and Scavenger
+billboards, defeats at least one added encounter, picks up its ground loot,
+revisits its cell, and then completes the existing Warden/Seal/exit route.

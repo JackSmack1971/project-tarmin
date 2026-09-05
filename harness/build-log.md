@@ -251,3 +251,29 @@
   `mode=active`, `runStatus=playing`, turn 0, health 10, and no objective.
   Screenshots: `harness/evidence/run-objective-locked.png` and
   `harness/evidence/run-objective-victorious.png`.
+
+## MVP content population
+
+- Branch: `feature/mvp-content-population`; baseline `main` was clean at
+  `f2465e2`.
+- Change: integrated the existing Glass Mireling into live content, added the
+  original Gloam Scavenger definition, seven fixed persistent monster records,
+  six useful item definitions across four roles, weighted seeded loot tables,
+  and a fixed two-cell east branch so added encounters are reachable. Warden
+  Seal loot and the existing `(2,4)` objective route remain unchanged.
+- Focused verification: content/world tests passed; the complete suite passed
+  50 tests. `npm run typecheck`, `npm run lint`, `npm run test:browser`,
+  `npm run build`, and `git diff --check` passed. `test:browser` emitted its
+  documented no-automated-suite notice. Structural scans found no
+  `Math.random()` or Phaser imports in `src/sim`/`src/renderer`.
+- Browser: fresh Chromium at `http://127.0.0.1:5174/`, 1280×720, WebGL,
+  zero console errors/warnings. The populated east branch showed
+  `monster-mireling-3` and `monster-scavenger-2`; Mireling defeat produced
+  world loot at `(4,3)`, pickup moved it to the ring, and revisit showed no
+  encounter/entity. Fresh Warden route defeated the guardian, picked up the
+  Seal, and reached `(2,4)` with `runStatus=victorious` and
+  `objective.complete=true`.
+- Evidence: `harness/evidence/mvp-population-mireling.png`,
+  `mvp-population-scavenger.png`, and `mvp-population-victorious.png`.
+- Delivery: local acceptance rows CP-01 through CP-10 passed. CP-11 and CP-12
+  remain pending until focused branch delivery and merged-main verification.

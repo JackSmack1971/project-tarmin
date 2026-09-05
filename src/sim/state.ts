@@ -36,10 +36,29 @@ function updateMonster(state: GameState, id: string, patch: Partial<MonsterInsta
   return state.monsters.map((monster) => monster.id === id ? { ...monster, ...patch } : monster);
 }
 
+function chooseLoot(table: readonly { readonly itemId: string; readonly weight: number }[], rollValue: number): string {
+  const totalWeight = table.reduce((total, entry) => total + entry.weight, 0);
+  let cursor = (rollValue - 1) % totalWeight;
+  for (const entry of table) {
+    if (cursor < entry.weight) return entry.itemId;
+    cursor -= entry.weight;
+  }
+  return table[table.length - 1].itemId;
+}
+
 export function createInitialState(seed = 7391): GameState {
   assertValidContent();
-  const walls = ["0,0","1,0","2,0","3,0","4,0","5,0","6,0","0,1","6,1","0,2","2,2","3,2","6,2","0,3","4,3","6,3","0,4","6,4","0,5","1,5","2,5","4,5","5,5","6,5","0,6","1,6","2,6","3,6","4,6","5,6","6,6","3,1","3,3","3,4"];
-  return { rulesVersion: 3, seed, rngState: seed >>> 0 || 1, runStatus: "playing", floor: 1, turn: 0, player: { position: { x: 1, y: 1 }, facing: "east" }, walls, doors: [], playerHealth: 10, playerMaxHealth: 10, monsters: [{ id: "monster-warden-1", definitionId: "ashbound-warden", position: { x: 2, y: 1 }, health: 5, defeated: false }], encounter: null, items: [item("item-ember-pike-1", "ember-pike", "ring"), item("item-moss-tonic-1", "moss-tonic", "ring")], leftHand: "item-ember-pike-1", rightHand: null, ring: ["item-ember-pike-1", "item-moss-tonic-1"], selectedRingIndex: 0, loot: [], objective: { itemDefinitionId: OBJECTIVE_ITEM_ID, exit: EXIT_POSITION, acquired: false, complete: false } };
+  const walls = ["0,0","1,0","2,0","3,0","4,0","5,0","6,0","0,1","6,1","0,2","2,2","3,2","6,2","0,3","6,3","0,4","6,4","0,5","1,5","2,5","4,5","5,5","6,5","0,6","1,6","2,6","3,6","4,6","5,6","6,6","3,1","3,4"];
+  const monsters: readonly MonsterInstance[] = [
+    { id: "monster-warden-1", definitionId: "ashbound-warden", position: { x: 2, y: 1 }, health: 5, defeated: false },
+    { id: "monster-mireling-1", definitionId: "glass-mireling", position: { x: 4, y: 1 }, health: 4, defeated: false },
+    { id: "monster-mireling-2", definitionId: "glass-mireling", position: { x: 5, y: 2 }, health: 4, defeated: false },
+    { id: "monster-mireling-3", definitionId: "glass-mireling", position: { x: 5, y: 3 }, health: 4, defeated: false },
+    { id: "monster-scavenger-1", definitionId: "gloam-scavenger", position: { x: 4, y: 4 }, health: 3, defeated: false },
+    { id: "monster-scavenger-2", definitionId: "gloam-scavenger", position: { x: 5, y: 4 }, health: 3, defeated: false },
+    { id: "monster-scavenger-3", definitionId: "gloam-scavenger", position: { x: 3, y: 5 }, health: 3, defeated: false }
+  ];
+  return { rulesVersion: 3, seed, rngState: seed >>> 0 || 1, runStatus: "playing", floor: 1, turn: 0, player: { position: { x: 1, y: 1 }, facing: "east" }, walls, doors: [], playerHealth: 10, playerMaxHealth: 10, monsters, encounter: null, items: [item("item-ember-pike-1", "ember-pike", "ring"), item("item-moss-tonic-1", "moss-tonic", "ring")], leftHand: "item-ember-pike-1", rightHand: null, ring: ["item-ember-pike-1", "item-moss-tonic-1"], selectedRingIndex: 0, loot: [], objective: { itemDefinitionId: OBJECTIVE_ITEM_ID, exit: EXIT_POSITION, acquired: false, complete: false } };
 }
 
 export function restartRun(seed: number): GameState { return createInitialState(seed); }
@@ -68,9 +87,10 @@ function combat(state: GameState, hand: HandSlot, events: GameEvent[]): GameStat
   events.push({ type: "hit", target: target.id, damage: damage.value });
   if (health <= 0) {
     events.push({ type: "monsterDefeated", monsterId: target.id });
-    const lootRoll = roll(rng, 1, 3); rng = lootRoll.rng;
     const table = LOOT_TABLES[monsterById(target.definitionId)!.lootTableId];
-    const lootEntry = table[lootRoll.value % table.length];
+    const lootRoll = roll(rng, 1, table.reduce((total, entry) => total + entry.weight, 0)); rng = lootRoll.rng;
+    const lootItemId = chooseLoot(table, lootRoll.value);
+    const lootEntry = table.find((entry) => entry.itemId === lootItemId);
     const defeated = updateMonster(state, target.id, { health: 0, defeated: true });
     if (lootEntry) {
       const lootId = `item-loot-${state.turn + 1}`;
