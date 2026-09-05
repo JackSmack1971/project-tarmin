@@ -6,7 +6,7 @@ Complete and harden the Phase 15 visual pipeline so the merged browser game cons
 
 ## Current phase
 
-Implementation and browser evidence complete locally; remote delivery pending.
+Complete — local checks, Chromium evidence, PR #17, and merged-main verification are complete.
 
 ## Constraints and non-goals
 
@@ -24,7 +24,7 @@ Preserve TypeScript, Vite, Phaser 4/WebGL, framework-independent deterministic s
 | P15-6 | Pause and reduced-motion states remain readable and presentation-only. | Chromium state inspection and pause capture | passed locally |
 | P15-7 | Presentation timing cannot alter authoritative state. | projection tests and source inspection | passed locally |
 | P15-8 | Required checks and durable documentation are current. | command results and docs/build log | passed locally |
-| P15-9 | Feature branch, PR to `main`, passing checks, merge, and merged-main verification. | Git/remote inspection after delivery | pending |
+| P15-9 | Feature branch, PR to `main`, passing checks, merge, and merged-main verification. | PR #17 and local `main` at `b9bb4ef` | passed |
 
 ## Authorized scope
 
@@ -32,7 +32,7 @@ Repository-local edits, tests, browser verification, feature branch, commit, PR 
 
 ## Stopping condition
 
-Stop only after P15-1 through P15-8 have independent evidence and P15-9 is verified against the merged `main` tree.
+All criteria are independently evidenced; the merged `main` tree is the verified result.
 
 ## Evidence index
 

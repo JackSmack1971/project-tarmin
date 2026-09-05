@@ -45,3 +45,10 @@
 - Observation: baseline and post-change local checks remain green; fresh Chromium confirms WebGL, depth/door/opening fixtures, encounter presence and defeat disappearance, pause/reduced-motion behavior, and 1280/1600/1920 responsive scaling.
 - Verification: fidelity ledger validator passed; typecheck, lint, 35 tests, test:browser status, build, diff check, and structural scans passed. Browser evidence is recorded in `harness/build/phase-15-visual-pipeline-acceptance.md`.
 - Decision: local acceptance rows P15-1 through P15-8 are passed. Keep P15-9 pending until feature branch commit, PR, merge, and merged-main verification.
+
+## Phase 15 iteration 2 — delivery closeout
+
+- Action: committed the implementation as `6f77620`, pushed `feature/phase-15-visual-pipeline`, opened PR #17 targeting `main`, squash-merged it, and fast-forwarded local `main`.
+- Observation: PR #17 is merged at `b9bb4ef7f13ba797ec0ac42f2cfa4ef7ea3b9e41`; local `main` and `origin/main` match and the worktree is clean. GitHub reports no configured remote checks.
+- Verification: merged-main contains all Phase 15 code, docs, acceptance, and fidelity artifacts. P15-9 is passed.
+- Decision: goal is complete after the closeout record is merged.
