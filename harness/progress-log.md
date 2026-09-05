@@ -1,5 +1,13 @@
 # Progress log
 
+## Entity-layer iteration 1 — baseline and acceptance reconciliation
+
+- Action: read the pasted objective, inspected `main`, reconciled the stale goal record, and defined E1–E8 acceptance rows.
+- Observation: textured portal rendering and canonical encounter state exist; active encounter presentation is a HUD ellipse with no perspective-aware entity projection, billboard contract, or entity disappearance rendering path.
+- Verification: `git status --short --branch` is clean on `main`; current tests/docs confirm the prerequisite renderer is present. Missing `docs/GAME_DESIGN.md` and `docs/INPUT_AND_UI.md` are recorded as repository gaps; gameplay context is currently in `harness/context/phase-05-combat-inventory-content-context.md`.
+- Decision: implement a pure renderer-neutral entity projection contract and a minimal Phaser billboard adapter using an original inline low-resolution sprite, then verify before any remote delivery action.
+- Next uncertainty: exact depth/occlusion representation and Phaser-compatible billboard presentation seam.
+
 ## Iteration 1
 
 - Action: scaffolded the first vertical slice and its acceptance matrix.

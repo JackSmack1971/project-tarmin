@@ -5,6 +5,7 @@ import { DUNGEON_PALETTE, paletteHex, shadeColor } from "./palette";
 import { frameToPixels, intervalQuads, PORTAL_FRAMES, type PortalFrame, type PortalQuad } from "./portalProjection";
 import { createRenderFixture, renderFixtureFromLocation } from "./renderFixtures";
 import { PERSPECTIVE_TRANSITION_MS, projectDungeon } from "../renderer/perspective/perspectiveRenderer";
+import { billboardFrameAt, projectEntities, type EntityBillboard } from "../renderer/entities/entityProjection";
 import { meshVertices, QUAD_INDICES } from "../renderer/meshGeometry";
 import { itemById } from "../content/items";
 import { DUNGEON_SURFACE_ATLAS } from "../renderer/assets/dungeonAtlas";
@@ -25,11 +26,18 @@ export class MainScene extends Phaser.Scene {
   private reducedMotion = false;
   private feedback = "A corridor waits beyond the torchlight.";
   private inputController!: InputController;
+  private readonly entitySprites = new Map<string, Phaser.GameObjects.Sprite>();
 
   constructor() { super("main"); }
 
   preload(): void {
     this.load.svg("dungeon-surfaces", DUNGEON_SURFACE_ATLAS.source);
+    this.load.spritesheet("ashbound-warden", "/assets/entities/ashbound-warden.svg", { frameWidth: 32, frameHeight: 48 });
+  }
+
+  update(time: number): void {
+    const frame = billboardFrameAt(time);
+    this.entitySprites.forEach((sprite) => sprite.setFrame(frame));
   }
 
   create(): void {
@@ -133,6 +141,7 @@ export class MainScene extends Phaser.Scene {
     const viewport = portalViewport(width, height);
     const scene = projectDungeon(this.state);
     const primitives = scene.primitives;
+    const entities = projectEntities(this.state, this.state.encounter ? [{ id: this.state.encounter.id, definitionId: this.state.encounter.definitionId, presentationId: "warden", kind: "monster", position: this.state.encounter.position }] : []);
     Object.defineProperty(window, "__TARMIN_RENDERER__", {
       configurable: true,
       get: () => Object.freeze({
@@ -153,7 +162,8 @@ export class MainScene extends Phaser.Scene {
         rightHand: this.state.rightHand,
         ring: this.state.ring,
         selectedRingIndex: this.state.selectedRingIndex,
-        loot: this.state.loot
+        loot: this.state.loot,
+        entities: entities.map((entity) => ({ id: entity.id, definitionId: entity.definitionId, depth: entity.depth, lightLevel: entity.lightLevel }))
       })
     });
 
@@ -172,6 +182,8 @@ export class MainScene extends Phaser.Scene {
       if (primitive.geometry.surface === "front" || primitive.kind === "closed-door") { world.lineStyle(2, primitive.kind === "closed-door" ? DUNGEON_PALETTE.door : DUNGEON_PALETTE.boundary, 0.9); world.strokePoints(points.map(({ x, y }) => new Phaser.Math.Vector2(x, y)), true); }
     }
 
+    this.renderEntities(entities, viewport);
+
     const debugDepths = [...new Set(primitives.map((primitive) => primitive.geometry.depth))];
     this.drawPerspectiveDebug(world, viewport, debugDepths.map((distance) => ({ distance, blocked: primitives.some((primitive) => primitive.geometry.depth === distance && primitive.geometry.surface === "front") })));
     if (this.perspectiveDebug) this.addDebugLabel(`POS ${this.state.player.position.x},${this.state.player.position.y}  FACING ${this.state.player.facing.toUpperCase()}  PRIMITIVES ${primitives.length}`, viewport.left + 8, viewport.top + viewport.height - 24);
@@ -181,8 +193,6 @@ export class MainScene extends Phaser.Scene {
     this.add.text(width - 64, 27, `FLOOR ${this.state.floor}  •  TURN ${this.state.turn}  •  ${this.state.player.facing.toUpperCase()}`, { color: paletteHex(DUNGEON_PALETTE.interfaceMuted), fontFamily: "monospace", fontSize: "14px" }).setOrigin(1, 0);
     const combat = this.state.encounter;
     if (combat) {
-      this.add.ellipse(width / 2, height / 2 - 40, 126, 190, DUNGEON_PALETTE.hostileEntity, 0.85).setStrokeStyle(4, DUNGEON_PALETTE.warningDamage).setDepth(4);
-      this.add.text(width / 2, height / 2 - 56, "WARDEN", { color: paletteHex(DUNGEON_PALETTE.backgroundVoid), fontFamily: "monospace", fontSize: "16px" }).setOrigin(0.5).setDepth(5);
       this.add.rectangle(width / 2, height - 76, 500, 72, DUNGEON_PALETTE.passageDarkness, 0.98).setStrokeStyle(2, DUNGEON_PALETTE.warningDamage);
       this.add.text(width / 2, height - 101, `${combat.name}  ${combat.health}/${combat.maxHealth} HP`, { color: paletteHex(DUNGEON_PALETTE.hostileEntity), fontFamily: "monospace", fontSize: "17px" }).setOrigin(0.5);
       this.add.text(width / 2, height - 75, `YOU  ${this.state.playerHealth}/${this.state.playerMaxHealth} HP    •    SPACE LEFT STRIKE · F RIGHT STRIKE · X RETREAT`, { color: paletteHex(DUNGEON_PALETTE.playerStatus), fontFamily: "monospace", fontSize: "14px" }).setOrigin(0.5);
@@ -191,6 +201,21 @@ export class MainScene extends Phaser.Scene {
     }
     this.add.text(width - 64, height - 85, combat ? "The warden raises its embered blade." : this.feedback, { color: paletteHex(combat ? DUNGEON_PALETTE.warningDamage : DUNGEON_PALETTE.narrativeText), fontFamily: "monospace", fontSize: "14px" }).setOrigin(1, 0);
     window.dispatchEvent(new CustomEvent("tarmin-state", { detail: { floor: this.state.floor, turn: this.state.turn, health: this.state.playerHealth, seed: this.state.seed, feedback: this.feedback, leftHand: this.itemName(this.state.leftHand), rightHand: this.itemName(this.state.rightHand), ring: this.state.ring.map((id) => this.itemName(id)), selectedRingIndex: this.state.selectedRingIndex } }));
+  }
+
+  private renderEntities(entities: readonly EntityBillboard[], viewport: { left: number; top: number; width: number; height: number }): void {
+    this.entitySprites.clear();
+    for (const entity of entities) {
+      const points = entity.quad.map((point) => ({ x: viewport.left + point.x * viewport.width, y: viewport.top + point.y * viewport.height }));
+      const left = Math.min(...points.map((point) => point.x));
+      const right = Math.max(...points.map((point) => point.x));
+      const top = Math.min(...points.map((point) => point.y));
+      const bottom = Math.max(...points.map((point) => point.y));
+      const sprite = this.add.sprite((left + right) / 2, (top + bottom) / 2, entity.presentationId === "warden" ? "ashbound-warden" : "ashbound-warden", billboardFrameAt(performance.now()));
+      sprite.setDisplaySize(right - left, bottom - top).setDepth(3);
+      sprite.setAlpha(entity.lightLevel);
+      this.entitySprites.set(entity.id, sprite);
+    }
   }
 
   private itemName(instanceId: string | null): string | null {
