@@ -6,7 +6,7 @@ Add a perspective-aware billboard entity layer so state-backed dungeon entities 
 
 ## Current phase
 
-Entity projection and browser integration.
+Complete — entity projection, browser integration, and PR delivery verified.
 
 ## Constraints
 
@@ -35,7 +35,7 @@ Local repository edits, tests, browser verification, feature branch creation, co
 
 ## Stopping conditions
 
-Stop only when every acceptance row has independent evidence, required docs/build log are current, and the verified merged result is present on `main`. Keep the goal active if browser, remote, or merge evidence is missing.
+Stop only when every acceptance row has independent evidence, required docs/build log are current, and the verified merged result is present on `main`. All rows are now evidenced by the phase-10 acceptance record and PR #9 merge verification.
 
 ## Evidence index
 

@@ -145,3 +145,5 @@
 - Browser: standalone Chromium at `http://127.0.0.1:5176/`, 1280×720, seed `42`; Begin Descent then ArrowUp produced `encounter.id=monster-warden-1`, `entities=[{definitionId:ashbound-warden,depth:1,lightLevel:1}]`, and a visible pixel-art Warden billboard. Three Space attacks deterministically defeated it and produced `encounter:null`, `entities:[]`, and loot `item-loot-4`; ArrowRight then changed facing to south with no entity. Encounter and defeated captures: `entity-encounter-1280.png`, `entity-defeated-1280.png`. Page/console errors: 0.
 - Documentation: updated `docs/RENDERING_SPEC.md`, `docs/ART_DIRECTION.md`, `docs/ARCHITECTURE.md`, `harness/build/entity-billboard-acceptance.md`, and added `harness/context/phase-10-entity-billboards-context.md`.
 
+- Delivery: committed as `7aa916d` on `feature/entity-billboards`, pushed, opened PR #9 targeting `main`, and squash-merged. GitHub reports merge commit `9413b59c1b3ff6391ca5bc3128ca4d075125dccc`; local `main` and `origin/main` both resolve to that SHA. No GitHub Actions workflows or required remote checks are configured.
+
