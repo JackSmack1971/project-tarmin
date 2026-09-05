@@ -88,3 +88,29 @@
 - Responsive browser sizing: Chromium viewport set to 1280×720, 1600×900, and 1920×1080; the shell remained usable at each representative size.
 - Checks: `npm run typecheck` passed; `npm run lint` passed; `npm test -- --run` passed (19 tests); `npm run test:browser` completed its repository-provided manual-phase notice; `npm run build` passed with the existing Phaser chunk-size warning. Static scans found no `Math.random()` in `src/sim` or `src/renderer`, and no Phaser imports there. Git status/diff remains unavailable because this workspace has no `.git` directory.
 
+## Phase 05 combat, inventory, and content
+
+- Change: added typed item/monster definitions, deterministic weighted loot tables, registry validation, serializable xorshift32 state, runtime item IDs, monster IDs, left/right equipment references, bounded ring inventory, consumable use, pickup/drop, and authoritative combat events.
+- Tests: `npm test -- --run` passed (25 tests); `npm run typecheck` and `npm run lint` passed. New tests cover content duplicates/references/ranges/loot shape, hand attacks, retaliation, invalid actions, ring wrap/use, and JSON encounter continuation.
+- Browser: local Chromium flow at `http://127.0.0.1:5174/?v=5` started the seeded run, entered the Ashbound Warden after `ArrowUp`, resolved deterministic combat after waiting for the movement transition, reduced vitality to 9, defeated the monster, exposed deterministic loot `item-loot-5`, picked it up with P, and rotated the ring with E. Read-only inspection showed integer coordinates, null encounter, ring length 3, empty loot, and 0 console errors. Encounter silhouette and combat HUD were visible in the running canvas.
+- Build: `npm run build` passed with the pre-existing Phaser chunk-size warning. `npm run test:browser` remains a repository-provided manual notice rather than an automated suite. Git verification unavailable because no `.git` directory exists.
+
+## Harness learning
+
+- Evidence: `npm run test:browser` retained stale Phase 1 wording across later
+  phases and was repeatedly accompanied by separately performed Chromium checks.
+- Change: added `docs/TESTING_STRATEGY.md` with the browser-verification contract
+  and changed the script message to state explicitly that it is not automated.
+- Verification: `npm run test:browser`, a package-script assertion, and
+  `git diff --check` passed. Existing application tests/typecheck/build had
+  already passed before this docs/script-only change.
+
+## Phaser 4.2.1 WebGL migration
+
+- Scope: migrate the presentation foundation from Phaser 3.90.0 forced Canvas to Phaser 4.2.1 with explicit WebGL, without changing the authoritative simulation model or pseudo-3D portal projection.
+- Change: pinned `phaser` and the lockfile to `4.2.1`; set `src/main.ts` to `Phaser.WEBGL`; adapted Phaser 4 graphics point inputs to `Phaser.Math.Vector2` at the scene boundary. No `src/sim/` imports or rules changed for the migration.
+- Documentation: updated `docs/ARCHITECTURE.md`, added `docs/RENDERING_SPEC.md`, and recorded the approved migration in `docs/DECISIONS.md`.
+- Baseline: before migration, typecheck, lint, and 26 tests passed on the existing Phaser 3 worktree.
+- Checks: `npm run typecheck` passed; `npm run lint` passed; `npm test` passed (7 files, 26 tests); `npm run build` passed with the existing Vite chunk-size warning; `npm run test:browser` passed as the documented manual-phase notice; structural scan confirmed no Phaser import or `Math.random()` in `src/sim/` and no `Phaser.CANVAS` production config.
+- Browser: isolated Chromium run against `http://127.0.0.1:5173/` at 1280×720 confirmed the canvas context is `webgl` (1280×720), menu start works with seed `7391`, ArrowUp enters the Ashbound Warden encounter with integer position `(1,1)`, Space combat input is accepted, Escape opens pause, Resume restores active mode, Reduced Motion reports transition duration `1`, and console/page errors are empty.
+
