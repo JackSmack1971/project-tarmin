@@ -6,7 +6,7 @@ Replace fixture-style encounter spawning with a persistent authoritative dungeon
 
 ## Status
 
-Active — implementation and delivery remain incomplete.
+Complete — implementation, verification, PR #19 merge, and merged-main verification are complete.
 
 ## Owner / resumption note
 
@@ -35,7 +35,7 @@ The repository's existing tracked `harness/goal-record.md`, `harness/progress-lo
 ## Baseline
 
 - Repository revision: clean `main`, matching `origin/main` before this goal.
-- Validation: baseline commands and exact results are recorded in the progress log and build log.
+- Validation: baseline and merged-main command results and exact browser observations are recorded in the progress log and build log.
 - Pre-existing failures: routed docs `docs/GAME_DESIGN.md`, `docs/CONTENT_MODEL.md`, and `docs/DETERMINISM_AND_SAVE.md` are absent; `npm run test:browser` is a documented manual-browser status notice.
 
 ## Facts
@@ -64,12 +64,12 @@ The repository's existing tracked `harness/goal-record.md`, `harness/progress-lo
 
 ## Open blockers
 
-None known before baseline execution. Remote PR/merge capability and required checks must be revalidated before delivery.
+None. PR #19 merged successfully; no remote checks are configured, and all required local checks passed.
 
 ## Last verified iteration
 
-Goal initialization and repository inspection; no implementation verification yet.
+Merged-main verification at `91ace85`: all required commands passed, and fresh Chromium confirmed encounter, defeat, loot, and no-respawn revisit behavior.
 
 ## Next action and why it is highest value
 
-Run the baseline test/typecheck/lint/browser-status/build commands, then implement the smallest persistent state transition with focused tests. Baseline distinguishes existing failures from introduced failures before the authoritative model changes.
+No next action. The acceptance matrix is fully passed and local `main` matches `origin/main` at the merged result.

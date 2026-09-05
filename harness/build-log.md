@@ -199,3 +199,5 @@
 - Documentation: updated `docs/ARCHITECTURE.md`, `docs/DECISIONS.md`, `docs/TESTING_STRATEGY.md`; added `docs/CONTENT_MODEL.md` and `docs/DETERMINISM_AND_SAVE.md`; added `harness/build/persistent-dungeon-world-acceptance.md`.
 - Delivery: not started. The goal remains active until the browser lane passes, focused branch/PR/merge are completed, and merged-main is independently verified.
 
+- Final delivery: PR #19 was squash-merged to `main` at `91ace85`; local `main` and `origin/main` match and the worktree is clean. Merged-main rerun passed `npm run typecheck`, `npm run lint`, `npm test` (39 tests), `npm run test:browser` (documented manual status), and `npm run build`. Fresh merged-main Chromium verification reported encounter `monster-warden-1` with one entity, post-defeat `encounter:null`/zero entities/loot, revisit at `(2,1)` with no encounter/entity, and zero page/application errors.
+

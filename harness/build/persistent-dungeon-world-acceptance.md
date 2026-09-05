@@ -23,4 +23,4 @@ Human row: DW-08 includes experiential readability review; automated/browser evi
 
 ## Post-implementation summary
 
-Passed: DW-01 through DW-10. DW-08 is supported by fresh 1280×720 Chromium evidence covering encounter, defeat, entity disappearance, loot pickup, revisit, and zero page/application errors. DW-11 and DW-12 remain planned pending final commit/PR merge and merged-main verification. Any failed, blocked, contradictory, or inconclusive applicable count prevents completion.
+Passed: DW-01 through DW-12. DW-08 is supported by fresh 1280×720 Chromium evidence covering encounter, defeat, entity disappearance, loot pickup, revisit, and zero page/application errors. DW-11 is supported by focused branch commit `6a8db8a` plus browser-evidence commit `78dcddf` and PR #19. DW-12 is supported by squash merge commit `91ace85`, local `main`/`origin/main` equality, merged-main checks, and merged-main Chromium verification. Failed: 0; blocked: 0; contradictory: 0; inconclusive: 0.

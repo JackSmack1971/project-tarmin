@@ -27,6 +27,15 @@
 - Blocker / failure classification: none.
 - Next uncertainty: required check status and merged-main state after the PR merge.
 
+## Persistent dungeon-world iteration 4 — merged-main closeout
+
+- Action: ran the required checks and fresh Chromium flow from merged `main`, then inspected PR #19 and local/remote branch state.
+- Observation: merge commit `91ace85` is the tip of both local `main` and `origin/main`; all required commands passed; browser state confirmed encounter, defeat, loot, and no-respawn revisit with zero errors.
+- Verification: acceptance rows DW-01 through DW-12 are now independently evidenced; the worktree is clean.
+- Decision: stop and mark the goal complete.
+- Blocker / failure classification: none.
+- Next uncertainty: none for this goal.
+
 ## Entity-layer iteration 1 — baseline and acceptance reconciliation
 
 - Action: read the pasted objective, inspected `main`, reconciled the stale goal record, and defined E1–E8 acceptance rows.
