@@ -1,5 +1,5 @@
 id,title,author,license,source_page,target_uses
-tiny-texture-pack-2,Tiny Texture Pack 2 (128x128 production set),Screaming Brain Studios,CC0 1.0 / Public Domain,https://opengameart.org/content/tiny-texture-pack-2,wall_crypt_blocks_a.png; wall_crypt_blocks_b.png; floor_flagstone_a.png; ceiling_stone.png
+tiny-texture-pack-2,Tiny Texture Pack 2 (128x128 production set),Screaming Brain Studios,CC0 1.0 / Public Domain,https://opengameart.org/content/tiny-texture-pack-2,wall_crypt_blocks_a.png; wall_crypt_blocks_b.png; floor_flagstone_a.png; ceiling_stone.png; public/assets/dungeon/dungeon-surfaces.png (transformed Project Tarmin production atlas; see DUNGEON_ATLAS_DERIVATION.json)
 old-school-dungeon-crawler-pack,Old School Dungeon Crawler Pack,Screaming Brain Studios,CC0 1.0 / Public Domain,https://opengameart.org/content/old-school-dungeon-crawler-pack,door_iron.png; archway_stone.png
 ps1-fire,PS1 Fire,Limphands,CC0 / Public Domain,https://limphands.itch.io/ps1-fire,fx_torch_flame.png
 fantasy-ui-borders,Fantasy UI Borders,Kenney,CC0 1.0,https://opengameart.org/content/fantasy-ui-borders,ui_hud_frame.png

@@ -25,7 +25,8 @@
       "wall_crypt_blocks_a.png",
       "wall_crypt_blocks_b.png",
       "floor_flagstone_a.png",
-      "ceiling_stone.png"
+      "ceiling_stone.png",
+      "public/assets/dungeon/dungeon-surfaces.png (transformed Project Tarmin production atlas; see DUNGEON_ATLAS_DERIVATION.json)"
     ]
   },
   {

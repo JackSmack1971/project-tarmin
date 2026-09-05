@@ -33,7 +33,7 @@ export class MainScene extends Phaser.Scene {
   constructor() { super("main"); }
 
   preload(): void {
-    this.load.svg("dungeon-surfaces", DUNGEON_SURFACE_ATLAS.source);
+    this.load.image("dungeon-surfaces", DUNGEON_SURFACE_ATLAS.source);
     this.load.image("ashbound-warden", "/assets/entities/ashbound-warden.svg");
     this.load.image("glass-mireling", "/assets/entities/glass-mireling.svg");
     this.load.image("gloam-scavenger", "/assets/entities/gloam-scavenger.svg");

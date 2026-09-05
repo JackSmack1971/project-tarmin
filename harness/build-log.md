@@ -317,3 +317,33 @@
   supported resolutions, reduced motion, and other experiential claims.
 - The repository references `docs/engineering/version-control.md`, but that
   file is absent; delivery follows the explicit root AGENTS.md PR policy.
+
+## Asset Integration Phase 1 — Environment Atlas
+
+- Change: replaced the placeholder 8×8 SVG surface strip with
+  `public/assets/dungeon/dungeon-surfaces.png`: a 136×68 production atlas with
+  eight padded canonical 32×32 regions. Semantic material IDs, UV architecture,
+  Mesh2D projection, geometry, depth lighting, fog, grading, visibility, and
+  simulation remain unchanged. `MainScene` now loads the PNG image; the obsolete
+  SVG was removed.
+- Provenance: `derive_dungeon_atlas.ps1` samples the approved staged CC0 Tiny
+  Texture Pack 2 archive into a 16px logical texture, applies Project Tarmin
+  palette/contrast/tiling treatment, scales it 2× nearest-neighbor, and copies
+  a one-pixel gutter. `DUNGEON_ATLAS_DERIVATION.json` records source inputs and
+  hashes. Source SHA-256:
+  `036589D7D59F72445C0B0AC54403B9DAD36F915CB7039576BBE78F98E772B8A6`;
+  repeatable output SHA-256:
+  `56D6319879F32373B91E149ED29CAFADC95C892222BF68D27A543BCC8856A7B8`.
+  Raw source remains staging-only and outside the browser build.
+- Verification: focused material/UV tests passed (2 files, 6 tests); full
+  `npm run typecheck`, `npm run lint`, `npm test` (12 files, 52 tests),
+  `npm run test:browser` (2 tests), `npm run build`, and `git diff --check`
+  passed.
+- Chromium review: WebGL fixtures at 1280×720, 1600×900, and 1920×1080 kept
+  the 1280×720 logical canvas and showed readable near masonry, compressed
+  middle/far frames, a near blocker, a closed door, and a side opening. Captures:
+  `harness/evidence/asset-atlas-corridor-1280.png`,
+  `asset-atlas-blocker-1280.png`, `asset-atlas-door-1600.png`,
+  `asset-atlas-opening-1600.png`, and `asset-atlas-deep-view-1920.png`.
+  There were no application console errors or page errors. Chromium reported
+  four screenshot-time WebGL GPU-stall messages only on the first capture.
