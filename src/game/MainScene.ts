@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import { createInitialState, executeCommand, type Command, type GameEvent, type GameState } from "../sim/state";
 import { InputController, type InputMode } from "../input/input-controller";
-import { DUNGEON_PALETTE, paletteHex, shadeColor } from "./palette";
+import { DUNGEON_PALETTE, shadeColor } from "./palette";
 import { frameToPixels, intervalQuads, PORTAL_FRAMES, type PortalFrame, type PortalQuad } from "./portalProjection";
 import { createRenderFixture, renderFixtureFromLocation } from "./renderFixtures";
 import { PERSPECTIVE_TRANSITION_MS, projectDungeon } from "../renderer/perspective/perspectiveRenderer";
@@ -78,7 +78,13 @@ export class MainScene extends Phaser.Scene {
     if (!command.startsWith("move") && !command.startsWith("turn")) return;
     this.mode = "transitioning"; this.publishMode();
     const veil = this.add.rectangle(this.scale.width / 2, this.scale.height / 2, this.scale.width, this.scale.height, DUNGEON_PALETTE.backgroundVoid, 0.28).setDepth(20);
-    this.tweens.add({ targets: veil, alpha: 0, duration: this.reducedMotion ? 1 : PERSPECTIVE_TRANSITION_MS, ease: "Sine.Out", onComplete: () => { veil.destroy(); this.mode = "active"; this.publishMode(); } });
+    const duration = this.reducedMotion ? 1 : PERSPECTIVE_TRANSITION_MS;
+    const finishTransition = (): void => {
+      if (this.mode !== "transitioning") return;
+      veil.destroy(); this.mode = "active"; this.publishMode();
+    };
+    this.tweens.add({ targets: veil, alpha: 0, duration, ease: "Sine.Out", onComplete: finishTransition });
+    window.setTimeout(finishTransition, duration + 40);
   }
 
   private feedbackFor(events: readonly GameEvent[]): string {
@@ -228,18 +234,7 @@ export class MainScene extends Phaser.Scene {
     if (this.perspectiveDebug) this.addDebugLabel(`POS ${this.state.player.position.x},${this.state.player.position.y}  FACING ${this.state.player.facing.toUpperCase()}  PRIMITIVES ${primitives.length}`, viewport.left + 8, viewport.top + viewport.height - 24);
     world.lineStyle(2, DUNGEON_PALETTE.boundary, 0.9);
     world.strokeRect(viewport.left, viewport.top, viewport.width, viewport.height);
-    this.add.text(64, 24, "THE UNDERCRYPT", { color: paletteHex(DUNGEON_PALETTE.narrativeText), fontFamily: "monospace", fontSize: "22px" });
-    this.add.text(width - 64, 27, `FLOOR ${this.state.floor}  •  TURN ${this.state.turn}  •  ${this.state.player.facing.toUpperCase()}`, { color: paletteHex(DUNGEON_PALETTE.interfaceMuted), fontFamily: "monospace", fontSize: "14px" }).setOrigin(1, 0);
-    const combat = this.state.encounter;
-    if (combat) {
-      this.add.rectangle(width / 2, height - 76, 500, 72, DUNGEON_PALETTE.passageDarkness, 0.98).setStrokeStyle(2, DUNGEON_PALETTE.warningDamage);
-      this.add.text(width / 2, height - 101, `${combat.name}  ${combat.health}/${combat.maxHealth} HP`, { color: paletteHex(DUNGEON_PALETTE.hostileEntity), fontFamily: "monospace", fontSize: "17px" }).setOrigin(0.5);
-      this.add.text(width / 2, height - 75, `YOU  ${this.state.playerHealth}/${this.state.playerMaxHealth} HP    •    SPACE LEFT STRIKE · F RIGHT STRIKE · X RETREAT`, { color: paletteHex(DUNGEON_PALETTE.playerStatus), fontFamily: "monospace", fontSize: "14px" }).setOrigin(0.5);
-    } else {
-      this.add.text(64, height - 85, "W/S move · A/D turn · ESC pause", { color: paletteHex(DUNGEON_PALETTE.interfaceMuted), fontFamily: "monospace", fontSize: "14px" });
-    }
-    this.add.text(width - 64, height - 85, combat ? "The warden raises its embered blade." : this.feedback, { color: paletteHex(combat ? DUNGEON_PALETTE.warningDamage : DUNGEON_PALETTE.narrativeText), fontFamily: "monospace", fontSize: "14px" }).setOrigin(1, 0);
-    window.dispatchEvent(new CustomEvent("tarmin-state", { detail: { floor: this.state.floor, turn: this.state.turn, health: this.state.playerHealth, seed: this.state.seed, feedback: this.feedback, leftHand: this.itemName(this.state.leftHand), rightHand: this.itemName(this.state.rightHand), ring: this.state.ring.map((id) => this.itemName(id)), selectedRingIndex: this.state.selectedRingIndex } }));
+    window.dispatchEvent(new CustomEvent("tarmin-state", { detail: { floor: this.state.floor, turn: this.state.turn, health: this.state.playerHealth, maxHealth: this.state.playerMaxHealth, seed: this.state.seed, facing: this.state.player.facing, position: this.state.player.position, feedback: this.feedback, leftHand: this.itemName(this.state.leftHand), rightHand: this.itemName(this.state.rightHand), leftDetail: this.itemDetail(this.state.leftHand), rightDetail: this.itemDetail(this.state.rightHand), ring: this.state.ring.map((id) => this.itemName(id) ?? "UNKNOWN"), selectedRingIndex: this.state.selectedRingIndex, encounter: this.state.encounter ? { name: this.state.encounter.name, health: this.state.encounter.health, maxHealth: this.state.encounter.maxHealth } : null } }));
   }
 
   private renderEntities(entities: readonly EntityBillboard[], viewport: { left: number; top: number; width: number; height: number }): void {
@@ -262,5 +257,16 @@ export class MainScene extends Phaser.Scene {
     if (!instanceId) return null;
     const instance = this.state.items.find((item) => item.id === instanceId);
     return instance ? itemById(instance.definitionId)?.name ?? instance.definitionId : null;
+  }
+
+  private itemDetail(instanceId: string | null): string {
+    if (!instanceId) return "No item equipped";
+    const instance = this.state.items.find((item) => item.id === instanceId);
+    const definition = instance ? itemById(instance.definitionId) : undefined;
+    if (!definition) return "Unknown item";
+    if (definition.attack) return `STRIKE +${definition.attack}`;
+    if (definition.defense) return `GUARD +${definition.defense}`;
+    if (definition.healing) return `RESTORE +${definition.healing}`;
+    return "Treasure carried";
   }
 }

@@ -29,6 +29,18 @@ the material palette. Near stone must retain readable texture and silhouette
 contrast, while distant openings approach near-black without losing navigation
 landmarks.
 
+## Interface hierarchy
+
+The dungeon is the visual subject. A warm parchment/olive interface sits at the
+edges in restrained translucent panels, leaving the central portal and its
+silhouettes unobstructed. Hand slots, vitality, and the ring use simple original
+pixel-era motifs—thin rules, compact labels, and a single ember/gold accent—so
+they feel like one instrument panel rather than debug annotations. Combat status
+is a small threat readout that supports the visible entity; it must not become a
+large health-bar-first battle screen. Menu and pause panels reuse the same
+materials and focus treatment, establishing a single interface language across
+all states.
+
 ## Source gathering
 
 Candidate source packs are gathered and tracked through `project-tarmin-asset-source-downloader/`. Its downloaded archives are staging/reference material only; runtime art must remain original or appropriately licensed and must be reviewed before promotion into `public/`. Keep source URLs, creators, licenses, and intended uses synchronized in the downloader manifests and license notes.
