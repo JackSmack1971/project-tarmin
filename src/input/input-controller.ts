@@ -1,6 +1,6 @@
 import { commandForKey, isPauseKey, type GameplayCommand, type KeyBindings, DEFAULT_KEY_BINDINGS } from "./bindings";
 
-export type InputMode = "menu" | "active" | "transitioning" | "paused";
+export type InputMode = "menu" | "active" | "transitioning" | "paused" | "defeated" | "victorious";
 export interface KeyboardLike { addEventListener(type: "keydown", listener: (event: KeyboardEvent) => void): void; removeEventListener(type: "keydown", listener: (event: KeyboardEvent) => void): void; }
 export interface InputControllerOptions { readonly target: KeyboardLike; readonly bindings?: KeyBindings; readonly emit: (command: GameplayCommand) => void; readonly togglePause: () => void; readonly getMode: () => InputMode; }
 

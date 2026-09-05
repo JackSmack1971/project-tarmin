@@ -51,3 +51,12 @@ until pickup. These tests also round-trip canonical state through JSON. The
 existing browser flow must still show the encounter billboard and combat HUD,
 then remove the billboard after defeat; the browser check remains separate from
 the focused simulation proof.
+
+Run lifecycle verification additionally covers canonical `playing`, `defeated`,
+and `victorious` states; zero-health terminal blocking; same-seed and new-seed
+restart; disabled terminal input; visible terminal panels; and multi-event
+defeat/loot feedback. Chromium evidence must exercise defeat and both restart
+buttons from a fresh page and record the terminal mode/state plus console errors.
+The reproducible terminal-panel routes are `?fixture=defeated` and
+`?fixture=victorious`; these are presentation fixtures only, while authoritative
+transition proof remains in simulation tests.

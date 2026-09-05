@@ -201,3 +201,30 @@
 
 - Final delivery: PR #19 was squash-merged to `main` at `91ace85`; local `main` and `origin/main` match and the worktree is clean. Merged-main rerun passed `npm run typecheck`, `npm run lint`, `npm test` (39 tests), `npm run test:browser` (documented manual status), and `npm run build`. Fresh merged-main Chromium verification reported encounter `monster-warden-1` with one entity, post-defeat `encounter:null`/zero entities/loot, revisit at `(2,1)` with no encounter/entity, and zero page/application errors.
 
+- Run lifecycle goal (2026-09-05): added canonical `GameState.runStatus` with
+  `playing`, `defeated`, and `victorious`; defeat now clears combat, emits
+  `runDefeated`, and rejects all later commands without changing state. Added
+  `completeRun()` as the future dungeon-objective victory hook and `restartRun()`
+  for clean seeded restarts. MainScene now maps terminal state to disabled input
+  modes and prioritizes terminal/defeat/monster-defeat/loot feedback. The shell
+  presents clear defeat/victory panels with same-seed and new-seed restart paths.
+  Added reproducible `?fixture=defeated` and `?fixture=victorious` presentation
+  fixtures only; they do not alter authoritative transitions.
+- Focused verification: `npm test -- --run` passed (11 files, 44 tests);
+  `npm run typecheck` passed; `npm run lint` passed; `npm run build` passed;
+  `npm run test:browser` passed as the documented no-automated-suite status
+  notice. The production build emitted no chunk warning.
+- Chromium evidence (Playwright Chromium, fresh pages, 1280x720, WebGL):
+  `?fixture=defeated` reported `mode=defeated`, `runStatus=defeated`, health 0,
+  visible terminal title `THE TORCH GUTTERS`, both restart buttons, and no
+  console/page errors. Pressing W left turn 0 unchanged. Same-seed restart
+  returned seed 7391, `mode=active`, `runStatus=playing`, health 10, turn 0;
+  new-seed restart returned a distinct generated seed and the same clean active
+  state. `?fixture=victorious` reported `mode=victorious`,
+  `runStatus=victorious`, title `THE UNDERCRYPT YIELDS`, and no errors.
+  Normal flow (Begin Descent, ArrowUp, four Space attacks) showed the Warden
+  encounter, then `encounter=null`, loot `item-loot-5`, and feedback
+  `The guardian falls. Loot waits nearby.` with no errors. Screenshots:
+  `harness/evidence/run-lifecycle-defeated.png`,
+  `harness/evidence/run-lifecycle-victorious.png`, and
+  `harness/evidence/run-lifecycle-loot.png`.

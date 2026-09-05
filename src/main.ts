@@ -32,11 +32,16 @@ ui.innerHTML = `<div class="start-panel" data-start><p class="eyebrow">AN ORIGIN
   <p class="feedback" data-feedback aria-live="polite"></p>
   <p class="controls">W/S MOVE <i>·</i> A/D TURN <i>·</i> Q/E RING <i>·</i> P PICK UP <i>·</i> ESC PAUSE</p>
 </div>
+<div class="terminal-panel" data-terminal hidden role="dialog" aria-modal="true" aria-labelledby="terminal-title"><p class="eyebrow" data-terminal-eyebrow>RUN ENDED</p><h2 id="terminal-title" data-terminal-title>THE TORCH GUTTERS</h2><p class="pause-copy" data-terminal-copy></p><div class="start-actions"><button type="button" data-restart-same>RESTART SAME SEED</button><button type="button" data-restart-new>NEW SEED</button></div></div>
 <div class="pause-scrim" data-pause-scrim hidden></div><div class="pause-panel" data-pause-panel hidden role="dialog" aria-modal="true" aria-labelledby="pause-title"><p class="eyebrow">RUN PAUSED</p><h2 id="pause-title">THE TORCH HOLDS</h2><p class="pause-copy">The dungeon waits exactly where you left it.</p><button type="button" data-resume>RESUME DESCENT</button><label><input type="checkbox" data-motion> REDUCED MOTION</label><p class="hint">Keyboard focus is held by this panel.</p></div>`;
 document.body.append(ui);
 const start = ui.querySelector("[data-start]") as HTMLElement;
 const hud = ui.querySelector("[data-hud]") as HTMLElement;
 const pausePanel = ui.querySelector("[data-pause-panel]") as HTMLElement;
+const terminalPanel = ui.querySelector("[data-terminal]") as HTMLElement;
+const terminalEyebrow = ui.querySelector("[data-terminal-eyebrow]") as HTMLElement;
+const terminalTitle = ui.querySelector("[data-terminal-title]") as HTMLElement;
+const terminalCopy = ui.querySelector("[data-terminal-copy]") as HTMLElement;
 const seed = ui.querySelector("#seed") as HTMLInputElement;
 const feedback = ui.querySelector("[data-feedback]") as HTMLElement;
 const floor = ui.querySelector("[data-floor]") as HTMLElement;
@@ -60,15 +65,21 @@ ui.querySelector("form")?.addEventListener("submit", (event) => { event.preventD
 ui.querySelector("[data-generate]")?.addEventListener("click", () => { const value = createBrowserSeed(); seed.value = String(value); emit("tarmin-start", value); });
 ui.querySelector("[data-pause]")?.addEventListener("click", () => emit("tarmin-toggle-pause"));
 ui.querySelector("[data-resume]")?.addEventListener("click", () => emit("tarmin-toggle-pause"));
+ui.querySelector("[data-restart-same]")?.addEventListener("click", () => emit("tarmin-start", normalizeSeed(seed.value)));
+ui.querySelector("[data-restart-new]")?.addEventListener("click", () => { const value = createBrowserSeed(); seed.value = String(value); emit("tarmin-start", value); });
 motion.addEventListener("change", () => emit("tarmin-motion", motion.checked));
 window.addEventListener("tarmin-mode", (event) => {
   const mode = (event as CustomEvent<string>).detail;
   const running = mode !== "menu";
   start.hidden = running; hud.hidden = !running; pausePanel.hidden = mode !== "paused"; (ui.querySelector("[data-pause-scrim]") as HTMLElement).hidden = mode !== "paused";
+  terminalPanel.hidden = mode !== "defeated" && mode !== "victorious";
+  if (mode === "defeated") { terminalEyebrow.textContent = "RUN ENDED"; terminalTitle.textContent = "THE TORCH GUTTERS"; terminalCopy.textContent = "The undercrypt has won this descent."; }
+  if (mode === "victorious") { terminalEyebrow.textContent = "RUN COMPLETE"; terminalTitle.textContent = "THE UNDERCRYPT YIELDS"; terminalCopy.textContent = "This run is victorious. The next descent awaits."; }
   if (mode === "paused") (ui.querySelector("[data-resume]") as HTMLButtonElement).focus();
+  if (mode === "defeated" || mode === "victorious") (ui.querySelector("[data-restart-same]") as HTMLButtonElement).focus();
 });
 window.addEventListener("tarmin-state", (event) => {
-  const detail = (event as CustomEvent<{ floor: number; turn: number; health: number; maxHealth: number; feedback: string; seed: number; facing: string; position: { x: number; y: number }; leftHand: string | null; rightHand: string | null; leftDetail: string; rightDetail: string; ring: readonly string[]; selectedRingIndex: number; encounter: { name: string; health: number; maxHealth: number } | null }>).detail;
+  const detail = (event as CustomEvent<{ floor: number; turn: number; health: number; maxHealth: number; feedback: string; seed: number; runStatus: string; facing: string; position: { x: number; y: number }; leftHand: string | null; rightHand: string | null; leftDetail: string; rightDetail: string; ring: readonly string[]; selectedRingIndex: number; encounter: { name: string; health: number; maxHealth: number } | null }>).detail;
   floor.textContent = `FLOOR ${detail.floor} · TURN ${detail.turn} · SEED ${detail.seed}`;
   location.textContent = `${detail.position.x},${detail.position.y} · FACING ${detail.facing.toUpperCase()}`;
   health.textContent = `${detail.health}/${detail.maxHealth}`;

@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { createInitialState, executeCommand, type Command, type GameEvent, type GameState } from "../sim/state";
+import { createInitialState, executeCommand, restartRun, type Command, type GameEvent, type GameState } from "../sim/state";
 import { InputController, type InputMode } from "../input/input-controller";
 import { DUNGEON_PALETTE, shadeColor } from "./palette";
 import { frameToPixels, intervalQuads, PORTAL_FRAMES, type PortalFrame, type PortalQuad } from "./portalProjection";
@@ -22,7 +22,7 @@ function portalViewport(width: number, height: number): { left: number; top: num
 export class MainScene extends Phaser.Scene {
   private state: GameState = renderFixtureFromLocation() ? createRenderFixture(renderFixtureFromLocation()!) : createInitialState();
   private readonly perspectiveDebug = new URLSearchParams(window.location.search).get("perspectiveDebug") === "1";
-  private mode: InputMode = renderFixtureFromLocation() ? "active" : "menu";
+  private mode: InputMode = this.state.runStatus === "defeated" || this.state.runStatus === "victorious" ? this.state.runStatus : renderFixtureFromLocation() ? "active" : "menu";
   private reducedMotion = false;
   private feedback = "A corridor waits beyond the torchlight.";
   private presentationTimeMs = 0;
@@ -56,7 +56,7 @@ export class MainScene extends Phaser.Scene {
 
   private readonly onStart = (event: Event): void => {
     const seed = (event as CustomEvent<number>).detail;
-    this.state = createInitialState(seed);
+    this.state = restartRun(seed);
     this.feedback = `Seed ${seed} · the descent begins.`;
     this.mode = "active";
     this.publishMode(); this.renderState();
@@ -76,7 +76,10 @@ export class MainScene extends Phaser.Scene {
     const result = executeCommand(this.state, command);
     this.state = result.state;
     this.feedback = this.feedbackFor(result.events);
+    if (this.state.runStatus !== "playing") this.mode = this.state.runStatus;
     this.renderState();
+    this.publishMode();
+    if (this.mode !== "active") return;
     if (!command.startsWith("move") && !command.startsWith("turn")) return;
     this.mode = "transitioning"; this.publishMode();
     const veil = this.add.rectangle(this.scale.width / 2, this.scale.height / 2, this.scale.width, this.scale.height, DUNGEON_PALETTE.backgroundVoid, 0.28).setDepth(20);
@@ -90,7 +93,13 @@ export class MainScene extends Phaser.Scene {
   }
 
   private feedbackFor(events: readonly GameEvent[]): string {
-    const event = events[0];
+    const event = events.find((candidate) => candidate.type === "runVictorious")
+      ?? events.find((candidate) => candidate.type === "runDefeated")
+      ?? events.find((candidate) => candidate.type === "playerDefeated")
+      ?? (events.some((candidate) => candidate.type === "monsterDefeated") && events.some((candidate) => candidate.type === "itemAcquired")
+        ? events.find((candidate) => candidate.type === "monsterDefeated")
+        : events.find((candidate) => candidate.type === "monsterDefeated" || candidate.type === "itemAcquired"))
+      ?? events[0];
     if (!event) return this.feedback;
     if (event.type === "movementBlocked") return "The way is sealed.";
     if (event.type === "encounterStarted") return `${event.name} bars the passage.`;
@@ -98,6 +107,8 @@ export class MainScene extends Phaser.Scene {
     if (event.type === "monsterAttack") return `The monster strikes for ${event.damage}.`;
     if (event.type === "monsterDefeated") return "The guardian falls. Loot waits nearby.";
     if (event.type === "playerDefeated") return "Your torch gutters. You have fallen.";
+    if (event.type === "runDefeated") return "Run ended. The undercrypt claims you.";
+    if (event.type === "runVictorious") return "The undercrypt yields. You are victorious.";
     if (event.type === "itemAcquired") return "A new item joins the ring.";
     if (event.type === "itemUsed") return "The tonic restores your vitality.";
     if (event.type === "equipmentChanged") return `${event.hand.toUpperCase()} hand equipped.`;
@@ -196,6 +207,7 @@ export class MainScene extends Phaser.Scene {
         primitiveTypes: primitives.map((primitive) => `${primitive.geometry.depth}:${primitive.geometry.surface}:${primitive.kind}`),
         transition: this.mode === "transitioning",
         mode: this.mode,
+        runStatus: this.state.runStatus,
         seed: this.state.seed,
         reducedMotion: this.reducedMotion,
         transitionDuration: this.reducedMotion ? 1 : PERSPECTIVE_TRANSITION_MS,
@@ -237,7 +249,7 @@ export class MainScene extends Phaser.Scene {
     if (this.perspectiveDebug) this.addDebugLabel(`POS ${this.state.player.position.x},${this.state.player.position.y}  FACING ${this.state.player.facing.toUpperCase()}  PRIMITIVES ${primitives.length}`, viewport.left + 8, viewport.top + viewport.height - 24);
     world.lineStyle(2, DUNGEON_PALETTE.boundary, 0.9);
     world.strokeRect(viewport.left, viewport.top, viewport.width, viewport.height);
-    window.dispatchEvent(new CustomEvent("tarmin-state", { detail: { floor: this.state.floor, turn: this.state.turn, health: this.state.playerHealth, maxHealth: this.state.playerMaxHealth, seed: this.state.seed, facing: this.state.player.facing, position: this.state.player.position, feedback: this.feedback, leftHand: this.itemName(this.state.leftHand), rightHand: this.itemName(this.state.rightHand), leftDetail: this.itemDetail(this.state.leftHand), rightDetail: this.itemDetail(this.state.rightHand), ring: this.state.ring.map((id) => this.itemName(id) ?? "UNKNOWN"), selectedRingIndex: this.state.selectedRingIndex, encounter: this.state.encounter ? { name: this.state.encounter.name, health: this.state.encounter.health, maxHealth: this.state.encounter.maxHealth } : null } }));
+    window.dispatchEvent(new CustomEvent("tarmin-state", { detail: { floor: this.state.floor, turn: this.state.turn, health: this.state.playerHealth, maxHealth: this.state.playerMaxHealth, seed: this.state.seed, runStatus: this.state.runStatus, facing: this.state.player.facing, position: this.state.player.position, feedback: this.feedback, leftHand: this.itemName(this.state.leftHand), rightHand: this.itemName(this.state.rightHand), leftDetail: this.itemDetail(this.state.leftHand), rightDetail: this.itemDetail(this.state.rightHand), ring: this.state.ring.map((id) => this.itemName(id) ?? "UNKNOWN"), selectedRingIndex: this.state.selectedRingIndex, encounter: this.state.encounter ? { name: this.state.encounter.name, health: this.state.encounter.health, maxHealth: this.state.encounter.maxHealth } : null } }));
   }
 
   private renderEntities(entities: readonly EntityBillboard[], viewport: { left: number; top: number; width: number; height: number }, frame: 0 | 1): void {

@@ -6,6 +6,12 @@ the edges. HTML/CSS is presentation only. It observes `tarmin-state` and
 `tarmin-mode` events and emits existing commands; authoritative state remains in
 `src/sim/`.
 
+Run modes include `defeated` and `victorious` in addition to menu, active,
+transitioning, and paused. Gameplay keyboard input is disabled in both terminal
+modes. The terminal panel presents the outcome and offers restart with the
+current seed or generation of a new seed. The shell prioritizes terminal,
+defeat, monster-defeat, and loot events when one command produces multiple events.
+
 ## Interface composition
 
 - The canvas fills the largest available 16:9 region. The header identifies the
