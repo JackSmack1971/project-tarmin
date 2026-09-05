@@ -14,7 +14,16 @@
     "atlasPadding": 1,
     "method": "Center-sample the listed CC0 source textures to a 16x16 logical grid, increase luminance contrast, map to Project Tarmin semantic palettes, force opposite logical edges to match, scale each logical pixel 2x nearest-neighbor, and copy a one-pixel edge gutter. Darkness is an original Project Tarmin aperture."
   },
-  "outputSha256": "56D6319879F32373B91E149ED29CAFADC95C892222BF68D27A543BCC8856A7B8",
+  "outputSha256": "F42608BA729A1193D4C8A6E76FEE83F5E103B9BDC05129C2D91211CA7A1B1720",
+  "architectureOutputs": {
+    "sourceArchive": "downloads/sbs_-_dungeon_crawler_pack_-_windows.zip",
+    "sourceArchiveSha256": "9235E70894E8ED15D979F1A50B840D86CFD544DEB946F7BE52A7ECF3DD8F670F",
+    "sourceEntry": "Brick 1 - Decorations/Door/Layer 1/Layer 1 - Brick Door - Center.png",
+    "ironDoorTransform": "Palette-remap and downsample the CC0 brick-door source into the existing 32x32 iron-door atlas region; semantic ID and atlas bounds are unchanged.",
+    "archwayOutput": "public/assets/dungeon/archway-stone.png",
+    "archwayTransform": "Downsample to 64x64, remap to the Project Tarmin stone palette, and key the inner aperture transparent so the asset frames visible openings without revealing cells.",
+    "archwayOutputSha256": "87A4D9BA8A5E0E982F9F9ED02CB4B4F3F27EB58931A496A396A03DDF70FBCB76"
+  },
   "inputs": {
     "crypt-stone": "128x128/Brick/Brick_01-128x128.png",
     "burial-masonry": "128x128/Brick/Brick_02-128x128.png",

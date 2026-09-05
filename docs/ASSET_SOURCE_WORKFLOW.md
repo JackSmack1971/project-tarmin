@@ -31,6 +31,13 @@ the logical edges tile-compatible, scales the 16px logical pixels to canonical
 the exact source entries are in `DUNGEON_ATLAS_DERIVATION.json`; update that
 record and re-review the browser output when the transform changes.
 
+The same derivation script accepts the staged Old School Dungeon Crawler Pack
+windows archive. It remaps `Brick 1 - Decorations/Door/Layer 1/Layer 1 - Brick
+Door - Center.png` into the existing semantic `iron-door` atlas region and emits
+`public/assets/dungeon/archway-stone.png` as a 64×64 transparent, palette-harmonized
+opening frame. This is transformed runtime art, not a raw source copy; rerun the
+script and update the recorded hashes whenever either output changes.
+
 ## Gather or extend the source set
 
 From the downloader directory on Windows:

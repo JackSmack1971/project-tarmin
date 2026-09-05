@@ -6,6 +6,7 @@ import { frameToPixels, intervalQuads, PORTAL_FRAMES, type PortalFrame, type Por
 import { createRenderFixture, renderFixtureFromLocation } from "./renderFixtures";
 import { PERSPECTIVE_TRANSITION_MS, projectDungeon } from "../renderer/perspective/perspectiveRenderer";
 import { billboardFrameAt, projectEntities, type EntityBillboard } from "../renderer/entities/entityProjection";
+import type { ProjectedFeature } from "../renderer/scene";
 import { meshVertices, QUAD_INDICES } from "../renderer/meshGeometry";
 import { itemById } from "../content/items";
 import { monsterById } from "../content/monsters";
@@ -34,6 +35,7 @@ export class MainScene extends Phaser.Scene {
 
   preload(): void {
     this.load.image("dungeon-surfaces", DUNGEON_SURFACE_ATLAS.source);
+    this.load.image("archway-stone", "/assets/dungeon/archway-stone.png");
     this.load.image("ashbound-warden", "/assets/entities/ashbound-warden.svg");
     this.load.image("glass-mireling", "/assets/entities/glass-mireling.svg");
     this.load.image("gloam-scavenger", "/assets/entities/gloam-scavenger.svg");
@@ -210,6 +212,7 @@ export class MainScene extends Phaser.Scene {
         position: this.state.player.position,
         facing: this.state.player.facing,
         visibleDepth: Math.max(...primitives.map((primitive) => primitive.geometry.depth), 0),
+        features: scene.features.map((feature) => ({ kind: feature.kind, depth: feature.depth, cell: feature.cell })),
         primitiveTypes: primitives.map((primitive) => `${primitive.geometry.depth}:${primitive.geometry.surface}:${primitive.kind}`),
         transition: this.mode === "transitioning",
         mode: this.mode,
@@ -241,10 +244,12 @@ export class MainScene extends Phaser.Scene {
       if (primitive.geometry.surface === "front" && isOpening) mesh.setTint(shadeColor(0xffffff, 0.08));
     }
 
+    this.renderFeatures(scene.features, viewport);
+
     const world = this.add.graphics();
     for (const primitive of primitives) {
       const points = primitive.geometry.quad.map((point) => ({ x: viewport.left + point.x * viewport.width, y: viewport.top + point.y * viewport.height }));
-      if (primitive.geometry.surface === "front" || primitive.kind === "closed-door") { world.lineStyle(2, primitive.kind === "closed-door" ? DUNGEON_PALETTE.door : DUNGEON_PALETTE.boundary, 0.9); world.strokePoints(points.map(({ x, y }) => new Phaser.Math.Vector2(x, y)), true); }
+      if (primitive.geometry.surface === "front" || primitive.kind === "closed-door") { world.lineStyle(primitive.kind === "closed-door" ? 4 : 2, primitive.kind === "closed-door" ? DUNGEON_PALETTE.door : DUNGEON_PALETTE.boundary, 1); world.strokePoints(points.map(({ x, y }) => new Phaser.Math.Vector2(x, y)), true); }
     }
 
     this.renderTorchLight(world, viewport);
@@ -257,6 +262,20 @@ export class MainScene extends Phaser.Scene {
     world.lineStyle(2, DUNGEON_PALETTE.boundary, 0.9);
     world.strokeRect(viewport.left, viewport.top, viewport.width, viewport.height);
     window.dispatchEvent(new CustomEvent("tarmin-state", { detail: { floor: this.state.floor, turn: this.state.turn, health: this.state.playerHealth, maxHealth: this.state.playerMaxHealth, seed: this.state.seed, runStatus: this.state.runStatus, facing: this.state.player.facing, position: this.state.player.position, feedback: this.feedback, leftHand: this.itemName(this.state.leftHand), rightHand: this.itemName(this.state.rightHand), leftDetail: this.itemDetail(this.state.leftHand), rightDetail: this.itemDetail(this.state.rightHand), ring: this.state.ring.map((id) => this.itemName(id) ?? "UNKNOWN"), selectedRingIndex: this.state.selectedRingIndex, objective: { acquired: this.state.objective.acquired, complete: this.state.objective.complete, exit: this.state.objective.exit }, encounter: this.state.encounter ? { name: this.state.encounter.name, health: this.state.encounter.health, maxHealth: this.state.encounter.maxHealth } : null } }));
+  }
+
+  private renderFeatures(features: readonly ProjectedFeature[], viewport: { left: number; top: number; width: number; height: number }): void {
+    for (const feature of features) {
+      const points = feature.quad.map((point) => ({ x: viewport.left + point.x * viewport.width, y: viewport.top + point.y * viewport.height }));
+      const left = Math.min(...points.map((point) => point.x));
+      const right = Math.max(...points.map((point) => point.x));
+      const top = Math.min(...points.map((point) => point.y));
+      const bottom = Math.max(...points.map((point) => point.y));
+      this.add.image((left + right) / 2, (top + bottom) / 2, "archway-stone")
+        .setDisplaySize(right - left, bottom - top)
+        .setAlpha(feature.lightLevel)
+        .setDepth(50 - feature.depth);
+    }
   }
 
   private renderEntities(entities: readonly EntityBillboard[], viewport: { left: number; top: number; width: number; height: number }, frame: 0 | 1): void {

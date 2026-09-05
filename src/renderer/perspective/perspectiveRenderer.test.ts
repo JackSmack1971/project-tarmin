@@ -22,6 +22,22 @@ describe("renderer-neutral perspective primitives", () => {
     expect(open.some((primitive) => primitive.geometry.surface === "front" && primitive.kind === "open-door")).toBe(false);
   });
 
+  it("frames only passage cells and never projects a feature through a blocker", () => {
+    const closed = projectDungeon(withDoors([{ position: { x: 3, y: 1 }, open: false }]));
+    expect(closed.features.map((feature) => feature.depth)).toEqual([1]);
+    expect(closed.features.every((feature) => feature.kind === "archway")).toBe(true);
+
+    const open = projectDungeon(withDoors([{ position: { x: 3, y: 1 }, open: true }]));
+    expect(open.features.map((feature) => feature.depth)).toEqual([4, 3, 2, 1]);
+    expect(open.features.some((feature) => feature.depth === 2 && feature.cell.x === 3)).toBe(true);
+  });
+
+  it("keeps feature geometry deterministic and independent of seed", () => {
+    const first = projectDungeon(createInitialState(1));
+    const second = projectDungeon(createInitialState(2));
+    expect(first.features).toEqual(second.features);
+  });
+
   it("keeps portal geometry independent from seed-driven presentation variation", () => {
     const first = projectDungeon(createInitialState(1)).primitives;
     const second = projectDungeon(createInitialState(2)).primitives;

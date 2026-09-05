@@ -15,10 +15,49 @@ type RendererSnapshot = {
   rightHand: string | null;
   loot: readonly string[];
   objective: { acquired: boolean; complete: boolean; exit: { x: number; y: number } };
+  features: readonly { kind: string; depth: number; cell: { x: number; y: number } }[];
+  primitiveTypes: readonly string[];
 };
+
+test("architectural features respect visible openings and blockers", async ({ page }) => {
+  test.setTimeout(60_000);
+  const failures = collectBrowserFailures(page);
+
+  await page.goto("/?fixture=straight-corridor");
+  await waitForRenderer(page);
+  await expect.poll(async () => (await renderer(page)).mode).toBe("active");
+  expect((await renderer(page)).features.map((feature) => feature.depth)).toEqual([4, 3, 2, 1]);
+  await page.screenshot({ path: "harness/evidence/phase-2-open-passage.png", fullPage: true });
+
+  await page.goto("/?fixture=closed-door");
+  await waitForRenderer(page);
+  await expect.poll(async () => (await renderer(page)).mode).toBe("active");
+  expect((await renderer(page)).primitiveTypes).toContain("1:front:closed-door");
+  expect((await renderer(page)).features).toEqual([]);
+  await page.screenshot({ path: "harness/evidence/phase-2-closed-iron-door.png", fullPage: true });
+
+  await page.goto("/?fixture=left-opening-1");
+  await waitForRenderer(page);
+  await expect.poll(async () => (await renderer(page)).mode).toBe("active");
+  const before = await renderer(page);
+  await page.keyboard.press("ArrowRight");
+  await expect.poll(async () => (await renderer(page)).turn).toBe(before.turn + 1);
+  await page.screenshot({ path: "harness/evidence/phase-2-turn-opening.png", fullPage: true });
+
+  await page.goto("/?fixture=straight-corridor");
+  await waitForRenderer(page);
+  await expect.poll(async () => (await renderer(page)).mode).toBe("active");
+  expect((await renderer(page)).features.every((feature) => feature.depth <= 4)).toBe(true);
+  await page.screenshot({ path: "harness/evidence/phase-2-deep-corridor.png", fullPage: true });
+  expect(failures).toEqual([]);
+});
 
 async function renderer(page: Page): Promise<RendererSnapshot> {
   return page.evaluate(() => (window as unknown as { __TARMIN_RENDERER__: RendererSnapshot }).__TARMIN_RENDERER__);
+}
+
+async function waitForRenderer(page: Page): Promise<void> {
+  await page.waitForFunction(() => Boolean((window as unknown as { __TARMIN_RENDERER__?: RendererSnapshot }).__TARMIN_RENDERER__));
 }
 
 async function startRun(page: Page, seed = "7391"): Promise<void> {
