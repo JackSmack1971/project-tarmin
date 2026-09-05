@@ -1,0 +1,51 @@
+{
+  "skill": "browser-game-fidelity",
+  "status": "COMPLETE",
+  "baseline": {
+    "repository": "feature/art-directed-portal-perspective dirty worktree before commit",
+    "entry_point": "http://127.0.0.1:5175/",
+    "runtime": "Chromium via Playwright, device scale 1",
+    "viewport": "1280x720 and 1920x1080",
+    "initial_state": "fixture seed 7391, floor 1, turn 0, position (0,0), facing east",
+    "before_capture": "phase-08-straight-corridor-final.png"
+  },
+  "claims": [
+    {
+      "kind": "objective_visual",
+      "observation": "The near portal is large and enclosing, while D2-D4 compress sharply with restrained lateral drift and the far aperture approaches darkness.",
+      "source": "src/game/portalProjection.ts, src/renderer/perspective/perspectiveRenderer.ts, art-directed-straight-1280.png, art-directed-straight-1920.png",
+      "verification": "Fresh Chromium captures at both desktop sizes show the same normalized composition and depth order.",
+      "status": "matched"
+    },
+    {
+      "kind": "objective_visual",
+      "observation": "Straight corridors, side openings, terminating walls, and closed doors remain spatially legible after the composition change.",
+      "source": "art-directed-straight-1280.png, art-directed-left-1280.png, art-directed-wall-1280.png, art-directed-door-1280.png",
+      "verification": "Fixture renderer state reports straight depth 4, wall depth 2 with front wall, side opening at depth 1, and closed door at depth 1; screenshots confirm the corresponding shapes.",
+      "status": "matched"
+    },
+    {
+      "kind": "objective_gameplay",
+      "observation": "Authoritative movement and visibility interpretation remain unchanged.",
+      "source": "src/sim/, src/renderer/perspective/perspectiveRenderer.test.ts, npm test",
+      "verification": "No simulation files changed; 31 tests pass and fixture primitive kinds/depths remain correct.",
+      "status": "matched"
+    },
+    {
+      "kind": "subjective",
+      "observation": "The new composition materially improves apparent scale and claustrophobia compared with the evenly centered prior portal layout.",
+      "source": "phase-08-straight-corridor-final.png, art-directed-straight-1280.png, art-directed-wall-1280.png",
+      "verification": "Visual review of equivalent 1280x720 fixture captures: near walls occupy more of the view, the first portal dominates, and the far aperture recedes into darkness.",
+      "status": "matched"
+    }
+  ],
+  "verification": {
+    "runtime": "Chromium fresh tabs at 1280x720 for straight, wall-2, left-opening-1, and closed-door+perspectiveDebug=1; straight corridor also at 1920x1080; WebGL contexts confirmed.",
+    "repeatable": true,
+    "checks": ["npm run typecheck", "npm run lint", "npm test -- --run", "npm run test:browser", "npm run build", "git diff --check"]
+  },
+  "failures": [
+    "Headless Chromium emitted GPU ReadPixels performance warnings during screenshot capture on the straight corridor; no application console errors were observed.",
+    "Vite retains its existing Phaser chunk-size warning during production build."
+  ]
+}
