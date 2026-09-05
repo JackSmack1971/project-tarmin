@@ -3,11 +3,11 @@ export type PortalPoint = Readonly<{ x: number; y: number }>;
 export type PortalQuad = readonly [PortalPoint, PortalPoint, PortalPoint, PortalPoint];
 
 export const PORTAL_FRAMES: readonly PortalFrame[] = [
-  { left: 0, right: 1, top: 0, bottom: 1 },
-  { left: 0.17, right: 0.83, top: 0.23, bottom: 0.8 },
-  { left: 0.3, right: 0.7, top: 0.345, bottom: 0.685 },
-  { left: 0.39, right: 0.61, top: 0.415, bottom: 0.625 },
-  { left: 0.45, right: 0.55, top: 0.455, bottom: 0.585 }
+  { left: 0.03, right: 0.97, top: 0.04, bottom: 0.99 },
+  { left: 0.1, right: 0.89, top: 0.13, bottom: 0.91 },
+  { left: 0.255, right: 0.775, top: 0.285, bottom: 0.78 },
+  { left: 0.38, right: 0.62, top: 0.39, bottom: 0.67 },
+  { left: 0.448, right: 0.562, top: 0.455, bottom: 0.59 }
 ] as const;
 
 export function frameToPixels(frame: PortalFrame, width: number, height: number): PortalFrame {

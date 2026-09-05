@@ -14,6 +14,10 @@ function screenFrame(frame: PortalFrame, viewport: { left: number; top: number; 
   return { left: pixels.left + viewport.left, right: pixels.right + viewport.left, top: pixels.top + viewport.top, bottom: pixels.bottom + viewport.top };
 }
 
+function portalViewport(width: number, height: number): { left: number; top: number; width: number; height: number } {
+  return { left: 72, top: 72, width: width - 144, height: height - 212 };
+}
+
 export class MainScene extends Phaser.Scene {
   private state: GameState = renderFixtureFromLocation() ? createRenderFixture(renderFixtureFromLocation()!) : createInitialState();
   private readonly perspectiveDebug = new URLSearchParams(window.location.search).get("perspectiveDebug") === "1";
@@ -126,7 +130,7 @@ export class MainScene extends Phaser.Scene {
   private renderState(): void {
     this.children.removeAll();
     const { width, height } = this.scale;
-    const viewport = { left: 96, top: 76, width: width - 192, height: height - 226 };
+    const viewport = portalViewport(width, height);
     const scene = projectDungeon(this.state);
     const primitives = scene.primitives;
     Object.defineProperty(window, "__TARMIN_RENDERER__", {

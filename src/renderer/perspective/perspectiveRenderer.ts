@@ -5,6 +5,7 @@ import type { SceneDescription, ScenePrimitive, SceneSurface } from "../scene";
 
 export type RenderPrimitive = ScenePrimitive;
 export const PERSPECTIVE_TRANSITION_MS = 140;
+const DEPTH_LIGHT_LEVELS = [1, 0.68, 0.36, 0.14] as const;
 
 const DELTAS = { north: { x: 0, y: -1 }, east: { x: 1, y: 0 }, south: { x: 0, y: 1 }, west: { x: -1, y: 0 } } as const;
 
@@ -49,7 +50,7 @@ function stableVariation(state: GameState, point: Point, surface: SceneSurface):
 
 function addPrimitive(result: ScenePrimitive[], state: GameState, depth: number, cell: Point, surface: SceneSurface, kind: ScenePrimitive["kind"], quad: PortalQuad): void {
   const variation = stableVariation(state, cell, surface);
-  result.push({ geometry: { depth, surface, cell, quad }, kind, material: materialFor(kind, surface, variation), lightLevel: Math.max(0.18, 1 - (depth - 1) * 0.24), variation });
+  result.push({ geometry: { depth, surface, cell, quad }, kind, material: materialFor(kind, surface, variation), lightLevel: DEPTH_LIGHT_LEVELS[depth - 1] ?? DEPTH_LIGHT_LEVELS[DEPTH_LIGHT_LEVELS.length - 1], variation });
 }
 
 export function primitiveSignature(primitives: readonly RenderPrimitive[]): string {
