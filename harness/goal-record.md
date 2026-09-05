@@ -9,7 +9,8 @@ objective/exit/victory route completable.
 
 ## Status
 
-Active — baseline reconciled; implementation and delivery remain.
+Complete — implementation, verification, PR #22 merge, and merged-main
+verification are complete.
 
 ## Constraints and authorization
 
@@ -82,5 +83,11 @@ matches the merged remote result.
 
 ## Next action
 
-Run the recorded baseline checks, then choose the smallest content/world
-population design supported by reachable-map and renderer evidence.
+No next action for this goal. Main is clean and matches origin at merged commit
+`e8622b9`.
+
+## Last verified iteration
+
+Fresh merged-main Chromium completed seed `7391` through Warden defeat, Seal
+pickup, and exit victory at `(2,4)` with zero console errors/warnings. All 50
+tests and required local checks passed on merged main.

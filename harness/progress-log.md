@@ -39,6 +39,21 @@
   documented manual-status notice, supplemented by the Chromium evidence above.
 - Next uncertainty: remote branch/PR state and merged-main verification.
 
+## MVP content population iteration 3 — merged-main closeout
+
+- Action: committed the verified implementation as `5196795`, pushed the focused
+  branch, opened PR #22, squash-merged it, fast-forwarded local `main`, and ran
+  the required checks plus a fresh Chromium completion flow from merged main.
+- Observation: PR #22 merged as `e8622b9`; local `main` equals `origin/main` and
+  the worktree is clean. All 50 tests, typecheck, lint, browser-status, build,
+  and diff checks passed. Fresh Chromium reached victory at `(2,4)` with
+  `objective.complete=true` and zero console errors/warnings.
+- Verification: CP-01 through CP-12 are independently evidenced in the
+  acceptance matrix; no remote checks are configured.
+- Decision: mark the goal complete.
+- Blocker / failure classification: none.
+- Next uncertainty: none for this goal.
+
 ## Persistent dungeon-world iteration 1 — baseline and contract
 
 - Action: read the pasted objective, inspected the clean `main` tree and current simulation/presentation contracts, reconciled the stale goal record, and created the persistent-world acceptance matrix.
