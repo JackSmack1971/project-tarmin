@@ -5,6 +5,7 @@ import { DUNGEON_PALETTE, paletteHex, shadeColor } from "./palette";
 import { frameToPixels, intervalQuads, PORTAL_FRAMES, type PortalFrame, type PortalPoint } from "./portalProjection";
 import { createRenderFixture, renderFixtureFromLocation } from "./renderFixtures";
 import { PERSPECTIVE_TRANSITION_MS, projectDungeon } from "../renderer/perspective/perspectiveRenderer";
+import { MATERIALS } from "../renderer/materials";
 import { itemById } from "../content/items";
 
 function screenFrame(frame: PortalFrame, viewport: { left: number; top: number; width: number; height: number }): PortalFrame {
@@ -127,14 +128,15 @@ export class MainScene extends Phaser.Scene {
     const { width, height } = this.scale;
     const viewport = { left: 96, top: 76, width: width - 192, height: height - 226 };
     const world = this.add.graphics();
-    const primitives = projectDungeon(this.state);
+    const scene = projectDungeon(this.state);
+    const primitives = scene.primitives;
     Object.defineProperty(window, "__TARMIN_RENDERER__", {
       configurable: true,
       get: () => Object.freeze({
         position: this.state.player.position,
         facing: this.state.player.facing,
-        visibleDepth: Math.max(...primitives.map((primitive) => primitive.depth), 0),
-        primitiveTypes: primitives.map((primitive) => `${primitive.depth}:${primitive.surface}:${primitive.kind}`),
+        visibleDepth: Math.max(...primitives.map((primitive) => primitive.geometry.depth), 0),
+        primitiveTypes: primitives.map((primitive) => `${primitive.geometry.depth}:${primitive.geometry.surface}:${primitive.kind}`),
         transition: this.mode === "transitioning",
         mode: this.mode,
         seed: this.state.seed,
@@ -153,19 +155,16 @@ export class MainScene extends Phaser.Scene {
     });
 
     for (const primitive of primitives) {
-      const depthTone = primitive.depth === 1 ? 1 : primitive.depth === 2 ? 0.72 : primitive.depth === 3 ? 0.48 : 0.3;
-      const wallColor = shadeColor(DUNGEON_PALETTE.nearWall, depthTone);
-      const floorColor = shadeColor(DUNGEON_PALETTE.floor, depthTone);
-      const ceilingColor = shadeColor(DUNGEON_PALETTE.ceiling, depthTone);
-      const points = primitive.quad.map((point) => ({ x: viewport.left + point.x * viewport.width, y: viewport.top + point.y * viewport.height }));
+      const depthTone = primitive.lightLevel;
+      const points = primitive.geometry.quad.map((point) => ({ x: viewport.left + point.x * viewport.width, y: viewport.top + point.y * viewport.height }));
       const isOpening = primitive.kind === "passage" || primitive.kind === "open-door";
-      const color = primitive.surface === "floor" ? floorColor : primitive.surface === "ceiling" ? ceilingColor : isOpening ? DUNGEON_PALETTE.passageDarkness : primitive.kind === "closed-door" ? DUNGEON_PALETTE.door : wallColor;
-      fillQuad(world, points, primitive.surface === "front" && isOpening ? DUNGEON_PALETTE.visibilityTerminus : color);
-      if (primitive.surface === "front" || primitive.kind === "closed-door") { world.lineStyle(2, primitive.kind === "closed-door" ? DUNGEON_PALETTE.door : DUNGEON_PALETTE.boundary, 0.9); world.strokePoints(points.map(({ x, y }) => new Phaser.Math.Vector2(x, y)), true); }
+      const color = primitive.geometry.surface === "front" && isOpening ? DUNGEON_PALETTE.visibilityTerminus : shadeColor(MATERIALS[primitive.material].fallbackColor, depthTone);
+      fillQuad(world, points, primitive.geometry.surface === "front" && isOpening ? DUNGEON_PALETTE.visibilityTerminus : color);
+      if (primitive.geometry.surface === "front" || primitive.kind === "closed-door") { world.lineStyle(2, primitive.kind === "closed-door" ? DUNGEON_PALETTE.door : DUNGEON_PALETTE.boundary, 0.9); world.strokePoints(points.map(({ x, y }) => new Phaser.Math.Vector2(x, y)), true); }
     }
 
-    const debugDepths = [...new Set(primitives.map((primitive) => primitive.depth))];
-    this.drawPerspectiveDebug(world, viewport, debugDepths.map((distance) => ({ distance, blocked: primitives.some((primitive) => primitive.depth === distance && primitive.surface === "front") })));
+    const debugDepths = [...new Set(primitives.map((primitive) => primitive.geometry.depth))];
+    this.drawPerspectiveDebug(world, viewport, debugDepths.map((distance) => ({ distance, blocked: primitives.some((primitive) => primitive.geometry.depth === distance && primitive.geometry.surface === "front") })));
     if (this.perspectiveDebug) this.addDebugLabel(`POS ${this.state.player.position.x},${this.state.player.position.y}  FACING ${this.state.player.facing.toUpperCase()}  PRIMITIVES ${primitives.length}`, viewport.left + 8, viewport.top + viewport.height - 24);
     world.lineStyle(2, DUNGEON_PALETTE.boundary, 0.9);
     world.strokeRect(viewport.left, viewport.top, viewport.width, viewport.height);
