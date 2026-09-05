@@ -188,3 +188,14 @@
 
 - Delivery: PR #17 targeting `main` was squash-merged at `b9bb4ef7f13ba797ec0ac42f2cfa4ef7ea3b9e41`; local `main` was fast-forwarded and matched `origin/main`. No remote checks are configured.
 
+## Persistent dungeon-world model
+
+- Scope: replace coordinate-triggered fixture spawning with explicit persistent monster instances and location-bearing world items, while retaining the current active-encounter presentation/input projection.
+- Baseline: clean `main`; `npm test -- --run` passed with 35 tests; typecheck, lint, browser-status, and build passed. The browser-status command remains a manual verification notice. The routed `GAME_DESIGN.md`, `CONTENT_MODEL.md`, and `DETERMINISM_AND_SAVE.md` documents were absent at baseline.
+- Change: `GameState.monsters` now stores stable monster ID, definition ID, integer position, health, and defeated state. Movement queries undefeated instances. Combat synchronizes health/defeat to the world record before clearing active combat. Uncollected loot item instances carry a dungeon position until pickup; dropped items use the player's current position.
+- Focused verification: `npx vitest run src/sim/dungeon-world.test.ts src/sim/state.test.ts src/sim/combat-inventory.test.ts` passed (3 files, 19 tests). Full `npm test -- --run` passed (11 files, 39 tests). Typecheck, lint, `npm run test:browser`, and build passed.
+- Structural verification: `git diff --check` passed; simulation source has no Phaser imports, no `Math.random()`, and no coordinate encounter factory. State JSON round-trip and deterministic combat tests passed.
+- Browser: `npm run dev -- --host 127.0.0.1` served `http://127.0.0.1:5173/`. Chromium fallback captured `harness/evidence/persistent-world-browser-menu.png` and `harness/evidence/persistent-world-browser-corridor.png`, visually confirming the app loads and the existing presentation renders. Interactive encounter/combat/defeat/revisit flow is inconclusive: the prescribed in-app browser endpoint was unavailable, the available Playwright MCP endpoint refused its connection, and the CLI screenshot path does not support the required input sequence.
+- Documentation: updated `docs/ARCHITECTURE.md`, `docs/DECISIONS.md`, `docs/TESTING_STRATEGY.md`; added `docs/CONTENT_MODEL.md` and `docs/DETERMINISM_AND_SAVE.md`; added `harness/build/persistent-dungeon-world-acceptance.md`.
+- Delivery: not started. The goal remains active until the browser lane passes, focused branch/PR/merge are completed, and merged-main is independently verified.
+

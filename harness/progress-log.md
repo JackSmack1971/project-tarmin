@@ -1,5 +1,23 @@
 # Progress log
 
+## Persistent dungeon-world iteration 1 — baseline and contract
+
+- Action: read the pasted objective, inspected the clean `main` tree and current simulation/presentation contracts, reconciled the stale goal record, and created the persistent-world acceptance matrix.
+- Observation: `encounterAt()` synthesizes the sole monster at `(2,1)`; `GameState.loot` is an unlocated string list; current rendering consumes the active encounter projection.
+- Verification: repository status is clean on `main`; baseline command results are pending. Missing routed docs and the manual `test:browser` status are recorded as pre-existing gaps/conditions.
+- Decision: implement a persistent monster collection and location-bearing world-item state while preserving the active encounter projection for the current renderer/input seam; no remote delivery action until local evidence passes.
+- Blocker / failure classification: none.
+- Next uncertainty: exact minimal state shape and synchronization rules for retreat, re-entry, defeat, and loot collection.
+
+## Persistent dungeon-world iteration 2 — implementation and local verification
+
+- Action: added canonical `monsters` state, world-positioned loot, synchronization between active combat and world records, focused persistence tests, and affected architecture/content/determinism/testing documentation.
+- Observation: the focused suite passed 19 tests; the full suite passed 39 tests; typecheck, lint, browser-status, build, and diff checks passed. Chromium loaded the app and produced menu/corridor captures.
+- Verification: tests prove stable identity, health persistence after retreat/re-entry, permanent defeat without respawn, location-bound loot, pickup ownership, and JSON serialization. Source scan found no coordinate encounter factory, Phaser import, or `Math.random()` in simulation.
+- Decision: keep local implementation and documentation; do not claim browser-flow completion because the available browser endpoints could not exercise input-driven encounter/combat/defeat behavior.
+- Blocker / failure classification: inconclusive/environmental browser automation only; local checks are passing.
+- Next uncertainty: obtain a working browser automation endpoint, then verify the seeded encounter/combat/defeat flow before branch delivery.
+
 ## Entity-layer iteration 1 — baseline and acceptance reconciliation
 
 - Action: read the pasted objective, inspected `main`, reconciled the stale goal record, and defined E1–E8 acceptance rows.
