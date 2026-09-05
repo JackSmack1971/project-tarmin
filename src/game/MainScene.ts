@@ -26,22 +26,23 @@ export class MainScene extends Phaser.Scene {
   private reducedMotion = false;
   private feedback = "A corridor waits beyond the torchlight.";
   private inputController!: InputController;
-  private readonly entitySprites = new Map<string, Phaser.GameObjects.Sprite>();
+  private readonly entitySprites = new Map<string, Phaser.GameObjects.Image>();
 
   constructor() { super("main"); }
 
   preload(): void {
     this.load.svg("dungeon-surfaces", DUNGEON_SURFACE_ATLAS.source);
-    this.load.spritesheet("ashbound-warden", "/assets/entities/ashbound-warden.svg", { frameWidth: 32, frameHeight: 48 });
+    this.load.image("ashbound-warden", "/assets/entities/ashbound-warden.svg");
   }
 
   update(time: number): void {
     const frame = billboardFrameAt(time);
-    this.entitySprites.forEach((sprite) => sprite.setFrame(frame));
+    this.entitySprites.forEach((sprite) => sprite.setCrop(frame * 32, 0, 32, 48));
   }
 
   create(): void {
     this.cameras.main.setBackgroundColor(DUNGEON_PALETTE.backgroundVoid);
+    this.configureAtmosphere();
     this.inputController = new InputController({ target: window, emit: (command) => this.dispatch(command), getMode: () => this.mode, togglePause: () => this.togglePause() });
     this.inputController.attach();
     window.addEventListener("tarmin-start", this.onStart);
@@ -105,6 +106,41 @@ export class MainScene extends Phaser.Scene {
     this.add.text(x, y, label, { color, fontFamily: "monospace", fontSize: "12px", backgroundColor: "#090b07", padding: { x: 3, y: 2 } }).setDepth(10);
   }
 
+  private configureAtmosphere(): void {
+    const filters = this.cameras.main.filters?.external;
+    if (!filters) return;
+
+    const grade = filters.addColorMatrix();
+    grade.colorMatrix.saturate(-0.18);
+    grade.colorMatrix.contrast(0.1, true);
+    filters.addVignette(0.5, 0.54, 0.72, 0.3, DUNGEON_PALETTE.backgroundVoid);
+  }
+
+  private renderTorchLight(world: Phaser.GameObjects.Graphics, viewport: { left: number; top: number; width: number; height: number }): void {
+    const x = viewport.left + viewport.width * 0.5;
+    const y = viewport.top + viewport.height * 0.58;
+    const radius = Math.min(viewport.width, viewport.height) * 0.42;
+    const bands = [
+      { scale: 1, alpha: 0.018 },
+      { scale: 0.78, alpha: 0.024 },
+      { scale: 0.56, alpha: 0.034 },
+      { scale: 0.34, alpha: 0.048 }
+    ];
+    for (const band of bands) {
+      world.fillStyle(0xd7954a, band.alpha);
+      world.fillCircle(x, y, radius * band.scale);
+    }
+  }
+
+  private renderFog(world: Phaser.GameObjects.Graphics, viewport: { left: number; top: number; width: number; height: number }): void {
+    const edge = Math.max(18, Math.round(viewport.width * 0.035));
+    world.fillStyle(DUNGEON_PALETTE.backgroundVoid, 0.28);
+    world.fillRect(viewport.left, viewport.top, viewport.width, edge);
+    world.fillRect(viewport.left, viewport.top + viewport.height - edge, viewport.width, edge);
+    world.fillRect(viewport.left, viewport.top, edge, viewport.height);
+    world.fillRect(viewport.left + viewport.width - edge, viewport.top, edge, viewport.height);
+  }
+
   private drawPerspectiveDebug(world: Phaser.GameObjects.Graphics, viewport: { left: number; top: number; width: number; height: number }, cells: readonly { distance: number; blocked: boolean }[]): void {
     if (!this.perspectiveDebug) return;
 
@@ -163,7 +199,8 @@ export class MainScene extends Phaser.Scene {
         ring: this.state.ring,
         selectedRingIndex: this.state.selectedRingIndex,
         loot: this.state.loot,
-        entities: entities.map((entity) => ({ id: entity.id, definitionId: entity.definitionId, depth: entity.depth, lightLevel: entity.lightLevel }))
+        entities: entities.map((entity) => ({ id: entity.id, definitionId: entity.definitionId, depth: entity.depth, lightLevel: entity.lightLevel })),
+        atmosphere: { torchLight: true, fogTreatment: true, colorGrade: true, vignette: true, reducedMotionIndependent: true }
       })
     });
 
@@ -182,7 +219,9 @@ export class MainScene extends Phaser.Scene {
       if (primitive.geometry.surface === "front" || primitive.kind === "closed-door") { world.lineStyle(2, primitive.kind === "closed-door" ? DUNGEON_PALETTE.door : DUNGEON_PALETTE.boundary, 0.9); world.strokePoints(points.map(({ x, y }) => new Phaser.Math.Vector2(x, y)), true); }
     }
 
+    this.renderTorchLight(world, viewport);
     this.renderEntities(entities, viewport);
+    this.renderFog(world, viewport);
 
     const debugDepths = [...new Set(primitives.map((primitive) => primitive.geometry.depth))];
     this.drawPerspectiveDebug(world, viewport, debugDepths.map((distance) => ({ distance, blocked: primitives.some((primitive) => primitive.geometry.depth === distance && primitive.geometry.surface === "front") })));
@@ -211,7 +250,8 @@ export class MainScene extends Phaser.Scene {
       const right = Math.max(...points.map((point) => point.x));
       const top = Math.min(...points.map((point) => point.y));
       const bottom = Math.max(...points.map((point) => point.y));
-      const sprite = this.add.sprite((left + right) / 2, (top + bottom) / 2, entity.presentationId === "warden" ? "ashbound-warden" : "ashbound-warden", billboardFrameAt(performance.now()));
+      const sprite = this.add.image((left + right) / 2, (top + bottom) / 2, entity.presentationId === "warden" ? "ashbound-warden" : "ashbound-warden");
+      sprite.setCrop(billboardFrameAt(performance.now()) * 32, 0, 32, 48);
       sprite.setDisplaySize(right - left, bottom - top).setDepth(3);
       sprite.setAlpha(entity.lightLevel);
       this.entitySprites.set(entity.id, sprite);

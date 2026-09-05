@@ -20,3 +20,20 @@ The production renderer is Phaser 4.2.1 with explicit `Phaser.WEBGL`; normalized
 `src/renderer/entities/entityProjection.ts` projects presentation sources into the same discrete forward-depth model as the portal frames. A source carries a stable runtime ID, content definition ID, presentation ID, entity kind, and integer grid position; the projection derives depth, lateral placement, normalized billboard quad, and depth light without mutating state. `projectEntities()` filters sources outside the forward view and sources at or beyond the nearest opaque wall or closed door, then sorts surviving billboards far-to-near with a stable ID tie-breaker.
 
 The active encounter is the first consumer: `MainScene` adapts `GameState.encounter` into a monster source and renders the resulting `EntityBillboard` as a perspective-scaled pixel-art sprite. The same contract intentionally supports future monsters, items, treasure, and environmental features when canonical state supplies their positions; it does not create gameplay entities. `billboardFrameAt()` selects a restrained two-frame animation from elapsed presentation time only; timing is never included in `GameState`, RNG, commands, events, or entity geometry.
+
+## WebGL atmosphere pass
+
+`MainScene` applies the cosmetic stack after projection: Mesh2D material textures
+receive depth tint, a low-alpha warm torch pool is drawn inside the portal,
+entities are rendered from canonical encounter sources, and a localized edge-fog
+layer follows. The main camera then applies a static color-matrix grade and
+restrained vignette through Phaser 4 WebGL filters. These effects do not modify
+`GameState`, visibility cells, RNG, commands, encounters, or entity projection.
+No filter is time-driven; `update()` is used only for the presentation-only
+billboard frame selector. Reduced motion keeps the static atmosphere and only
+shortens the existing transition veil.
+
+Fog and vignette are compositional treatments, not a second visibility system.
+They must preserve portal boundaries, closed-door outlines, active entity
+silhouettes, and interaction-critical HUD readability. The default stack stays
+small and low-cost: no blur, animated noise, or full-screen glow.
