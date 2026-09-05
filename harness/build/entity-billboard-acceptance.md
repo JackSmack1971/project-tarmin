@@ -9,7 +9,7 @@
 | E5 | human/browser | must | Active Ashbound Warden visibly occupies encounter depth. | Browser first-person screenshot/runtime state shows a billboard, not only HUD text. | Chromium encounter capture and visual inspection. | passed — `entity-encounter-1280.png`, depth 1, WebGL |
 | E6 | functional/browser | must | Entity disappears when canonical state no longer contains it. | Defeat/retreat changes renderer entity list to empty while combat/state remains coherent. | Browser flow plus renderer surface. | passed — seed 42 defeat: `encounter:null`, `entities:[]` |
 | E7 | compatibility | must | Existing textured portal behavior remains intact. | Existing projection/render checks retain expected depth and blocker behavior. | Full repository checks and fixture inspection. | passed — 35 tests, typecheck/lint/build |
-| E8 | delivery | must | Docs, commit, PR, checks, and merged main are verified. | Updated docs/build log and merged feature commit on `main`. | Git/remote inspection. | pending |
+| E8 | delivery | must | Docs, commit, PR, checks, and merged main are verified. | Updated docs/build log and merged feature commit on `main`. | Git/remote inspection. | passed — PR #9 merged as `9413b59c1b3ff6391ca5bc3128ca4d075125dccc`; `main` and `origin/main` match |
 
 ## Scope notes
 

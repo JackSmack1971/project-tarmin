@@ -8,6 +8,13 @@
 - Decision: implement a pure renderer-neutral entity projection contract and a minimal Phaser billboard adapter using an original inline low-resolution sprite, then verify before any remote delivery action.
 - Next uncertainty: exact depth/occlusion representation and Phaser-compatible billboard presentation seam.
 
+## Entity-layer iteration 2 — delivery verification
+
+- Action: committed the completed implementation, pushed `feature/entity-billboards`, opened PR #9 against `main`, and squash-merged it.
+- Observation: PR #9 is merged; merge commit `9413b59c1b3ff6391ca5bc3128ca4d075125dccc` is the resolved tip of both local `main` and `origin/main`. No remote checks are configured.
+- Verification: local tests, typecheck, lint, build, documented browser command, and standalone Chromium evidence all passed as recorded above; the merged tree contains the entity projection, art, docs, and acceptance artifacts.
+- Decision: mark E8 and the goal complete.
+
 ## Iteration 1
 
 - Action: scaffolded the first vertical slice and its acceptance matrix.
