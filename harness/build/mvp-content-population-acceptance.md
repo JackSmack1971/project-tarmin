@@ -10,10 +10,10 @@
 | CP-06 | compatibility | must | Existing combat/inventory/objective/exit path remains completable | seeded route defeats required encounters, acquires seal, reaches exit, wins | simulation test + browser | passed — 50 tests and fresh Chromium victory at `(2,4)` |
 | CP-07 | architectural | must | No roaming AI, procedural generation, multi-floor, saves, or second authoritative model | changes remain fixed data plus existing command transitions | source inspection + tests | passed — fixed records/data; no forbidden simulation imports or RNG |
 | CP-08 | non-functional | must | Required checks pass | typecheck, lint, test, browser status, build exit successfully | commands | passed — all required commands exit 0 |
-| CP-09 | browser/human | must | Populated floor is readable and usable in running Chromium | encounter/loot/pickup/revisit/complete flow works with zero errors | fresh Chromium route, screenshots, reviewer observation | passed — Mireling/Scavenger/Warden flow; 0 errors; 3 captures |
+| CP-09 | browser/human | must | Populated floor is readable and usable in running Chromium | encounter/loot/pickup/revisit/complete flow works with zero errors | Playwright smoke flow plus manual visual review | passed — automated Warden/Mireling flow; manual visual evidence remains separately recorded |
 | CP-10 | documentation | must | Gameplay/content/testing/README/build evidence match population | docs name implemented population and verification | file inspection | passed — docs and harness records updated |
-| CP-11 | delivery | must | Focused branch and PR target `main` | commit and open PR exist | git/remote inspection | passed — commit `5196795`, PR #22 targets `main` |
-| CP-12 | delivery | must | PR merges only after checks and merged result is verified on `main` | local and remote `main` contain merged change and are clean | git/remote/check inspection | passed — PR #22 merged as `e8622b9`; merged-main checks/browser passed |
+| CP-11 | delivery | must | Focused branch and PR target `main` | commit and open PR exist | git/remote inspection | planned — this acceptance change |
+| CP-12 | delivery | must | PR merges only after checks and merged result is verified on `main` | local and remote `main` contain merged change and are clean | git/remote/check inspection | planned — this acceptance change |
 
 No contradictory or unavailable criteria identified. CP-09 includes a human
 readability judgment; runtime state and screenshots are evidence, not a

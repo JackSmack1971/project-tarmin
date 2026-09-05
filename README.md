@@ -5,11 +5,11 @@ It uses a deterministic TypeScript simulation and a Phaser 4.2.1 WebGL
 presentation layer with textured portal geometry, pixel-art materials,
 state-backed entity billboards, and a compact HTML HUD.
 
-Run `npm install` and `npm run dev`, then review in Chromium. Supported visual
-review sizes are 1280x720, 1600x900, and 1920x1080. Checks are `npm run
-typecheck`, `npm run lint`, `npm test`, and `npm run build`. `npm run
-test:browser` is the documented manual-browser status notice, not an automated
-suite.
+Run `npm install`, install Chromium with `npx playwright install chromium`, and
+use `npm run test:browser` for the deterministic MVP Playwright smoke suite.
+Run `npm run dev` for manual visual review at 1280x720, 1600x900, and
+1920x1080. Checks are `npm run typecheck`, `npm run lint`, `npm test`,
+`npm run test:browser`, and `npm run build`.
 
 The MVP is one complete deterministic floor: defeat the Ashbound Warden, pick
 up the Star-Forged Seal, explore the fixed east branch with Glass Mirelings and

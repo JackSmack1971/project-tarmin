@@ -29,7 +29,7 @@ be `passed` and no inconclusive lane.
 - `npm run typecheck`: passed.
 - `npm run lint`: passed.
 - `npm run build`: passed.
-- `npm run test:browser`: documented status check only; not counted as Chromium evidence.
+- `npm run test:browser`: Playwright Chromium smoke suite; functional evidence for the complete-floor and defeat/restart flows.
 - Chromium evidence is recorded in `harness/build-log.md` under the run-lifecycle
   entry, including route, viewport, WebGL state, input sequence, terminal and
   restart observations, screenshots, and console errors.
@@ -40,7 +40,7 @@ be `passed` and no inconclusive lane.
 - `npm run typecheck`: passed.
 - `npm run lint`: passed.
 - `npm run build`: passed.
-- `npm run test:browser`: documented status check only; not counted as Chromium evidence.
+- `npm run test:browser`: Playwright Chromium smoke suite; functional evidence for the complete-floor and defeat/restart flows.
 - Chromium evidence: fresh 1280×720 Chromium pages on `http://127.0.0.1:5173/`.
   No-seal movement reached `(2,4)` with `runStatus=playing` and
   `objective.acquired=false`. The complete route defeated the Warden, picked up

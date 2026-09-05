@@ -291,3 +291,29 @@
   exit victory at `(2,4)` with `objective.complete=true` and zero console
   errors/warnings.
 - Acceptance rows CP-01 through CP-12 pass.
+
+## MVP browser acceptance gate
+
+- Branch: `feature/mvp-browser-acceptance`; baseline `main` was clean.
+- Change: replaced the informational `test:browser` echo with Playwright
+  Chromium automation, added a focused Playwright config and Vitest browser-test
+  exclusion, and added the deterministic `combat-defeat` acceptance fixture.
+- Browser coverage: seed `7391` completed the Warden defeat/revisit, Seal loot
+  pickup, Moss Tonic use, right-hand equipment, Glass Mireling encounter and
+  defeat, exit victory, terminal input blocking, and same-seed restart. The
+  defeat flow entered the Warden from 1 vitality, reached `runStatus=defeated`,
+  verified terminal input blocking, and restarted to a clean playing state.
+  Both flows collected zero application console errors and zero page errors.
+- Clean-install verification: `npm ci` passed after stopping a stale project
+  Vite process that held esbuild on the first attempt; `npx playwright install
+  chromium` passed.
+- Final checks from the clean install: `npm run typecheck` passed, `npm run lint`
+  passed, `npm test` passed (12 files, 50 tests), `npm run test:browser` passed
+  (2 tests), `npm run build` passed, and `git diff --check` passed. Build output
+  retained the existing Phaser vendor chunk behavior; npm reported five audit
+  findings (3 moderate, 1 high, 1 critical), not introduced by the browser
+  suite.
+- Manual visual review remains separate and is still required for atmosphere,
+  supported resolutions, reduced motion, and other experiential claims.
+- The repository references `docs/engineering/version-control.md`, but that
+  file is absent; delivery follows the explicit root AGENTS.md PR policy.

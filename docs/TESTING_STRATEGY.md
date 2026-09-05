@@ -2,10 +2,24 @@
 
 ## Browser verification
 
-`npm run test:browser` is a truthful status check, not an automated browser
-test. It must not be counted as browser verification.
+`npm run test:browser` runs the Playwright Chromium MVP smoke suite. Install the
+Playwright browser once after a clean dependency install with
+`npx playwright install chromium`.
 
-For browser-visible changes:
+The suite has two deterministic flows in `tests/browser/mvp.spec.ts`:
+
+* seed `7391` starts a run, defeats and revisits the Ashbound Warden, picks up
+  the Star-Forged Seal, uses the Moss Tonic, equips an item, encounters and
+  defeats a Glass Mireling, reaches the exit, verifies terminal victory/input
+  blocking, and restarts the same seed;
+* `?fixture=combat-defeat` starts a deterministic low-vitality combat probe,
+  reaches player defeat, verifies terminal input blocking, and restarts.
+
+Application console errors and page errors are collected and fail either flow.
+This is functional browser coverage; it does not replace the manual visual
+review below.
+
+For browser-visible changes requiring visual or experiential judgment:
 
 1. Run `npm run dev`.
 2. Open the printed local URL in Chromium.
@@ -13,9 +27,9 @@ For browser-visible changes:
 4. Check the browser console for errors and record the route, inputs, viewport,
    observable result, and screenshot paths when visual evidence matters.
 
-The required browser evidence belongs in `harness/build-log.md` or the relevant
-phase acceptance document. If an automated browser suite is added later, replace
-the placeholder script and document its command and coverage here.
+The required manual visual evidence belongs in `harness/build-log.md` or the
+relevant phase acceptance document. The automated suite is the acceptance gate
+for the MVP gameplay flows, not a visual-regression system.
 
 ## Local checks
 
@@ -29,7 +43,9 @@ npm run test:browser
 npm run build
 ```
 
-The `test:browser` status check does not replace the Chromium procedure above.
+`npm run test:browser` is the automated Chromium procedure for MVP functional
+coverage; the manual Chromium procedure above remains required for visual and
+experiential claims.
 
 Atmosphere browser evidence must include a near/bright material state, a
 deep/distant corridor state, an encounter and post-defeat state, a movement
@@ -58,8 +74,11 @@ restart; disabled terminal input; visible terminal panels; and multi-event
 defeat/loot feedback. Chromium evidence must exercise defeat and both restart
 buttons from a fresh page and record the terminal mode/state plus console errors.
 The reproducible terminal-panel routes are `?fixture=defeated` and
-`?fixture=victorious`; these are presentation fixtures only, while authoritative
-transition proof remains in simulation tests.
+`?fixture=victorious`; these remain presentation fixtures for visual review,
+while authoritative transition proof remains in simulation tests. The
+`?fixture=combat-defeat` route is a deterministic browser acceptance fixture
+that begins immediately before the Warden cell with 1 vitality so the negative
+combat path is reachable without weakening normal-game rules.
 
 The complete one-floor run additionally requires deterministic proof that the
 Warden yields the Star-Forged Seal, pickup records objective possession, the
