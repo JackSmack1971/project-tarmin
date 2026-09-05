@@ -68,4 +68,9 @@ describe("authoritative exploration", () => {
     expect(result.encounter).toBeNull();
     expect(result.player.position).toEqual({ x: 1, y: 1 });
   });
+
+  it("round-trips the lifecycle field through canonical JSON", () => {
+    const defeated = { ...createInitialState(42), runStatus: "defeated" as const, playerHealth: 0 };
+    expect(JSON.parse(JSON.stringify(defeated))).toEqual(defeated);
+  });
 });

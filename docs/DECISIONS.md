@@ -1,5 +1,15 @@
 # Decisions
 
+## Canonical run lifecycle
+
+- Status: approved implementation decision for the run-lifecycle slice.
+- Decision: store `playing`, `defeated`, or `victorious` in canonical simulation
+  state rather than deriving lifecycle from renderer mode or health alone.
+- Consequences: defeat clears active combat and rejects later commands;
+  `completeRun()` is the future dungeon-objective victory hook; restart creates a
+  clean seeded initial state. `rulesVersion` remains unchanged because the
+  current save contract has no migration surface.
+
 ## Phaser 4.2.1 and explicit WebGL
 
 - Status: approved for the presentation modernization migration.

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyCommand, createInitialState, executeCommand } from "./state";
+import { applyCommand, completeRun, createInitialState, executeCommand, restartRun } from "./state";
 
 const encounter = () => applyCommand(createInitialState(42), "moveForward");
 
@@ -34,6 +34,27 @@ describe("deterministic combat and ring inventory", () => {
     const state = { ...encounter(), playerHealth: 1, encounter: { ...encounter().encounter!, attack: 1 } };
     const result = executeCommand(state, "attackLeft");
     expect(result.state.playerHealth).toBe(0);
+    expect(result.state.runStatus).toBe("defeated");
+    expect(result.state.encounter).toBeNull();
     expect(result.events.some((event) => event.type === "playerDefeated")).toBe(true);
+    expect(result.events.at(-1)).toEqual({ type: "runDefeated" });
+  });
+  it("blocks every later command after defeat without mutating the terminal run", () => {
+    const state = { ...encounter(), playerHealth: 1, encounter: { ...encounter().encounter!, attack: 1 } };
+    const defeated = executeCommand(state, "attackLeft").state;
+    const attempted = executeCommand(defeated, "moveForward");
+    expect(attempted.state).toBe(defeated);
+    expect(attempted.events).toEqual([{ type: "commandIgnored", reason: "terminal" }]);
+  });
+  it("supports a terminal victory hook and blocks later commands", () => {
+    const result = completeRun(createInitialState(42));
+    expect(result.state.runStatus).toBe("victorious");
+    expect(result.events).toEqual([{ type: "runVictorious" }]);
+    expect(executeCommand(result.state, "turnLeft").state).toBe(result.state);
+  });
+  it("restarts cleanly for the same and a new seed", () => {
+    expect(restartRun(42)).toEqual(createInitialState(42));
+    expect(restartRun(43).seed).toBe(43);
+    expect(restartRun(43)).not.toEqual(restartRun(42));
   });
 });

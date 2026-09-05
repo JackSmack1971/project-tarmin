@@ -31,4 +31,12 @@ describe("keyboard input adapter", () => {
     listener.current?.(key("KeyW", undefined, true));
     expect(emit).not.toHaveBeenCalled();
   });
+
+  it("disables gameplay input in terminal modes", () => {
+    const listener: { current?: (event: KeyboardEvent) => void } = {};
+    const emit = vi.fn();
+    new InputController({ target: { addEventListener: (_type, callback) => { listener.current = callback; }, removeEventListener: () => undefined }, emit, togglePause: vi.fn(), getMode: () => "defeated" }).attach();
+    listener.current?.(key("KeyW"));
+    expect(emit).not.toHaveBeenCalled();
+  });
 });
