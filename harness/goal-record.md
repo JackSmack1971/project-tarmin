@@ -2,41 +2,38 @@
 
 ## Objective
 
-Add a perspective-aware billboard entity layer so state-backed dungeon entities visibly inhabit the first-person view. The active Ashbound Warden must render at its canonical encounter depth with deterministic scaling, ordering, and geometry occlusion; the contract must be reusable for monsters, items, treasure, and environmental features without adding unsupported gameplay systems.
+Complete and harden the Phase 15 visual pipeline so the merged browser game consistently reads as original high-quality pixel-art dungeon composition: coherent atlas materials and palette, crisp WebGL scaling, correct portal depth/UV/occlusion/composition, and browser-suitable presentation performance.
 
 ## Current phase
 
-Complete — entity projection, browser integration, and PR delivery verified.
+Implementation and browser evidence complete locally; remote delivery pending.
 
-## Constraints
+## Constraints and non-goals
 
-TypeScript, Vite, Phaser presentation, framework-independent pure simulation, deterministic seeded state, integer grid coordinates, cardinal facing, original low-resolution pixel art, presentation-only animation, and no gameplay/state mutation from rendering. Preserve the textured portal renderer already on `main`.
-
-## Non-goals
-
-Do not invent new gameplay entities, encounter rules, maps, persistence, or real-time combat. Existing canonical state remains authoritative; defeated/absent entities must disappear from presentation.
+Preserve TypeScript, Vite, Phaser 4/WebGL, framework-independent deterministic simulation, integer cardinal grid movement, turn-based combat, canonical serializable state, pseudo-3D portal projection, and original/licensed assets. Do not redesign gameplay, add a backend, or replace the grid interaction grammar.
 
 ## Acceptance criteria
 
-| ID | Requirement | Evidence |
-| --- | --- | --- |
-| E1 | Canonical state projects active encounters and reusable entity kinds into the same discrete depth model as dungeon geometry. | Pure projection/entity tests |
-| E2 | Entity billboards scale by depth, use deterministic placement/order, and remain occluded by blocking geometry. | Projection tests plus source inspection |
-| E3 | Presentation animation is deterministic/presentation-only and cannot affect state or combat outcomes. | Unit tests, state comparison, browser inspection |
-| E4 | Active Ashbound Warden is visibly present in the first-person view at encounter depth; far entities remain readable and near entities are prominent. | Browser screenshots/runtime inspection |
-| E5 | Entity disappears when canonical state no longer contains it. | Simulation/browser defeat or retreat flow |
-| E6 | Required repository checks pass. | typecheck, lint, test, test:browser, build |
-| E7 | Rendering/art/gameplay docs and build evidence are updated. | docs and `harness/build-log.md` |
-| E8 | Changes are committed on a feature branch, submitted as a PR to `main`, checks pass, and merged state is verified on `main`. | Git/remote inspection |
+| ID | Requirement | Evidence | Status |
+| --- | --- | --- | --- |
+| P15-1 | WebGL is active and no obsolete Canvas/flat-polygon production surface path remains. | source scan, browser WebGL context, build | passed locally |
+| P15-2 | Atlas/material IDs and semantic palette are consistent; UVs are inset and metadata-driven. | material/mesh tests and source inspection | passed locally |
+| P15-3 | Crisp 1280×720 presentation works at 1280×720, 1600×900, and 1920×1080. | Chromium captures and canvas measurements | passed locally |
+| P15-4 | Corridor, wall, doorway, turning/opening, and blocked movement compositions preserve depth and opaque termination. | fixture runtime state plus screenshots | passed locally |
+| P15-5 | Encounter/combat/defeat shows the Warden, retains HUD hierarchy, and removes it when canonical state is gone. | paced Chromium flow and screenshots | passed locally |
+| P15-6 | Pause and reduced-motion states remain readable and presentation-only. | Chromium state inspection and pause capture | passed locally |
+| P15-7 | Presentation timing cannot alter authoritative state. | projection tests and source inspection | passed locally |
+| P15-8 | Required checks and durable documentation are current. | command results and docs/build log | passed locally |
+| P15-9 | Feature branch, PR to `main`, passing checks, merge, and merged-main verification. | Git/remote inspection after delivery | pending |
 
 ## Authorized scope
 
-Local repository edits, tests, browser verification, feature branch creation, commit, PR creation, and merge to `main` as explicitly requested. No unrelated cleanup or new external services.
+Repository-local edits, tests, browser verification, feature branch, commit, PR creation, and merge to `main`, as explicitly requested. No unrelated cleanup or new services.
 
-## Stopping conditions
+## Stopping condition
 
-Stop only when every acceptance row has independent evidence, required docs/build log are current, and the verified merged result is present on `main`. All rows are now evidenced by the phase-10 acceptance record and PR #9 merge verification.
+Stop only after P15-1 through P15-8 have independent evidence and P15-9 is verified against the merged `main` tree.
 
 ## Evidence index
 
-This record, `harness/progress-log.md`, `harness/build/`, and `harness/build-log.md`.
+`harness/build/phase-15-visual-pipeline-acceptance.md`, `harness/fidelity/phase-15-visual-pipeline.json`, `harness/context/phase-15-visual-pipeline-context.md`, and `harness/build-log.md`.

@@ -29,6 +29,11 @@ the material palette. Near stone must retain readable texture and silhouette
 contrast, while distant openings approach near-black without losing navigation
 landmarks.
 
+The palette is semantic and shared by the atlas adapter and atmosphere pass;
+torch warmth is a palette token rather than a second ad hoc color. Atlas UVs use
+an inset around each authored swatch so neighboring pixel marks cannot bleed
+into projected surfaces.
+
 ## Interface hierarchy
 
 The dungeon is the visual subject. A warm parchment/olive interface sits at the

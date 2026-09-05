@@ -7,6 +7,7 @@ export const DUNGEON_PALETTE = {
   ceiling: 0x202519,
   passageDarkness: 0x0e110b,
   visibilityTerminus: 0x050604,
+  torchLight: 0xd7954a,
   door: 0x665735,
   hostileEntity: 0x9b5032,
   treasureItem: 0xc09a3c,

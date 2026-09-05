@@ -35,3 +35,8 @@ near-black panels. Interactive controls retain visible focus outlines, live
 feedback uses `aria-live`, modal pause uses `role="dialog"` and
 `aria-modal="true"`, and reduced-motion preferences shorten presentation
 transitions without changing simulation state.
+
+The renderer rebuilds presentation only after a command or mode/state change;
+its frame loop updates cosmetic billboard crops only. This keeps turning,
+blocked movement, combat, pause, and reduced-motion feedback independent of
+presentation frame rate.

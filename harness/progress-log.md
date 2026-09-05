@@ -38,3 +38,10 @@
 - Action: reset the first-person projection around five normalized nested portal frames, with one explicit ceiling, floor, left-wall, and right-wall quad per visible cell interval; front walls terminate at the blocked cell's far frame and open side edges use dark trapezoids.
 - Observation: fixed 1280×720 captures distinguish wall depths 1–3, show four corridor stages, and show black left/right apertures and distant termination. The existing ArrowUp combat probe still enters the Ashbound Warden encounter.
 - Verification: projection and simulation tests pass (9 total); browser captured all ten requested fixture PNGs plus `portal-gameplay-combat.png`; browser console errors: 0.
+
+## Phase 15 iteration 1 — local hardening and runtime evidence
+
+- Action: reconciled the stale goal record to Phase 15, created `feature/phase-15-visual-pipeline`, centralized material atlas lookup and torch palette identity, hardened transient display cleanup and explicit billboard depth, and updated durable renderer/UI/art/testing documentation.
+- Observation: baseline and post-change local checks remain green; fresh Chromium confirms WebGL, depth/door/opening fixtures, encounter presence and defeat disappearance, pause/reduced-motion behavior, and 1280/1600/1920 responsive scaling.
+- Verification: fidelity ledger validator passed; typecheck, lint, 35 tests, test:browser status, build, diff check, and structural scans passed. Browser evidence is recorded in `harness/build/phase-15-visual-pipeline-acceptance.md`.
+- Decision: local acceptance rows P15-1 through P15-8 are passed. Keep P15-9 pending until feature branch commit, PR, merge, and merged-main verification.

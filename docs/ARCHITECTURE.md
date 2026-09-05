@@ -15,3 +15,8 @@ cosmetic torch, fog, and WebGL filter objects after consuming the renderer-neutr
 scene and entity projections. Camera filters may grade or darken pixels, but
 cannot change projected geometry, canonical visibility, RNG, commands, encounters,
 or serialized state.
+
+Phase 15 keeps state-change rendering bounded to transient display objects and
+clears destroyed entity references before rebuilding. The per-frame update path
+only advances the presentation billboard frame; it does not project geometry or
+read or mutate authoritative state.

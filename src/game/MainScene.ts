@@ -25,6 +25,7 @@ export class MainScene extends Phaser.Scene {
   private mode: InputMode = renderFixtureFromLocation() ? "active" : "menu";
   private reducedMotion = false;
   private feedback = "A corridor waits beyond the torchlight.";
+  private presentationTimeMs = 0;
   private inputController!: InputController;
   private readonly entitySprites = new Map<string, Phaser.GameObjects.Image>();
 
@@ -36,6 +37,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   update(time: number): void {
+    this.presentationTimeMs = time;
     const frame = billboardFrameAt(time);
     this.entitySprites.forEach((sprite) => sprite.setCrop(frame * 32, 0, 32, 48));
   }
@@ -133,7 +135,7 @@ export class MainScene extends Phaser.Scene {
       { scale: 0.34, alpha: 0.048 }
     ];
     for (const band of bands) {
-      world.fillStyle(0xd7954a, band.alpha);
+      world.fillStyle(DUNGEON_PALETTE.torchLight, band.alpha);
       world.fillCircle(x, y, radius * band.scale);
     }
   }
@@ -178,7 +180,8 @@ export class MainScene extends Phaser.Scene {
   }
 
   private renderState(): void {
-    this.children.removeAll();
+    this.entitySprites.clear();
+    this.children.removeAll(true);
     const { width, height } = this.scale;
     const viewport = portalViewport(width, height);
     const scene = projectDungeon(this.state);
@@ -226,7 +229,7 @@ export class MainScene extends Phaser.Scene {
     }
 
     this.renderTorchLight(world, viewport);
-    this.renderEntities(entities, viewport);
+    this.renderEntities(entities, viewport, billboardFrameAt(this.presentationTimeMs));
     this.renderFog(world, viewport);
 
     const debugDepths = [...new Set(primitives.map((primitive) => primitive.geometry.depth))];
@@ -237,8 +240,7 @@ export class MainScene extends Phaser.Scene {
     window.dispatchEvent(new CustomEvent("tarmin-state", { detail: { floor: this.state.floor, turn: this.state.turn, health: this.state.playerHealth, maxHealth: this.state.playerMaxHealth, seed: this.state.seed, facing: this.state.player.facing, position: this.state.player.position, feedback: this.feedback, leftHand: this.itemName(this.state.leftHand), rightHand: this.itemName(this.state.rightHand), leftDetail: this.itemDetail(this.state.leftHand), rightDetail: this.itemDetail(this.state.rightHand), ring: this.state.ring.map((id) => this.itemName(id) ?? "UNKNOWN"), selectedRingIndex: this.state.selectedRingIndex, encounter: this.state.encounter ? { name: this.state.encounter.name, health: this.state.encounter.health, maxHealth: this.state.encounter.maxHealth } : null } }));
   }
 
-  private renderEntities(entities: readonly EntityBillboard[], viewport: { left: number; top: number; width: number; height: number }): void {
-    this.entitySprites.clear();
+  private renderEntities(entities: readonly EntityBillboard[], viewport: { left: number; top: number; width: number; height: number }, frame: 0 | 1): void {
     for (const entity of entities) {
       const points = entity.quad.map((point) => ({ x: viewport.left + point.x * viewport.width, y: viewport.top + point.y * viewport.height }));
       const left = Math.min(...points.map((point) => point.x));
@@ -246,8 +248,9 @@ export class MainScene extends Phaser.Scene {
       const top = Math.min(...points.map((point) => point.y));
       const bottom = Math.max(...points.map((point) => point.y));
       const sprite = this.add.image((left + right) / 2, (top + bottom) / 2, entity.presentationId === "warden" ? "ashbound-warden" : "ashbound-warden");
-      sprite.setCrop(billboardFrameAt(performance.now()) * 32, 0, 32, 48);
-      sprite.setDisplaySize(right - left, bottom - top).setDepth(3);
+      sprite.setCrop(frame * 32, 0, 32, 48);
+      // Keep near billboards above far billboards independent of display-list order.
+      sprite.setDisplaySize(right - left, bottom - top).setDepth(100 + PORTAL_FRAMES.length - entity.depth);
       sprite.setAlpha(entity.lightLevel);
       this.entitySprites.set(entity.id, sprite);
     }
