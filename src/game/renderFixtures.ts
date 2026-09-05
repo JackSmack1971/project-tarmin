@@ -2,7 +2,7 @@ import { createInitialState, type GameState } from "../sim/state";
 
 export const RENDER_FIXTURES = [
   "wall-1", "wall-2", "wall-3", "straight-corridor", "left-opening-1", "left-opening-2",
-  "right-opening-1", "t-intersection", "four-way-intersection", "corridor-darkness", "closed-door", "open-door", "defeated", "victorious"
+  "right-opening-1", "t-intersection", "four-way-intersection", "corridor-darkness", "closed-door", "open-door", "defeated", "victorious", "combat-defeat"
 ] as const;
 export type RenderFixture = typeof RENDER_FIXTURES[number];
 
@@ -27,8 +27,11 @@ function fixtureWalls(fixture: RenderFixture): string[] {
 
 export function createRenderFixture(fixture: RenderFixture): GameState {
   const status = fixture === "defeated" || fixture === "victorious" ? fixture : "playing";
+  const initial = createInitialState(7391);
   return {
-    ...createInitialState(7391), runStatus: status, playerHealth: status === "defeated" ? 0 : 10, player: { position: { x: 0, y: 0 }, facing: "east" }, walls: fixtureWalls(fixture),
+    ...initial, runStatus: status, playerHealth: status === "defeated" ? 0 : fixture === "combat-defeat" ? 1 : 10,
+    player: { position: fixture === "combat-defeat" ? { x: 1, y: 1 } : { x: 0, y: 0 }, facing: "east" },
+    walls: fixture === "combat-defeat" ? initial.walls : fixtureWalls(fixture),
     doors: fixture === "closed-door" || fixture === "open-door" ? [{ position: { x: 1, y: 0 }, open: fixture === "open-door" }] : []
   };
 }

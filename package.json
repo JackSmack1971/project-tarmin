@@ -9,12 +9,13 @@
     "typecheck": "tsc -b --pretty false",
     "lint": "tsc -b --pretty false",
     "test": "vitest run",
-    "test:browser": "echo \"No automated browser suite is configured; run npm run dev and verify the local build in Chromium per docs/TESTING_STRATEGY.md.\""
+    "test:browser": "playwright test"
   },
   "dependencies": {
     "phaser": "4.2.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/node": "^22.10.0",
     "typescript": "^5.7.2",
     "vite": "^6.0.7",
