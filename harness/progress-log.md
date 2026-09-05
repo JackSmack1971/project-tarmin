@@ -18,6 +18,15 @@
 - Blocker / failure classification: inconclusive/environmental browser automation only; local checks are passing.
 - Next uncertainty: obtain a working browser automation endpoint, then verify the seeded encounter/combat/defeat flow before branch delivery.
 
+## Persistent dungeon-world iteration 3 — browser verification
+
+- Action: used a disposable Playwright Chromium runtime against the local Vite server to exercise the required presentation/input path, including defeat, pickup, and revisit.
+- Observation: seed `7391` entered `monster-warden-1` with one entity; four Space attacks removed the encounter/entity and produced loot; `p` collected the loot; ArrowUp/ArrowDown/ArrowUp revisited `(2,1)` with `encounter:null`, `entities:[]`, and zero page/application errors.
+- Verification: browser captures were written under `harness/evidence/persistent-world-browser-*.png`; the renderer state surface confirmed the expected before/after values at 1280×720.
+- Decision: browser acceptance is passed; run the final project checks, commit the evidence record, and then proceed to PR merge verification.
+- Blocker / failure classification: none.
+- Next uncertainty: required check status and merged-main state after the PR merge.
+
 ## Entity-layer iteration 1 — baseline and acceptance reconciliation
 
 - Action: read the pasted objective, inspected `main`, reconciled the stale goal record, and defined E1–E8 acceptance rows.

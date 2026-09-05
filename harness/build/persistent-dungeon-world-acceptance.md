@@ -23,4 +23,4 @@ Human row: DW-08 includes experiential readability review; automated/browser evi
 
 ## Post-implementation summary
 
-Passed: DW-01 through DW-07, DW-09, and DW-10 based on focused/full test output, source inspection, project commands, and documentation. DW-08 is inconclusive because the available browser endpoints could load and capture the app but could not exercise the required input-driven encounter/combat/defeat flow. DW-11 and DW-12 remain planned pending delivery. Any failed, blocked, contradictory, or inconclusive applicable count prevents completion.
+Passed: DW-01 through DW-10. DW-08 is supported by fresh 1280×720 Chromium evidence covering encounter, defeat, entity disappearance, loot pickup, revisit, and zero page/application errors. DW-11 and DW-12 remain planned pending final commit/PR merge and merged-main verification. Any failed, blocked, contradictory, or inconclusive applicable count prevents completion.
