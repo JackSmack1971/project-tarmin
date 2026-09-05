@@ -14,6 +14,23 @@ It contains the downloaded source packs and copied provenance files listed in `S
 
 The current runtime art remains governed by the project art direction: authored or transformed project assets are copied into `public/` only after review. Raw third-party sources are references or processing inputs; they are not automatically runtime assets. Preserve the source URL, author, license, intended use, and any attribution/share-alike obligation in the manifest before using a new source.
 
+## Dungeon surface atlas derivation
+
+`public/assets/dungeon/dungeon-surfaces.png` is Project Tarmin's checked-in
+production atlas, not a raw Tiny Texture Pack 2 file. Regenerate it from the
+staged CC0 archive with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\derive_dungeon_atlas.ps1
+```
+
+The script extracts no source files into the browser build. It samples the
+specific staged textures, applies Project Tarmin palettes and contrast, makes
+the logical edges tile-compatible, scales the 16px logical pixels to canonical
+32×32 regions, and creates protective edge gutters. Archive/output hashes and
+the exact source entries are in `DUNGEON_ATLAS_DERIVATION.json`; update that
+record and re-review the browser output when the transform changes.
+
 ## Gather or extend the source set
 
 From the downloader directory on Windows:

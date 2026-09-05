@@ -1,0 +1,28 @@
+{
+  "id": "tarmin-dungeon-surfaces-v2",
+  "output": "public/assets/dungeon/dungeon-surfaces.png",
+  "source": {
+    "manifest": "SOURCE_MANIFEST.json",
+    "sourceId": "tiny-texture-pack-2",
+    "archive": "downloads/sbs_-_tiny_texture_pack_2_-_128x128.zip",
+    "sha256": "036589D7D59F72445C0B0AC54403B9DAD36F915CB7039576BBE78F98E772B8A6"
+  },
+  "derivation": {
+    "script": "derive_dungeon_atlas.ps1",
+    "logicalTileSize": 16,
+    "canonicalRegionSize": 32,
+    "atlasPadding": 1,
+    "method": "Center-sample the listed CC0 source textures to a 16x16 logical grid, increase luminance contrast, map to Project Tarmin semantic palettes, force opposite logical edges to match, scale each logical pixel 2x nearest-neighbor, and copy a one-pixel edge gutter. Darkness is an original Project Tarmin aperture."
+  },
+  "outputSha256": "56D6319879F32373B91E149ED29CAFADC95C892222BF68D27A543BCC8856A7B8",
+  "inputs": {
+    "crypt-stone": "128x128/Brick/Brick_01-128x128.png",
+    "burial-masonry": "128x128/Brick/Brick_02-128x128.png",
+    "basalt": "128x128/Stone/Stone_01-128x128.png",
+    "timber-door": "128x128/Wood/Wood_01-128x128.png",
+    "iron-door": "128x128/Metal/Metal_01-128x128.png",
+    "floor-stone": "128x128/Tile/Tile_01-128x128.png",
+    "ceiling-stone": "128x128/Stone/Stone_02-128x128.png",
+    "darkness": "Original Project Tarmin authored aperture"
+  }
+}

@@ -9,7 +9,7 @@ Each scene primitive has two deliberately separate concerns:
 
 `projectDungeon()` remains the spatial source of truth. It emits far-to-near portal intervals and stops at the nearest opaque wall or closed door. It must not import Phaser, call `Math.random()`, mutate simulation state, or depend on frame timing. `primitiveSignature()` is a compact deterministic diagnostic for geometry and metadata regression tests.
 
-Material IDs are stable contracts, not artwork. The data-only material registry points to regions in the original low-resolution atlas at `public/assets/dungeon/dungeon-surfaces.svg`. The production Phaser adapter loads that atlas once and renders every dungeon surface through a Mesh2D quad composed of two textured triangles. The four projected corners receive the four inset atlas-region UV corners, so the material follows the existing portal projection without introducing a second spatial model. Depth light is presentation-only Mesh2D tinting; it does not alter geometry or simulation. Variation is derived from seed, floor, source cell, and surface through a stable hash.
+Material IDs are stable contracts, not artwork. The data-only material registry points to padded canonical 32×32 regions in the original Project Tarmin atlas at `public/assets/dungeon/dungeon-surfaces.png`. The production Phaser adapter loads that atlas once and renders every dungeon surface through a Mesh2D quad composed of two textured triangles. The four projected corners receive the four inset atlas-region UV corners, so the material follows the existing portal projection without introducing a second spatial model. Depth light is presentation-only Mesh2D tinting; it does not alter geometry or simulation. Variation is derived from seed, floor, source cell, and surface through a stable hash.
 
 Open passages use the darkness swatch, while closed doors use the deterministic timber/iron material identity and retain a boundary stroke for immediate blocker readability. Mesh2D uses nearest-neighbor pixel-art sampling through the game-wide `pixelArt` configuration. Graphics remains for borders and the opt-in perspective debug overlay only; production dungeon surfaces are not flat fill polygons.
 
@@ -34,8 +34,10 @@ billboard frame selector. Reduced motion keeps the static atmosphere and only
 shortens the existing transition veil.
 
 The material UV adapter resolves atlas coordinates through the material registry,
-then applies a quarter-pixel inset to all four corners. This keeps material IDs
-and atlas coordinates from drifting apart as the authored atlas evolves. Phaser
+then applies a quarter-pixel inset to all four corners. The 136×68 atlas also
+copies a one-pixel gutter around each 32×32 region, preventing bleeding even at
+the boundary. This keeps material IDs and atlas coordinates from drifting apart
+as the authored atlas evolves. Phaser
 display objects are rebuilt only after a state or mode change; the frame loop
 updates billboard crops only.
 
