@@ -13,6 +13,8 @@ const game = new Phaser.Game({
   width: 1280,
   height: 720,
   backgroundColor: DUNGEON_PALETTE.backgroundVoid,
+  pixelArt: true,
+  antialias: false,
   scene: MainScene,
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }
 });
