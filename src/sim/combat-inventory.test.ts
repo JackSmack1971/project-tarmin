@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyCommand, completeRun, createInitialState, executeCommand, restartRun } from "./state";
+import { applyCommand, completeRun, createInitialState, executeCommand, restartRun, EXIT_POSITION } from "./state";
 
 const encounter = () => applyCommand(createInitialState(42), "moveForward");
 
@@ -47,7 +47,8 @@ describe("deterministic combat and ring inventory", () => {
     expect(attempted.events).toEqual([{ type: "commandIgnored", reason: "terminal" }]);
   });
   it("supports a terminal victory hook and blocks later commands", () => {
-    const result = completeRun(createInitialState(42));
+    const initial = createInitialState(42);
+    const result = completeRun({ ...initial, player: { position: EXIT_POSITION, facing: "south" }, objective: { ...initial.objective, acquired: true } });
     expect(result.state.runStatus).toBe("victorious");
     expect(result.events).toEqual([{ type: "runVictorious" }]);
     expect(executeCommand(result.state, "turnLeft").state).toBe(result.state);

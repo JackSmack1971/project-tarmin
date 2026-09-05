@@ -26,6 +26,9 @@ defeat, monster-defeat, and loot events when one command produces multiple event
   remains the primary encounter representation.
 - Feedback is a short live message. It must remain concise and never replace a
   visible door, corridor, entity, or combat result.
+- The header shows objective status and exit coordinate. Before the seal is
+  collected it says `FIND SEAL`; after pickup it says `SEAL FOUND`; the exit
+  reports a locked message without awarding victory until the objective is held.
 
 Menu and pause use the same dark panel, border, type, and focus treatment as the
 HUD. Pause owns focus through its Resume control, keeps the run unchanged, and

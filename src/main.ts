@@ -23,7 +23,7 @@ const ui = document.createElement("section");
 ui.className = "shell-ui";
 ui.innerHTML = `<div class="start-panel" data-start><p class="eyebrow">AN ORIGINAL DUNGEON DESCENT</p><h1>THE UNDERCRYPT</h1><p class="lede">A torch, a sealed passage, and whatever waits below.</p><form><label for="seed">RUN SEED</label><input id="seed" name="seed" value="7391" autocomplete="off" inputmode="numeric"><div class="start-actions"><button type="submit">BEGIN DESCENT</button><button type="button" data-generate>GENERATE SEED</button></div></form><p class="hint">W / S move · A / D turn · Q / E ring · Esc pause</p></div>
 <div class="hud" data-hud hidden aria-label="Run information">
-  <header class="hud-header"><div><span class="eyebrow">THE UNDERCRYPT</span><strong data-floor></strong></div><div class="location" data-location></div><button type="button" class="pause-button" data-pause>PAUSE <span>ESC</span></button></header>
+  <header class="hud-header"><div><span class="eyebrow">THE UNDERCRYPT</span><strong data-floor></strong></div><div class="location" data-location></div><div class="objective" data-objective></div><button type="button" class="pause-button" data-pause>PAUSE <span>ESC</span></button></header>
   <aside class="equipment equipment-left" aria-label="Left hand equipment"><span class="slot-label">LEFT HAND</span><strong data-left>EMPTY</strong><small data-left-detail>—</small></aside>
   <aside class="equipment equipment-right" aria-label="Right hand equipment"><span class="slot-label">RIGHT HAND</span><strong data-right>EMPTY</strong><small data-right-detail>—</small></aside>
   <section class="vitals" aria-label="Player vitality"><span class="slot-label">VITALITY</span><strong data-health></strong><div class="health-bar"><i data-health-bar></i></div></section>
@@ -46,6 +46,7 @@ const seed = ui.querySelector("#seed") as HTMLInputElement;
 const feedback = ui.querySelector("[data-feedback]") as HTMLElement;
 const floor = ui.querySelector("[data-floor]") as HTMLElement;
 const location = ui.querySelector("[data-location]") as HTMLElement;
+const objective = ui.querySelector("[data-objective]") as HTMLElement;
 const health = ui.querySelector("[data-health]") as HTMLElement;
 const healthBar = ui.querySelector("[data-health-bar]") as HTMLElement;
 const left = ui.querySelector("[data-left]") as HTMLElement;
@@ -79,9 +80,10 @@ window.addEventListener("tarmin-mode", (event) => {
   if (mode === "defeated" || mode === "victorious") (ui.querySelector("[data-restart-same]") as HTMLButtonElement).focus();
 });
 window.addEventListener("tarmin-state", (event) => {
-  const detail = (event as CustomEvent<{ floor: number; turn: number; health: number; maxHealth: number; feedback: string; seed: number; runStatus: string; facing: string; position: { x: number; y: number }; leftHand: string | null; rightHand: string | null; leftDetail: string; rightDetail: string; ring: readonly string[]; selectedRingIndex: number; encounter: { name: string; health: number; maxHealth: number } | null }>).detail;
+  const detail = (event as CustomEvent<{ floor: number; turn: number; health: number; maxHealth: number; feedback: string; seed: number; runStatus: string; facing: string; position: { x: number; y: number }; leftHand: string | null; rightHand: string | null; leftDetail: string; rightDetail: string; ring: readonly string[]; selectedRingIndex: number; objective: { acquired: boolean; complete: boolean; exit: { x: number; y: number } }; encounter: { name: string; health: number; maxHealth: number } | null }>).detail;
   floor.textContent = `FLOOR ${detail.floor} · TURN ${detail.turn} · SEED ${detail.seed}`;
   location.textContent = `${detail.position.x},${detail.position.y} · FACING ${detail.facing.toUpperCase()}`;
+  objective.textContent = detail.objective.complete ? "OBJECTIVE COMPLETE" : detail.objective.acquired ? `SEAL FOUND · EXIT ${detail.objective.exit.x},${detail.objective.exit.y}` : `FIND SEAL · EXIT ${detail.objective.exit.x},${detail.objective.exit.y}`;
   health.textContent = `${detail.health}/${detail.maxHealth}`;
   healthBar.style.width = `${Math.max(0, Math.min(100, detail.health / detail.maxHealth * 100))}%`;
   feedback.textContent = detail.feedback;

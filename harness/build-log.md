@@ -228,3 +228,26 @@
   `harness/evidence/run-lifecycle-defeated.png`,
   `harness/evidence/run-lifecycle-victorious.png`, and
   `harness/evidence/run-lifecycle-loot.png`.
+
+- Complete one-floor run (2026-09-05): replaced the unconditional victory hook
+  with canonical objective state. The Ashbound Warden now deterministically
+  yields the Star-Forged Seal; pickup records possession; exit `(2,4)` emits a
+  locked-exit event and remains `playing` without the seal; entering it with
+  the seal records objective completion and `victorious`. Terminal input stays
+  disabled and the existing same-seed/new-seed restart paths remain authoritative.
+- Focused verification: `npm test -- --run` passed (12 files, 48 tests),
+  including objective gating, successful completion, seal pickup, terminal
+  blocking, and restart coverage. `npm run typecheck`, `npm run lint`,
+  `npm run test:browser` (documented manual status), `npm run build`, and
+  `git diff --check` passed.
+- Chromium evidence: fresh Playwright Chromium at `http://127.0.0.1:5173/`,
+  1280×720, WebGL, zero page errors. No-seal route
+  `Begin Descent → Right/Up/Up/Left/Up/Right/Up` reached `(2,4)` with
+  `runStatus=playing`, `objective.acquired=false`, and feedback
+  `The exit rejects you. Find the Star-Forged Seal.`. Complete route
+  `Begin Descent → ArrowUp → four Space attacks → P → Right/Up/Up/Left/Up/Right/Up`
+  reached `(2,4)` with `mode=victorious`, `objective.complete=true`, visible
+  `RUN COMPLETE` panel, and victory feedback. Same-seed restart returned
+  `mode=active`, `runStatus=playing`, turn 0, health 10, and no objective.
+  Screenshots: `harness/evidence/run-objective-locked.png` and
+  `harness/evidence/run-objective-victorious.png`.
