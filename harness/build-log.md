@@ -186,3 +186,5 @@
 - Browser: fresh Chromium at `http://127.0.0.1:5174/`, device scale 1, seed 7391. At 1280×720, straight corridor reported WebGL and visible depth 4; wall/door/opening fixtures reported correct front termination; fresh Begin + ArrowUp showed the Warden at depth 1; paced Space combat ended with `encounter:null`, `entities:[]`, and loot; Escape and reduced-motion reported paused mode, checked reduced motion, and 1 ms transition duration. At 1600×900 and 1920×1080, the internal canvas remained 1280×720 with WebGL and corridor depth 4. Reviewed sessions had no application console errors.
 - Evidence: `harness/build/phase-15-visual-pipeline-acceptance.md`, `harness/fidelity/phase-15-visual-pipeline.json`, and browser captures named in the acceptance record.
 
+- Delivery: PR #17 targeting `main` was squash-merged at `b9bb4ef7f13ba797ec0ac42f2cfa4ef7ea3b9e41`; local `main` was fast-forwarded and matched `origin/main`. No remote checks are configured.
+
