@@ -1,0 +1,55 @@
+{
+  "skill": "browser-game-fidelity",
+  "status": "COMPLETE",
+  "baseline": {
+    "repository": "dirty local worktree; phase-4 palette implementation present",
+    "entry_point": "http://127.0.0.1:5174/",
+    "runtime": "Chromium via Playwright, CSS screenshot scale, default device scale",
+    "viewport": "1280x720",
+    "initial_state": "seed 7391, floor 1, turn 0, position (1,1), facing east",
+    "before_capture": "darkness-before.png"
+  },
+  "claims": [
+    {
+      "kind": "objective_visual",
+      "observation": "Visible planes are attenuated by forward grid distance: near planes are readable, middle planes are subdued, and far planes approach black.",
+      "source": "src/game/MainScene.ts, src/game/palette.ts, visibility-depth-1.png, visibility-depth-2.png, visibility-depth-3.png",
+      "verification": "Fresh 1280x720 browser tabs were captured at blocker depths 1, 2, and 3 using deterministic keyboard sequences.",
+      "status": "matched"
+    },
+    {
+      "kind": "objective_visual",
+      "observation": "Open passage termination is a black aperture and geometry outside the three-cell visibility model remains background void.",
+      "source": "src/game/MainScene.ts, visibility-depth-max.png",
+      "verification": "A fresh tab facing south from the initial state shows the maximum supported three-cell view ending in a black aperture with no colored terminal rectangle.",
+      "status": "matched"
+    },
+    {
+      "kind": "objective_visual",
+      "observation": "Side planes remain bounded and side passage space is represented as black void rather than revealing unseen architecture.",
+      "source": "src/game/MainScene.ts, visibility-depth-3.png, visibility-depth-max.png",
+      "verification": "The captures show tapered side planes around the aperture while the unmodeled space beyond them stays black.",
+      "status": "matched"
+    },
+    {
+      "kind": "objective_gameplay",
+      "observation": "The visibility and occlusion model remains authoritative and deterministic; only the Phaser presentation adapter changed.",
+      "source": "src/sim/state.ts, src/sim/state.test.ts, npm test",
+      "verification": "Simulation source is unchanged; all 7 tests pass. Browser input still enters combat and displays the combat panel in darkness-combat.png.",
+      "status": "matched"
+    }
+  ],
+  "verification": {
+    "runtime": "Playwright fresh tabs at 1280x720; depth captures use ArrowLeft, no input, ArrowRight+ArrowUp, and ArrowRight respectively; combat capture uses ArrowUp then Space; console errors: 0",
+    "repeatable": true,
+    "checks": [
+      "npm test",
+      "npm run typecheck",
+      "npm run build"
+    ]
+  },
+  "failures": [
+    "Vite retains its existing Phaser chunk-size warning during production build.",
+    "The current simulation exposes three forward visibility cells, so maximum supported depth is 3."
+  ]
+}

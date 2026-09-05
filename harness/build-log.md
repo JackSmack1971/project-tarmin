@@ -1,0 +1,90 @@
+# Build log
+
+## Phase 1
+
+- Baseline: empty worktree except `AGENTS.md`; no existing commands or implementation.
+- Decision: use a minimal Vite + Phaser shell with pure TypeScript state transitions.
+- Risk/autonomy: local reversible implementation only (A2); no external writes.
+- Dependency note: initial npm cache extraction was incomplete; `npm cache clean --force` followed by `npm install --force --no-audit --no-fund` restored the runnable toolchain.
+- Verification: typecheck and production build passed; focused tests passed after correcting one fixture expectation; static simulation boundary scan passed.
+- Browser: local Vite app loaded at `http://127.0.0.1:5173/`; title was `Project Tarmin`, Phaser canvas measured `929x619.3`, screenshot `phase-1-initial.png` captured, and ArrowRight then ArrowUp were accepted. Initial favicon 404 was corrected.
+- Final checks: `npm test` (4 passed), `npm run typecheck` (passed), `npm run lint` (passed), `npm run build` (passed with Vite chunk-size warning), `npm run test:browser` (manual-phase notice; browser check performed separately), and architecture scan (passed). Browser reload after favicon fix reported zero console errors and a `960x640` canvas.
+
+## Phase 2
+
+- Scope: deterministic turn-based Ashbound Warden encounter triggered by forward movement, with attack and retreat commands.
+- Composition: acceptance matrix first; uncertainty-first vertical slice across src/sim/ and Phaser adapter; browser verification after focused checks.
+- Baseline: 4 tests passed; typecheck and build passed before edits.
+- Verification: 7 tests passed, typecheck passed, production build passed with existing Phaser chunk-size warning, and simulation boundary scan found no Phaser import or Math.random usage.
+- Browser: local Vite app loaded at http://127.0.0.1:5173/; ArrowUp entered the guarded encounter, Space resolved three attacks and defeated it, screenshots phase-2-combat.png and phase-2-defeated.png captured by browser automation, and console error check returned 0 errors.
+
+## Phase 3
+
+- Scope: recompose the first-person presentation without changing simulation rules or state.
+- Change: moved to a 1280x720 logical canvas, responsive 16:9 shell capped at 80vw, bounded first-person viewport, stable horizon, and separate header/footer UI lanes; corrected polygon geometry to use world-space graphics coordinates.
+- Browser: captured composition-1280.png, composition-1600.png, composition-1920.png, and composition-combat-1920.png through Playwright. The requested sizes preserved the same horizon and readable UI; combat entry with ArrowUp showed no overlap; browser console errors: 0.
+- Checks: `npm test` passed (7 tests); `npm run typecheck` passed; `npm run build` passed with the existing Phaser chunk-size warning; fidelity ledger validation passed.
+
+## Fresh browser verification
+
+- Runtime: navigated to `http://127.0.0.1:5174/` in a fresh page context and resized to 1280×720, 1600×900, and 1920×1080.
+- Canvas bounds: 1024×576, 1280×720, and 1536×864 respectively, confirming centered 16:9 FIT scaling without perspective stretching.
+- Captures: `fresh-1280.png`, `fresh-1600.png`, `fresh-1920.png`, and `fresh-combat-1920.png`.
+- Combat: `ArrowUp` entered the guarded encounter; the combat panel remained below the dungeon frame with no overlap.
+- Browser console: 0 errors and 0 warnings.
+
+## Phase 4
+
+- Scope: replace the blue-gray/purple prototype palette with a centrally configured constrained dungeon palette while preserving the deterministic render state.
+- Change: added semantic palette tokens in `src/game/palette.ts`; routed Phaser fills, strokes, text, canvas background, and shell CSS through those tokens; added depth-specific near/middle/far wall tones and a black visibility terminus.
+- Browser: captured `palette-before.png` and `palette-after.png` at 1280x720 from the identical initial state (seed 7391, floor 1, turn 0, position 1,1, facing east); captured `palette-after-combat.png` after ArrowUp from that state. Console errors and warnings: 0.
+- Checks: `npm test` passed (7 tests); `npm run typecheck` passed; `npm run build` passed with the existing Phaser chunk-size warning; fidelity ledger recorded in `harness/fidelity/phase-4-palette.json`.
+
+## Phase 5
+
+- Scope: make darkness a compositional first-person visibility feature without changing deterministic visibility or occlusion rules.
+- Change: replaced the full-frame lit floor/ceiling and terminal rectangle with distance-indexed nested visibility planes. Near, middle, and far planes use discrete attenuation; open terminal cells become black apertures; unmodeled space remains background void; tapered side planes frame black side-passage space.
+- Browser: captured `visibility-depth-1.png`, `visibility-depth-2.png`, `visibility-depth-3.png`, and `visibility-depth-max.png` at 1280x720 from fresh tabs using deterministic input sequences; captured `darkness-combat.png` after entering combat. Console errors: 0.
+- Checks: `npm test` passed (7 tests); `npm run typecheck` passed; `npm run build` passed with the existing Phaser chunk-size warning; fidelity ledger recorded in `harness/fidelity/phase-5-darkness.json`.
+
+## Surface treatment
+
+- Scope: add restrained, deterministic 2D dungeon surface variation to the first-person Phaser renderer without changing simulation or projection geometry.
+- Change: added perspective-quad surface marks for near and middle-depth ceiling, floor, side, and blocked-wall planes. Mark density drops to zero at far depth; no image textures, particles, or simulation changes were introduced.
+- Browser: fresh initial-state capture `surface-before.png` and after-state capture `surface-after.png` at 1280×720; blocked-wall capture `surface-after-blocked.png` after ArrowLeft. The large planes remain dominant and the marks remain readable but subordinate at thumbnail scale.
+- Checks: `npm test` passed (7 tests); `npm run typecheck` passed; `npm run build` passed with the existing Phaser chunk-size warning; browser console reported 0 errors and 0 warnings.
+
+## Phase 6
+
+- Scope: structural reset of the first-person dungeon projection to an explicit nested portal-frame model; no new art, textures, props, particles, lighting, UI, monsters, or animation.
+- Change: added pure normalized portal frames D0–D4 and interval quad construction in `src/game/portalProjection.ts`; renderer now draws far-to-near ceiling, floor, and side-wall/opening quads for each cell and places blocked front planes at the exact portal depth; derived forward visibility now exposes four cells.
+- Fixtures: added deterministic URL-selected render fixtures for wall depth 1/2/3, straight corridor, left opening depth 1/2, right opening depth 1, T intersection, four-way intersection, and corridor darkness.
+- Browser: Chromium Playwright at 1280×720 captured `portal-wall-1.png`, `portal-wall-2.png`, `portal-wall-3.png`, `portal-straight-corridor.png`, `portal-left-opening-1.png`, `portal-left-opening-2.png`, `portal-right-opening-1.png`, `portal-t-intersection.png`, `portal-four-way-intersection.png`, `portal-corridor-darkness.png`, and `portal-gameplay-combat.png`; visual inspection confirmed nested contraction, exact wall depth, floor/ceiling bands, and dark apertures. Console errors: 0.
+- Checks: `npm test -- --run` passed (9 tests); `npm run typecheck` passed; `npm run build` passed with the existing Phaser chunk-size warning.
+
+## Perspective debug overlay
+
+- Scope: developer-only visual inspection aid; normal play remains unchanged unless `perspectiveDebug=1` is explicitly present in the URL.
+- Change: `MainScene` now outlines D1–D4 and labels the portal surfaces (`LEFT WALL`, `RIGHT WALL`, `FLOOR`, `CEILING`) plus the active termination (`FRONT WALL` or `OPENING`).
+- Browser: maximum-depth fixture captured at 1280×720 as `perspective-debug-corridor.png`; visual inspection confirmed all D1–D4 outlines and expected labels. Browser console errors: 0.
+- Checks: `npm test -- --run` passed (9 tests); `npm run typecheck` passed; production build pending final rerun.
+
+## Phase 03 renderer implementation
+
+- Change: extracted deterministic framework-independent primitive generation to `src/renderer/perspective/perspectiveRenderer.ts`; Phaser now consumes normalized render primitives instead of calculating side topology itself.
+- Change: added serializable open/closed door entries to the compact simulation model, including closed-door movement/occlusion behavior and renderer fixtures. Added a centralized 140 ms presentation-only transition with bounded input rejection.
+- Tests: projection/simulation test suite passes (11 tests); typecheck passes. Projection tests cover deterministic signatures, far-to-near ordering, nearest opaque termination, and open/closed doors.
+- Browser: Chromium local runtime loaded `?fixture=straight-corridor` and `?fixture=closed-door&perspectiveDebug=1`; canvas measured 1536×864 at the responsive desktop viewport, debug screenshot `phase-03-closed-door-debug.png` captured, ArrowLeft/ArrowRight interaction exercised, and console errors were 0.
+- Build: production build passes with the existing Phaser chunk-size warning. Git status/diff verification remains unavailable because the workspace has no `.git` directory.
+- Additional browser evidence: `?fixture=open-door` exposed visible depth 4 and an `open-door` depth-1 primitive; ArrowUp advanced the authoritative position from `(0,0)` to `(1,0)` with cardinal east facing and no fractional coordinates. Responsive canvas bounds were 1024×576 at 1280×720, 1280×720 at 1600×900, and 1536×864 at 1920×1080.
+
+## Phase 04 input and gameplay loop
+
+- Scope: playable seeded exploration shell around the existing deterministic simulation and perspective renderer.
+- Change: added explicit `moveBackward` and `executeCommand` event results; blocked movement now emits an authoritative `movementBlocked` event. Added centralized keyboard bindings/controller with active/transitioning/paused/menu acceptance states, repeat suppression, focus protection, and arrow-key scroll prevention.
+- Change: added seed-entry/generated-seed start UI, compact state-derived HUD (vitality, floor/turn/seed, empty hand/ring slots, feedback), pause/resume panel, and reduced-motion setting. Reduced motion reuses the existing presentation veil at 1 ms instead of 140 ms and does not enter simulation state.
+- Tests: `npm test -- --run` passed (18 tests); coverage includes bindings, emission without direct state mutation, active/paused/form/repeat handling, blocked events, backward movement, and deterministic seed flow.
+- Browser: Chromium at `http://127.0.0.1:5173/` loaded with no fatal errors; `phase04` entered in the seed textbox without movement; Begin Descent produced reproducible active seed `1960696452`; A then W produced facing `north`, unchanged integer position `(1,1)`, turn `2`, and UI feedback `The way is sealed.`. Escape opened pause; Resume restored the run; Reduced Motion reported `reducedMotion:true` and `transitionDuration:1` through the read-only renderer surface. Console inspection returned 0 errors and 0 warnings.
+- Responsive browser sizing: Chromium viewport set to 1280×720, 1600×900, and 1920×1080; the shell remained usable at each representative size.
+- Checks: `npm run typecheck` passed; `npm run lint` passed; `npm test -- --run` passed (19 tests); `npm run test:browser` completed its repository-provided manual-phase notice; `npm run build` passed with the existing Phaser chunk-size warning. Static scans found no `Math.random()` in `src/sim` or `src/renderer`, and no Phaser imports there. Git status/diff remains unavailable because this workspace has no `.git` directory.
+

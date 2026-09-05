@@ -1,0 +1,54 @@
+{
+  "skill": "browser-game-fidelity",
+  "status": "COMPLETE",
+  "baseline": {
+    "repository": "dirty local worktree; palette edit applied after phase-3 composition",
+    "entry_point": "http://127.0.0.1:5174/",
+    "runtime": "Chromium via Playwright, CSS screenshot scale, default device scale",
+    "viewport": "1280x720",
+    "initial_state": "seed 7391, floor 1, turn 0, position (1,1), facing east",
+    "before_capture": "palette-before.png"
+  },
+  "claims": [
+    {
+      "kind": "objective_visual",
+      "observation": "The same initial dungeon state uses a constrained near-black, charcoal, deep olive, moss, green-brown, and muted stone family instead of the blue-gray/purple prototype palette.",
+      "source": "palette-before.png, palette-after.png, src/game/palette.ts",
+      "verification": "Independent 1280x720 browser captures were taken after fresh navigation with no input; geometry and UI state match while the palette changes from blue-purple to olive/stone.",
+      "status": "matched"
+    },
+    {
+      "kind": "objective_visual",
+      "observation": "Depth changes wall color: near walls are more visible, middle walls are darker, far walls are subdued, and the visibility terminus is effectively black.",
+      "source": "src/game/MainScene.ts, src/game/palette.ts, palette-after.png",
+      "verification": "The render selects nearWall/middleWall/farWall by visible-cell distance and fills an unblocked distance-3 terminus with visibilityTerminus.",
+      "status": "matched"
+    },
+    {
+      "kind": "objective_visual",
+      "observation": "Gameplay-important UI uses controlled accents: hostile and warning text/borders are rust, player status is moss, and narrative text is muted ochre.",
+      "source": "palette-after-combat.png, src/game/palette.ts",
+      "verification": "ArrowUp entered the deterministic encounter from the same initial state; combat UI remained readable and separate from the dungeon frame.",
+      "status": "matched"
+    },
+    {
+      "kind": "objective_gameplay",
+      "observation": "The palette change does not alter authoritative simulation behavior.",
+      "source": "src/sim/state.ts, npm test",
+      "verification": "The simulation source was unchanged and all 7 simulation tests passed.",
+      "status": "matched"
+    }
+  ],
+  "verification": {
+    "runtime": "Playwright fresh navigation at 1280x720; initial and encounter states captured; browser console errors: 0, warnings: 0",
+    "repeatable": true,
+    "checks": [
+      "npm test",
+      "npm run typecheck",
+      "npm run build"
+    ]
+  },
+  "failures": [
+    "Vite retains its existing Phaser chunk-size warning during production build."
+  ]
+}

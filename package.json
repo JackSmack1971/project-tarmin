@@ -1,0 +1,23 @@
+{
+  "name": "project-tarmin",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "typecheck": "tsc -b --pretty false",
+    "lint": "tsc -b --pretty false",
+    "test": "vitest run",
+    "test:browser": "echo \"Browser test is manual in Phase 1; run npm run dev and inspect the local build.\""
+  },
+  "dependencies": {
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.7",
+    "vitest": "^2.1.8"
+  }
+}

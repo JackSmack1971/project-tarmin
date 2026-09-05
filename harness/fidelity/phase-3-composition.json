@@ -1,0 +1,53 @@
+{
+  "skill": "browser-game-fidelity",
+  "status": "COMPLETE",
+  "baseline": {
+    "repository": "dirty local worktree; phase-2 implementation before composition edit",
+    "entry_point": "http://127.0.0.1:5174/",
+    "runtime": "Chromium via Playwright, CSS screenshot scale, default device scale",
+    "initial_state": "seed 7391, floor 1, turn 0, position (1,1), facing east",
+    "prior_capture": "phase-1-initial.png and phase-2-combat.png showed a 960x640 canvas centered inside large unused browser space"
+  },
+  "claims": [
+    {
+      "kind": "objective_visual",
+      "observation": "The dungeon presentation is the dominant visual element: the responsive game shell is 80vw wide and the first-person frame occupies the central visual field.",
+      "source": "composition-1280.png, composition-1600.png, composition-1920.png",
+      "verification": "Independent screenshots at 1280x720, 1600x900, and 1920x1080 show the same centered composition.",
+      "status": "matched"
+    },
+    {
+      "kind": "objective_visual",
+      "observation": "The logical render resolution is 1280x720 with a 16:9 responsive FIT scale; the horizon and projection center remain stable across aspect-matched desktop sizes.",
+      "source": "src/main.ts, src/style.css, composition-1280.png, composition-1600.png, composition-1920.png",
+      "verification": "Browser snapshots measured shells of 1024x576, 1280x720, and 1536x864 at the requested browser sizes.",
+      "status": "matched"
+    },
+    {
+      "kind": "objective_visual",
+      "observation": "World geometry, title/status text, narrative text, controls, and combat UI occupy distinct visual lanes without accidental overlap.",
+      "source": "composition-combat-1920.png",
+      "verification": "Combat was entered with ArrowUp from a fresh load; the footer combat panel remained separate from the dungeon geometry and right-aligned narrative text.",
+      "status": "matched"
+    },
+    {
+      "kind": "objective_gameplay",
+      "observation": "The presentation change does not alter the authoritative simulation path.",
+      "source": "src/sim/state.ts, npm test",
+      "verification": "Simulation tests pass and no files under src/sim were changed.",
+      "status": "matched"
+    }
+  ],
+  "verification": {
+    "runtime": "Playwright browser replay at all three requested sizes plus combat entry at 1920x1080; browser console errors: 0",
+    "repeatable": true,
+    "checks": [
+      "npm test",
+      "npm run typecheck",
+      "npm run build"
+    ]
+  },
+  "failures": [
+    "Vite retains its existing Phaser chunk-size warning; no runtime failure observed."
+  ]
+}

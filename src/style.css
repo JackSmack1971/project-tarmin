@@ -1,0 +1,24 @@
+html, body { margin: 0; min-height: 100%; background: var(--background-void, #0a0c08); color: var(--narrative-text, #c1b077); }
+[hidden] { display: none !important; }
+body { display: grid; min-height: 100vh; place-items: center; overflow: hidden; font-family: monospace; }
+#game { width: min(80vw, 1600px); aspect-ratio: 16 / 9; }
+canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges; }
+.shell-ui { position: fixed; inset: 0; pointer-events: none; }
+.start-panel, .pause-panel { pointer-events: auto; position: absolute; left: 50%; top: 50%; width: min(420px, calc(100vw - 40px)); transform: translate(-50%, -50%); padding: 32px; box-sizing: border-box; background: rgba(10, 12, 8, .96); border: 1px solid #586044; box-shadow: 0 0 0 8px rgba(5,6,4,.45); }
+.start-panel h1, .pause-panel h2 { margin: 8px 0 18px; letter-spacing: .12em; font-weight: 400; }
+.eyebrow { color: #7f8860; letter-spacing: .16em; font-size: 12px; }
+form { display: grid; gap: 10px; margin-top: 24px; }
+label { color: #c1b077; font-size: 12px; letter-spacing: .08em; }
+input, button { font: inherit; color: #c1b077; background: #171b11; border: 1px solid #586044; padding: 10px; }
+button { cursor: pointer; text-transform: uppercase; letter-spacing: .08em; }
+button:hover, button:focus, input:focus { border-color: #c09a3c; outline: 2px solid #665735; outline-offset: 2px; }
+.hint { color: #7f8860; font-size: 12px; line-height: 1.5; }
+.hud { pointer-events: none; position: absolute; left: max(16px, calc(50% - 620px)); right: max(16px, calc(50% - 620px)); top: 18px; display: flex; align-items: center; gap: 22px; color: #c1b077; }
+.hud strong { display: block; margin-top: 4px; font-weight: 400; }
+.hud-stats { display: flex; gap: 16px; color: #9eae68; font-size: 12px; }
+.hud button { pointer-events: auto; margin-left: auto; padding: 6px 10px; }
+.feedback { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); color: #c1b077; margin: 0; }
+.pause-panel { text-align: center; }
+.pause-panel button { display: block; width: 100%; margin: 20px 0; }
+.pause-panel label { display: block; }
+@media (max-width: 800px) { #game { width: 100vw; } .hud { left: 12px; right: 12px; gap: 8px; font-size: 11px; } .hud-stats { display: none; } }
