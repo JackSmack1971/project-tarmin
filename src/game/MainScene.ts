@@ -5,6 +5,7 @@ import { DUNGEON_PALETTE, paletteHex, shadeColor } from "./palette";
 import { frameToPixels, intervalQuads, PORTAL_FRAMES, type PortalFrame, type PortalPoint } from "./portalProjection";
 import { createRenderFixture, renderFixtureFromLocation } from "./renderFixtures";
 import { PERSPECTIVE_TRANSITION_MS, projectDungeon } from "../renderer/perspective/perspectiveRenderer";
+import { itemById } from "../content/items";
 
 function screenFrame(frame: PortalFrame, viewport: { left: number; top: number; width: number; height: number }): PortalFrame {
   const pixels = frameToPixels(frame, viewport.width, viewport.height);
@@ -13,7 +14,7 @@ function screenFrame(frame: PortalFrame, viewport: { left: number; top: number; 
 
 function fillQuad(world: Phaser.GameObjects.Graphics, quad: readonly PortalPoint[], color: number): void {
   world.fillStyle(color, 1);
-  world.fillPoints(quad.map(({ x, y }) => ({ x, y })), true);
+  world.fillPoints(quad.map(({ x, y }) => new Phaser.Math.Vector2(x, y)), true);
 }
 
 export class MainScene extends Phaser.Scene {
@@ -60,7 +61,7 @@ export class MainScene extends Phaser.Scene {
     this.state = result.state;
     this.feedback = this.feedbackFor(result.events);
     this.renderState();
-    if (command !== "moveForward" && command !== "moveBackward" && command !== "turnLeft" && command !== "turnRight") return;
+    if (!command.startsWith("move") && !command.startsWith("turn")) return;
     this.mode = "transitioning"; this.publishMode();
     const veil = this.add.rectangle(this.scale.width / 2, this.scale.height / 2, this.scale.width, this.scale.height, DUNGEON_PALETTE.backgroundVoid, 0.28).setDepth(20);
     this.tweens.add({ targets: veil, alpha: 0, duration: this.reducedMotion ? 1 : PERSPECTIVE_TRANSITION_MS, ease: "Sine.Out", onComplete: () => { veil.destroy(); this.mode = "active"; this.publishMode(); } });
@@ -71,6 +72,15 @@ export class MainScene extends Phaser.Scene {
     if (!event) return this.feedback;
     if (event.type === "movementBlocked") return "The way is sealed.";
     if (event.type === "encounterStarted") return `${event.name} bars the passage.`;
+    if (event.type === "hit") return `Hit for ${event.damage}.`;
+    if (event.type === "monsterAttack") return `The monster strikes for ${event.damage}.`;
+    if (event.type === "monsterDefeated") return "The guardian falls. Loot waits nearby.";
+    if (event.type === "playerDefeated") return "Your torch gutters. You have fallen.";
+    if (event.type === "itemAcquired") return "A new item joins the ring.";
+    if (event.type === "itemUsed") return "The tonic restores your vitality.";
+    if (event.type === "equipmentChanged") return `${event.hand.toUpperCase()} hand equipped.`;
+    if (event.type === "inventoryRotated") return event.selectedItemId ? "Ring selection changed." : "The ring is empty.";
+    if (event.type === "commandIgnored") return event.reason === "inventoryFull" ? "The ring is full." : "Action unavailable.";
     if (event.type === "moved") return `Moved to ${event.position.x},${event.position.y}.`;
     if (event.type === "turned") return `Facing ${event.facing}.`;
     return "Action unavailable.";
@@ -100,7 +110,7 @@ export class MainScene extends Phaser.Scene {
     this.addDebugLabel("LEFT WALL", viewport.left + viewport.width * 0.04, viewport.top + viewport.height * 0.45);
     this.addDebugLabel("RIGHT WALL", viewport.left + viewport.width * 0.83, viewport.top + viewport.height * 0.45);
     world.lineStyle(1, 0x9ed4d8, 0.9);
-    [first.leftWall, first.rightWall, first.ceiling, first.floor].forEach((quad) => world.strokePoints(quad.map(({ x, y }) => ({ x, y })), true));
+    [first.leftWall, first.rightWall, first.ceiling, first.floor].forEach((quad) => world.strokePoints(quad.map(({ x, y }) => new Phaser.Math.Vector2(x, y)), true));
 
     const terminatingWall = cells.find((cell) => cell.blocked);
     if (terminatingWall) {
@@ -131,7 +141,14 @@ export class MainScene extends Phaser.Scene {
         reducedMotion: this.reducedMotion,
         transitionDuration: this.reducedMotion ? 1 : PERSPECTIVE_TRANSITION_MS,
         turn: this.state.turn,
-        lastFeedback: this.feedback
+        lastFeedback: this.feedback,
+        encounter: this.state.encounter ? { id: this.state.encounter.id, definitionId: this.state.encounter.definitionId, health: this.state.encounter.health } : null,
+        playerHealth: this.state.playerHealth,
+        leftHand: this.state.leftHand,
+        rightHand: this.state.rightHand,
+        ring: this.state.ring,
+        selectedRingIndex: this.state.selectedRingIndex,
+        loot: this.state.loot
       })
     });
 
@@ -144,7 +161,7 @@ export class MainScene extends Phaser.Scene {
       const isOpening = primitive.kind === "passage" || primitive.kind === "open-door";
       const color = primitive.surface === "floor" ? floorColor : primitive.surface === "ceiling" ? ceilingColor : isOpening ? DUNGEON_PALETTE.passageDarkness : primitive.kind === "closed-door" ? DUNGEON_PALETTE.door : wallColor;
       fillQuad(world, points, primitive.surface === "front" && isOpening ? DUNGEON_PALETTE.visibilityTerminus : color);
-      if (primitive.surface === "front" || primitive.kind === "closed-door") { world.lineStyle(2, primitive.kind === "closed-door" ? DUNGEON_PALETTE.door : DUNGEON_PALETTE.boundary, 0.9); world.strokePoints(points, true); }
+      if (primitive.surface === "front" || primitive.kind === "closed-door") { world.lineStyle(2, primitive.kind === "closed-door" ? DUNGEON_PALETTE.door : DUNGEON_PALETTE.boundary, 0.9); world.strokePoints(points.map(({ x, y }) => new Phaser.Math.Vector2(x, y)), true); }
     }
 
     const debugDepths = [...new Set(primitives.map((primitive) => primitive.depth))];
@@ -156,13 +173,21 @@ export class MainScene extends Phaser.Scene {
     this.add.text(width - 64, 27, `FLOOR ${this.state.floor}  •  TURN ${this.state.turn}  •  ${this.state.player.facing.toUpperCase()}`, { color: paletteHex(DUNGEON_PALETTE.interfaceMuted), fontFamily: "monospace", fontSize: "14px" }).setOrigin(1, 0);
     const combat = this.state.encounter;
     if (combat) {
+      this.add.ellipse(width / 2, height / 2 - 40, 126, 190, DUNGEON_PALETTE.hostileEntity, 0.85).setStrokeStyle(4, DUNGEON_PALETTE.warningDamage).setDepth(4);
+      this.add.text(width / 2, height / 2 - 56, "WARDEN", { color: paletteHex(DUNGEON_PALETTE.backgroundVoid), fontFamily: "monospace", fontSize: "16px" }).setOrigin(0.5).setDepth(5);
       this.add.rectangle(width / 2, height - 76, 500, 72, DUNGEON_PALETTE.passageDarkness, 0.98).setStrokeStyle(2, DUNGEON_PALETTE.warningDamage);
       this.add.text(width / 2, height - 101, `${combat.name}  ${combat.health}/${combat.maxHealth} HP`, { color: paletteHex(DUNGEON_PALETTE.hostileEntity), fontFamily: "monospace", fontSize: "17px" }).setOrigin(0.5);
-      this.add.text(width / 2, height - 75, `YOU  ${this.state.playerHealth}/10 HP    •    SPACE  STRIKE    X  RETREAT`, { color: paletteHex(DUNGEON_PALETTE.playerStatus), fontFamily: "monospace", fontSize: "14px" }).setOrigin(0.5);
+      this.add.text(width / 2, height - 75, `YOU  ${this.state.playerHealth}/${this.state.playerMaxHealth} HP    •    SPACE LEFT STRIKE · F RIGHT STRIKE · X RETREAT`, { color: paletteHex(DUNGEON_PALETTE.playerStatus), fontFamily: "monospace", fontSize: "14px" }).setOrigin(0.5);
     } else {
       this.add.text(64, height - 85, "W/S move · A/D turn · ESC pause", { color: paletteHex(DUNGEON_PALETTE.interfaceMuted), fontFamily: "monospace", fontSize: "14px" });
     }
     this.add.text(width - 64, height - 85, combat ? "The warden raises its embered blade." : this.feedback, { color: paletteHex(combat ? DUNGEON_PALETTE.warningDamage : DUNGEON_PALETTE.narrativeText), fontFamily: "monospace", fontSize: "14px" }).setOrigin(1, 0);
-    window.dispatchEvent(new CustomEvent("tarmin-state", { detail: { floor: this.state.floor, turn: this.state.turn, health: this.state.playerHealth, seed: this.state.seed, feedback: this.feedback } }));
+    window.dispatchEvent(new CustomEvent("tarmin-state", { detail: { floor: this.state.floor, turn: this.state.turn, health: this.state.playerHealth, seed: this.state.seed, feedback: this.feedback, leftHand: this.itemName(this.state.leftHand), rightHand: this.itemName(this.state.rightHand), ring: this.state.ring.map((id) => this.itemName(id)), selectedRingIndex: this.state.selectedRingIndex } }));
+  }
+
+  private itemName(instanceId: string | null): string | null {
+    if (!instanceId) return null;
+    const instance = this.state.items.find((item) => item.id === instanceId);
+    return instance ? itemById(instance.definitionId)?.name ?? instance.definitionId : null;
   }
 }
