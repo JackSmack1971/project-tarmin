@@ -82,7 +82,8 @@
       }
     ],
     "targets": [
-      "ui_hud_frame.png"
+      "public/assets/ui/panel-border.png",
+      "public/assets/ui/divider.png"
     ]
   },
   {
@@ -106,7 +107,7 @@
       }
     ],
     "targets": [
-      "ui_hud_frame.png"
+      "public/assets/ui/panel-texture.png (low-alpha transformed panel material; source window frames/glow remain staging-only)"
     ]
   },
   {

@@ -355,3 +355,45 @@
   `asset-atlas-opening-1600.png`, and `asset-atlas-deep-view-1920.png`.
   There were no application console errors or page errors. Chromium reported
   four screenshot-time WebGL GPU-stall messages only on the first capture.
+
+## Control-plane routing — product vision and design system
+
+- Change: updated root `AGENTS.md` to route `docs/VISION.md` as the authority
+  for product direction, scope, target users, success criteria, and non-goals;
+  routed `docs/DESIGN.md` as the authority for visual language, design tokens,
+  and UI presentation constraints; and placed both in the authority precedence
+  before subsystem specifications.
+- Verification: inspected the resulting authority and governing-document
+  sections and confirmed both documents are explicitly named and actionable.
+
+## Acceptance-matrix status consistency
+
+- Change: synchronized persistent dungeon-world and MVP content-population row
+  statuses with their post-implementation summaries; linked delivery and browser
+  evidence; documented the repository's actual version-control authority path;
+  ignored generated `test-results/` output; and added `npm run check:acceptance`.
+- Verification: acceptance status check passed for both matrix files and
+  `git diff --check` passed.
+
+## Asset Integration Phase 3 — Interface Art Language
+
+- Change: added a provenance-traceable UI derivation script and metadata for
+  transformed CC0 Fantasy UI Borders and Flare texture material. Promoted only
+  `panel-border.png`, `divider.png`, and low-alpha `panel-texture.png`; raw
+  source archives remain staging-only. Applied the shared primitives to the
+  existing HTML/CSS shell across menu, HUD, equipment, vitality, ring, combat,
+  pause, and terminal states without moving state into Phaser or changing
+  controls/equipment/ring/combat semantics.
+- Verification: `npm run typecheck`, `npm run lint`, `npm test` (12 files, 54
+  tests), `npm run build`, `npm run test:browser` (4 tests), and `git diff
+  --check` passed. The browser config uses one worker because parallel WebGL
+  screenshot capture caused GPU contention; the existing MVP flows pass
+  serially.
+- Chromium review: fresh WebGL runs at 1280×720, 1600×900, and 1920×1080
+  captured menu, active HUD, combat, pause, reduced-motion pause, and terminal
+  states. Screenshots are in `harness/evidence/phase-3-*.png`. The dungeon
+  portal remains central and unobstructed; cards share the recolored sliced
+  border and panel texture; vitality/threat use oxide fills; no application
+  console errors or page errors were reported.
+- Provenance: `project-tarmin-asset-source-downloader/UI_ASSET_DERIVATION.json`
+  records source/output hashes, transforms, and staging-only policy.

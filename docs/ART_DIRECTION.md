@@ -54,3 +54,9 @@ all states.
 ## Source gathering
 
 Candidate source packs are gathered and tracked through `project-tarmin-asset-source-downloader/`. Its downloaded archives are staging/reference material only; runtime art must remain original or appropriately licensed and must be reviewed before promotion into `public/`. Keep source URLs, creators, licenses, and intended uses synchronized in the downloader manifests and license notes.
+
+The interface uses a restrained sliced border language derived from the approved
+CC0 source packs: small iron/bronze corners and edges, a thin divider, and a
+low-alpha stone texture. These primitives are shared by HUD cards and modal
+panels; no complete source frame or glow is used, and the portal remains the
+visual subject.
