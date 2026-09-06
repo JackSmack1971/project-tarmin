@@ -88,6 +88,7 @@ export class MainScene extends Phaser.Scene {
     const result = executeCommand(this.state, command);
     this.state = result.state;
     this.feedback = this.feedbackFor(result.events);
+    window.dispatchEvent(new CustomEvent("tarmin-events", { detail: result.events }));
     if (this.state.runStatus !== "playing") this.mode = this.state.runStatus;
     this.renderState();
     this.publishMode();

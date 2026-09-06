@@ -3,6 +3,7 @@ import { MainScene } from "./game/MainScene";
 import { DUNGEON_PALETTE, paletteHex } from "./game/palette";
 import { createBrowserSeed, normalizeSeed } from "./game/seed";
 import { HealthCue } from "./audio/healthCue";
+import { ActionCue, type ActionCueKind } from "./audio/actionCue";
 import "./style.css";
 
 document.documentElement.style.setProperty("--background-void", paletteHex(DUNGEON_PALETTE.backgroundVoid));
@@ -20,6 +21,7 @@ const game = new Phaser.Game({
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }
 });
 const healthCue = new HealthCue();
+const actionCue = new ActionCue();
 
 const ui = document.createElement("section");
 ui.className = "shell-ui";
@@ -74,7 +76,9 @@ motion.addEventListener("change", () => emit("tarmin-motion", motion.checked));
 window.addEventListener("tarmin-mode", (event) => {
   const mode = (event as CustomEvent<string>).detail;
   healthCue.setMode(mode === "active" ? "active" : mode === "paused" ? "paused" : mode === "menu" ? "menu" : "terminal");
+  actionCue.setMode(mode === "active" ? "active" : mode === "paused" ? "paused" : mode === "menu" ? "menu" : "terminal");
   Object.defineProperty(window, "__TARMIN_AUDIO__", { configurable: true, get: () => healthCue.diagnostics() });
+  Object.defineProperty(window, "__TARMIN_ACTION_AUDIO__", { configurable: true, get: () => actionCue.diagnostics() });
   const running = mode !== "menu";
   start.hidden = running; hud.hidden = !running; pausePanel.hidden = mode !== "paused"; (ui.querySelector("[data-pause-scrim]") as HTMLElement).hidden = mode !== "paused";
   terminalPanel.hidden = mode !== "defeated" && mode !== "victorious";
@@ -82,6 +86,11 @@ window.addEventListener("tarmin-mode", (event) => {
   if (mode === "victorious") { terminalEyebrow.textContent = "RUN COMPLETE"; terminalTitle.textContent = "THE UNDERCRYPT YIELDS"; terminalCopy.textContent = "This run is victorious. The next descent awaits."; }
   if (mode === "paused") (ui.querySelector("[data-resume]") as HTMLButtonElement).focus();
   if (mode === "defeated" || mode === "victorious") (ui.querySelector("[data-restart-same]") as HTMLButtonElement).focus();
+});
+window.addEventListener("tarmin-events", (event) => {
+  const events = (event as CustomEvent<readonly { type: string }[]>).detail;
+  if (events.some((value) => value.type === "attackAttempt")) actionCue.play("attack" satisfies ActionCueKind);
+  if (events.some((value) => value.type === "itemUsed")) actionCue.play("use" satisfies ActionCueKind);
 });
 window.addEventListener("tarmin-state", (event) => {
   const detail = (event as CustomEvent<{ floor: number; turn: number; health: number; maxHealth: number; feedback: string; seed: number; runStatus: string; facing: string; position: { x: number; y: number }; leftHand: string | null; rightHand: string | null; leftDetail: string; rightDetail: string; ring: readonly string[]; selectedRingIndex: number; objective: { acquired: boolean; complete: boolean; exit: { x: number; y: number } }; encounter: { name: string; health: number; maxHealth: number } | null }>).detail;

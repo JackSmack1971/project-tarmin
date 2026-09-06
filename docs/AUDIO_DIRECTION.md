@@ -27,6 +27,10 @@ audio contexts fail closed; no simulation state or RNG is involved.
 
 Now that counts are shown numerically (`docs/GAME_DESIGN.md` §4), the original's click-counting ritual is no longer strictly necessary for information — but a light sound accompanying the action (nocking an arrow, eating) preserves tactile feedback without forcing mental bookkeeping. This is deliberately a smaller role than the original's arrow-click mechanic, which was pure information delivery; here it's texture.
 
+The first resource-action pass adds short native Web Audio punctuation for attack
+attempts and item use. These cues are event-driven presentation adapters: they do
+not consume RNG, alter command results, or become the sole resource readout.
+
 ## Open Item
 
 Whether any additional systems beyond health warrant a dedicated audio cue (e.g. proximity dread cues for nearby monsters) is not yet decided and isn't blocking v1 — revisit once `docs/GAME_DESIGN.md` §6 (Controls & Hidden Mastery) is resolved, since some of those mechanics may turn out to be audio-gated in the original.

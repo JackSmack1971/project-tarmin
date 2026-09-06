@@ -1,5 +1,22 @@
 # Build log
 
+## Resource action audio
+
+- Scope: implement the next audio-direction slice after the load-bearing health
+  cue: short event-driven feedback for attack attempts and item use, without
+  changing simulation rules, resources, controls, or authoritative state.
+- Change: added a native Web Audio `ActionCue` adapter with pure attack/use
+  profiles. `MainScene` forwards its existing authoritative event list through a
+  presentation-only window event; pause suppresses playback and menu/terminal
+  modes dispose the context. No dependency, RNG, or simulation import was added.
+- Verification: focused audio tests passed (4 tests), full Vitest passed (16
+  files, 63 tests), typecheck/lint/build passed, acceptance and control-plane
+  checks passed, and `git diff --check` passed. Dedicated Chromium passed the
+  attack/item-use/pause flow with zero application console/page errors; the
+  full Chromium suite passed 10 tests in 3.7 minutes.
+- Acceptance: `harness/build/resource-action-audio-acceptance.md` rows R1-R5
+  passed.
+
 ## Audio health cue
 
 - Scope: implement the first load-bearing audio slice from `docs/AUDIO_DIRECTION.md`
