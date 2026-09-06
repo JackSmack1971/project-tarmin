@@ -15,7 +15,7 @@ One maze floor, playable start to finish, containing:
 - [ ] Basic item pickup + use-to-identify with at least one positive and one negative outcome (`docs/GAME_DESIGN.md` §3)
 - [ ] Health as audio+visual (`docs/AUDIO_DIRECTION.md`), arrows/food as numeric HUD (`DESIGN.md` tokens)
 - [ ] Minimal combat: fire an arrow, hit a wall or a monster, take damage — **using placeholder tunable numbers**, not final values, since combat math is unresolved (`docs/OPEN_QUESTIONS.md` #3)
-- [ ] One checkpoint save, one permadeath scenario, confirming the interaction from `docs/OPEN_QUESTIONS.md` #1 actually feels right in practice, not just on paper
+- [x] One checkpoint save, one permadeath scenario, confirming the interaction from `docs/OPEN_QUESTIONS.md` #1 actually feels right in practice, not just on paper — versioned browser checkpoint resumes across reload and is cleared on terminal run state; the working-assumption question remains open for owner confirmation.
 
 **Slice 1 exit criteria:** you can walk into the floor, encounter risk, make a mistake, and lose the run — and it feels like something, even with placeholder numbers and only core controls.
 

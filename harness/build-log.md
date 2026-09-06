@@ -1,5 +1,20 @@
 # Build log
 
+## Checkpoint save
+
+- Scope: complete the remaining Slice 1 persistence slice with one browser-local
+  checkpoint, preserving canonical state, deterministic replay, and the current
+  working assumption that terminal runs delete their checkpoint.
+- Change: added a schema-versioned `localStorage` envelope with defensive load,
+  save, and clear operations. Playing commands autosave; defeat and victory
+  clear storage. The shell exposes Continue after reload and resumes the exact
+  saved canonical state. No second simulation model or new dependency was added.
+- Verification: focused checkpoint tests, full Vitest (18 files, 67 tests),
+  typecheck, lint, production build, acceptance/control-plane checks, diff
+  check, and the complete Chromium suite (12 tests) pass. Chromium confirmed
+  reload/Continue restores the exact seed, turn, and facing; terminal defeat
+  clears the saved run. No application console/page errors were reported.
+
 ## Resource action audio
 
 - Scope: implement the next audio-direction slice after the load-bearing health
