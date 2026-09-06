@@ -15,7 +15,7 @@ type RendererSnapshot = {
   rightHand: string | null;
   loot: readonly string[];
   objective: { acquired: boolean; complete: boolean; exit: { x: number; y: number } };
-  features: readonly { kind: string; depth: number; cell: { x: number; y: number } }[];
+  features: readonly { kind: string; depth: number; surface?: string; cell: { x: number; y: number } }[];
   primitiveTypes: readonly string[];
 };
 
@@ -26,14 +26,14 @@ test("architectural features respect visible openings and blockers", async ({ pa
   await page.goto("/?fixture=straight-corridor");
   await waitForRenderer(page);
   await expect.poll(async () => (await renderer(page)).mode).toBe("active");
-  expect((await renderer(page)).features.map((feature) => feature.depth)).toEqual([4, 3, 2, 1]);
+  expect((await renderer(page)).features.filter((feature) => feature.kind === "archway").map((feature) => feature.depth)).toEqual([4, 3, 2, 1]);
   await page.screenshot({ path: "harness/evidence/phase-2-open-passage.png", fullPage: true });
 
   await page.goto("/?fixture=closed-door");
   await waitForRenderer(page);
   await expect.poll(async () => (await renderer(page)).mode).toBe("active");
   expect((await renderer(page)).primitiveTypes).toContain("1:front:closed-door");
-  expect((await renderer(page)).features).toEqual([]);
+  expect((await renderer(page)).features.filter((feature) => feature.kind === "archway")).toEqual([]);
   await page.screenshot({ path: "harness/evidence/phase-2-closed-iron-door.png", fullPage: true });
 
   await page.goto("/?fixture=left-opening-1");

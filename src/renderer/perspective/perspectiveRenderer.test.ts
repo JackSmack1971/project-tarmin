@@ -24,11 +24,11 @@ describe("renderer-neutral perspective primitives", () => {
 
   it("frames only passage cells and never projects a feature through a blocker", () => {
     const closed = projectDungeon(withDoors([{ position: { x: 3, y: 1 }, open: false }]));
-    expect(closed.features.map((feature) => feature.depth)).toEqual([1]);
-    expect(closed.features.every((feature) => feature.kind === "archway")).toBe(true);
+    expect(closed.features.filter((feature) => feature.kind === "archway").map((feature) => feature.depth)).toEqual([1]);
+    expect(closed.features.filter((feature) => feature.kind === "archway").every((feature) => feature.kind === "archway")).toBe(true);
 
     const open = projectDungeon(withDoors([{ position: { x: 3, y: 1 }, open: true }]));
-    expect(open.features.map((feature) => feature.depth)).toEqual([4, 3, 2, 1]);
+    expect(open.features.filter((feature) => feature.kind === "archway").map((feature) => feature.depth)).toEqual([4, 3, 2, 1]);
     expect(open.features.some((feature) => feature.depth === 2 && feature.cell.x === 3)).toBe(true);
   });
 
@@ -36,6 +36,21 @@ describe("renderer-neutral perspective primitives", () => {
     const first = projectDungeon(createInitialState(1));
     const second = projectDungeon(createInitialState(2));
     expect(first.features).toEqual(second.features);
+  });
+
+  it("adds sparse sconces only to visible side-wall surfaces", () => {
+    const scene = projectDungeon(createInitialState(7391));
+    const sconces = scene.features.filter((feature) => feature.kind === "torch-sconce");
+    expect(sconces.map((feature) => `${feature.depth}:${feature.surface}`)).toEqual(["1:left"]);
+    expect(sconces.every((feature) => feature.depth <= 4 && feature.surface)).toBe(true);
+  });
+
+  it("keeps sconce projection presentation-only and occluded by the nearest blocker", () => {
+    const state = withDoors([{ position: { x: 2, y: 1 }, open: false }]);
+    const before = JSON.stringify(state);
+    const scene = projectDungeon(state);
+    expect(JSON.stringify(state)).toBe(before);
+    expect(scene.features.every((feature) => feature.depth <= 2)).toBe(true);
   });
 
   it("keeps portal geometry independent from seed-driven presentation variation", () => {

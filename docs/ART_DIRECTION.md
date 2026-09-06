@@ -11,6 +11,12 @@ low-resolution stone archway derived from the approved Old School Dungeon Crawle
 Pack brick-door source. It frames visible openings only; closed iron doors remain
 opaque, semantic `iron-door` blockers and take visual priority over decoration.
 
+Wall sconces are a second sparse architectural presentation feature. The promoted
+64×64 `torch-sconce.png` derivative is used only on deterministic visible side-wall
+anchors, with the compact four-frame `torch-flame.png` sheet layered above it. The
+fixture remains subdued and small enough that near material, blocker edges, and deep
+apertures retain priority.
+
 ## Portal composition
 
 The first-person frame is deliberately claustrophobic and slightly irregular. Near geometry should feel large enough to press against the edges of the view; the first major portal is the dominant landmark, while successive portals compress aggressively toward a small, dark aperture. The normalized frame sequence is deterministic but includes restrained horizontal drift and a low, uneven horizon so corridors, turns, side walls, and blockers do not resemble a mathematically tidy tunnel. Keep the viewport large within the logical surface while preserving the shell’s header and footer lanes. Distance attenuation is part of the composition: near materials remain legible, middle materials recede, and far materials fall toward near-black silhouette.

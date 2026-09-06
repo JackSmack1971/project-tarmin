@@ -1,0 +1,8 @@
+{
+  "outputs": ["public/assets/dungeon/torch-sconce.png", "public/assets/dungeon/torch-flame.png"],
+  "sources": [
+    {"sourceId": "fantasy-torch-pack-1", "archive": "downloads/fantasy-torch-pack-1.zip", "entry": "torch.JPG", "license": "CC0", "transform": "Use the source material reference for a small authored Tarmin wall-sconce silhouette, quantized into the Project Tarmin stone palette. The raw pack remains staging-only."},
+    {"sourceId": "ps1-fire", "archive": "downloads/Fire Spritesheet.zip", "entry": "Fire Spritesheet.png", "license": "CC0 / Public Domain", "transform": "Select four source frames, key the black background transparent, remap fire colors to ember/gold tokens, and downsample nearest-neighbor to a 128x48 four-frame sheet."}
+  ],
+  "runtimePolicy": "Only transformed derivatives are loaded by Phaser. Sconces and flame frames are presentation-only; they do not create visibility, lighting, or simulation state."
+}

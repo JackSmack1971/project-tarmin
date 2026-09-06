@@ -35,14 +35,28 @@ export function projectDungeon(state: GameState): SceneDescription {
     addPrimitive(result, state, cell.distance, cell.point, "floor", cell.kind, quads.floor);
     const leftPoint = sidePoint(state, cell.distance, "left");
     const rightPoint = sidePoint(state, cell.distance, "right");
-    addPrimitive(result, state, cell.distance, leftPoint, "left", visibleCellKind(state, leftPoint), quads.leftWall);
-    addPrimitive(result, state, cell.distance, rightPoint, "right", visibleCellKind(state, rightPoint), quads.rightWall);
+    const leftKind = visibleCellKind(state, leftPoint);
+    const rightKind = visibleCellKind(state, rightPoint);
+    addPrimitive(result, state, cell.distance, leftPoint, "left", leftKind, quads.leftWall);
+    addPrimitive(result, state, cell.distance, rightPoint, "right", rightKind, quads.rightWall);
+    if (leftKind === "wall" && shouldPlaceSconce(cell.distance, "left")) features.push(torchSconce(cell.distance, cell.point, "left", quads.leftWall));
+    if (rightKind === "wall" && shouldPlaceSconce(cell.distance, "right")) features.push(torchSconce(cell.distance, cell.point, "right", quads.rightWall));
     if (cell.kind !== "passage" && cell.kind !== "open-door") {
       const frame = PORTAL_FRAMES[index + 1];
       addPrimitive(result, state, cell.distance, cell.point, "front", cell.kind, [{ x: frame.left, y: frame.top }, { x: frame.right, y: frame.top }, { x: frame.right, y: frame.bottom }, { x: frame.left, y: frame.bottom }]);
     }
   }
   return { primitives: result, features };
+}
+
+function shouldPlaceSconce(depth: number, surface: "left" | "right"): boolean {
+  return (depth === 1 && surface === "left") || (depth === 3 && surface === "right");
+}
+
+function torchSconce(depth: number, cell: Point, surface: "left" | "right", quad: PortalQuad): ProjectedFeature {
+  const center = quad.reduce((point, next) => ({ x: point.x + next.x / 4, y: point.y + next.y / 4 }), { x: 0, y: 0 });
+  const inset = quad.map((point) => ({ x: center.x + (point.x - center.x) * 0.5, y: center.y + (point.y - center.y) * 0.55 })) as unknown as PortalQuad;
+  return { kind: "torch-sconce", depth, cell, surface, quad: inset, lightLevel: DEPTH_LIGHT_LEVELS[depth - 1] ?? DEPTH_LIGHT_LEVELS[3] };
 }
 
 function stableVariation(state: GameState, point: Point, surface: SceneSurface): number {

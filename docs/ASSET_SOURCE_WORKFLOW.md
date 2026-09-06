@@ -59,3 +59,17 @@ a low-alpha panel texture, remaps all visible pixels to the Project Tarmin
 iron/bronze/stone palette, and deliberately excludes the source window frame and
 glow. `UI_ASSET_DERIVATION.json` records the source entries and runtime policy.
 Raw archives and source images remain staging-only.
+
+## Torch presentation derivation
+
+Generate the reviewed wall-sconce and compact flame derivatives with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\derive_torch_assets.ps1
+```
+
+The script reads only `fantasy-torch-pack-1.zip` and `Fire Spritesheet.zip` from
+staging. It emits `public/assets/dungeon/torch-sconce.png` and
+`public/assets/dungeon/torch-flame.png`; the source archives remain staging-only.
+`TORCH_ASSET_DERIVATION.json` records the source entries, transforms, licenses, and
+runtime policy.
