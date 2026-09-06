@@ -24,6 +24,11 @@ const game = new Phaser.Game({
 const healthCue = new HealthCue();
 const actionCue = new ActionCue();
 const ambientCue = new AmbientCue();
+window.addEventListener("pagehide", () => {
+  healthCue.dispose();
+  actionCue.dispose();
+  ambientCue.dispose();
+});
 
 const ui = document.createElement("section");
 ui.className = "shell-ui";

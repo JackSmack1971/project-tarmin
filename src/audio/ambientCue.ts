@@ -21,7 +21,6 @@ export class AmbientCue {
   setMode(mode: CueMode): void {
     this.mode = mode;
     if (mode === "active") {
-      this.ensureContext();
       void this.context?.resume();
       this.schedule(true);
       return;
@@ -58,7 +57,9 @@ export class AmbientCue {
   }
 
   private play(): void {
-    if (this.mode !== "active" || !this.context) return;
+    if (this.mode !== "active") return;
+    this.ensureContext();
+    if (!this.context) return;
     const profile = ambientCueProfile();
     const oscillator = this.context.createOscillator();
     const gain = this.context.createGain();
@@ -71,7 +72,12 @@ export class AmbientCue {
     oscillator.connect(gain).connect(this.context.destination);
     oscillator.start(now);
     oscillator.stop(now + profile.durationMs / 1000);
-    oscillator.addEventListener("ended", () => { oscillator.disconnect(); gain.disconnect(); });
+    oscillator.addEventListener("ended", () => {
+      oscillator.disconnect();
+      gain.disconnect();
+      void this.context?.close();
+      this.context = null;
+    });
     this.count += 1;
     this.lastCue = "stone-settle";
   }

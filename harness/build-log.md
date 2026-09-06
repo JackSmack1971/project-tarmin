@@ -555,3 +555,21 @@ scripts/check-control-plane-routes.mjs`, and `git diff --check` passed.
   timed out at its first movement and reproduced with the ambient mode hookup
   temporarily removed, so it is recorded as environmental/pre-existing rather
   than attributed to this slice. Manual atmosphere review remains required.
+
+## Ambient audio lifecycle hardening
+
+- Change: made the ambient adapter lazy and short-lived. It now creates an
+  `AudioContext` only when a scheduled cue is due, closes that context after the
+  one-shot cue ends, and disposes all presentation audio adapters on `pagehide`.
+  Authoritative simulation, event ordering, and cue profiles are unchanged.
+- Baseline: the unchanged seeded MVP Chromium flow reached its final assertions
+  but timed out during page teardown; a direct browser probe confirmed gameplay
+  input itself remained functional. This isolated the defect to a persistent
+  ambient browser resource.
+- Verification: the unchanged focused regression passed the seeded MVP flow in
+  46.4 seconds; ambient lifecycle plus MVP browser tests passed (4 tests); the
+  complete Chromium suite passed (11 tests). Typecheck, lint, Vitest (17 files,
+  64 tests), build, acceptance, control-plane, and diff checks all passed.
+- Scope: presentation-only browser lifecycle cleanup; no new dependency, RNG,
+  simulation state, or gameplay rule. Manual atmosphere review remains the
+  appropriate follow-up for subjective soundscape quality.
