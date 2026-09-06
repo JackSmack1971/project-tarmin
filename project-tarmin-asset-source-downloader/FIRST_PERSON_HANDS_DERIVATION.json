@@ -1,0 +1,16 @@
+{
+  "output": "public/assets/first-person/fp-hands-empty.png",
+  "source": {
+    "manifest": "SOURCE_MANIFEST.json",
+    "sourceId": "lo-fi-first-person-hand",
+    "file": "downloads/lofifirstpersonhand.png",
+    "license": "CC0"
+  },
+  "derivation": {
+    "script": "derive_first_person_hands.ps1",
+    "inputSize": "58x36",
+    "outputSize": "232x144",
+    "method": "Retain the source silhouette and transparency, remap opaque pixels into the Project Tarmin outline, ember, warm leather, and parchment tokens, and scale 4x with nearest-neighbor sampling. Fantasy FPS Hands informed pose language only and contributes no runtime pixels."
+  },
+  "runtimePolicy": "The asset is a presentation-only empty-hands baseline. Equipped items resolve from canonical presentationId metadata but unsupported held-object art falls back to this asset; no torch item or gameplay content is created."
+}

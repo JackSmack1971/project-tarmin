@@ -73,3 +73,18 @@ staging. It emits `public/assets/dungeon/torch-sconce.png` and
 `public/assets/dungeon/torch-flame.png`; the source archives remain staging-only.
 `TORCH_ASSET_DERIVATION.json` records the source entries, transforms, licenses, and
 runtime policy.
+
+## First-person hands derivation
+
+Generate the empty-hands baseline with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\derive_first_person_hands.ps1
+```
+
+The script reads `downloads/lofifirstpersonhand.png`, keeps its transparent
+two-hand silhouette, remaps opaque pixels to Project Tarmin palette tokens, and
+scales it 4x with nearest-neighbor sampling into
+`public/assets/first-person/fp-hands-empty.png`. Fantasy FPS Hands remains
+pose-language reference only. `FIRST_PERSON_HANDS_DERIVATION.json` records the
+lineage and the policy that no torch or held-object gameplay art is fabricated.

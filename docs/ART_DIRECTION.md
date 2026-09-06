@@ -17,6 +17,13 @@ anchors, with the compact four-frame `torch-flame.png` sheet layered above it. T
 fixture remains subdued and small enough that near material, blocker edges, and deep
 apertures retain priority.
 
+The first-person embodiment uses `public/assets/first-person/fp-hands-empty.png`,
+a 4x nearest-neighbor palette harmonization of the approved Lo Fi First Person
+Hand source. It is a baseline empty-hands silhouette, not a torch or weapon. The
+Fantasy FPS Hands source is pose-language reference only. Hands render above world
+geometry and fog but remain below the HTML HUD and are sized to leave portal,
+encounter, and interaction-critical information readable.
+
 ## Portal composition
 
 The first-person frame is deliberately claustrophobic and slightly irregular. Near geometry should feel large enough to press against the edges of the view; the first major portal is the dominant landmark, while successive portals compress aggressively toward a small, dark aperture. The normalized frame sequence is deterministic but includes restrained horizontal drift and a low, uneven horizon so corridors, turns, side walls, and blockers do not resemble a mathematically tidy tunnel. Keep the viewport large within the logical surface while preserving the shell’s header and footer lanes. Distance attenuation is part of the composition: near materials remain legible, middle materials recede, and far materials fall toward near-black silhouette.

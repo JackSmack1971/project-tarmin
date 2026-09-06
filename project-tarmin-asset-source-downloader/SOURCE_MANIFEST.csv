@@ -5,6 +5,6 @@ ps1-fire,PS1 Fire,Limphands,CC0 / Public Domain,https://limphands.itch.io/ps1-fi
 fantasy-ui-borders,Fantasy UI Borders,Kenney,CC0 1.0,https://opengameart.org/content/fantasy-ui-borders,public/assets/ui/panel-border.png; public/assets/ui/divider.png
 flare-windows,Flare windows,Blarumyrran,CC0 / Public Domain,https://opengameart.org/content/flare-windows,public/assets/ui/panel-texture.png (transformed; source frame/glow staging-only)
 fantasy-torch-pack-1,Fantasy Torch Pack 1,rubberduck,CC0,https://opengameart.org/content/fantasy-torch-pack-1,torch_sconce.png
-lo-fi-first-person-hand,Lo Fi First Person Hand,Ragnar Random,CC0,https://opengameart.org/node/134125,fp_hands_empty.png
-fantasy-fps-hands,Fantasy FPS Hands,Ragnar Random,CC0,https://opengameart.org/content/fantasy-fps-hands,fp_torch.png; fp_hands_empty.png (reference/raw material)
+lo-fi-first-person-hand,Lo Fi First Person Hand,Ragnar Random,CC0,https://opengameart.org/node/134125,public/assets/first-person/fp-hands-empty.png
+fantasy-fps-hands,Fantasy FPS Hands,Ragnar Random,CC0,https://opengameart.org/content/fantasy-fps-hands,pose language reference only; no runtime output
 1-bit-doomgeon-kit,1-Bit Doomgeon Kit,B77345-100 / BUTTERHANDS,CC0,https://opengameart.org/content/1-bit-doomgeon-kit,enemy_ashbound_warden.png (reference only; final should be original)
