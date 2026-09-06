@@ -1,0 +1,8 @@
+{
+  "kind": "missing-mutation-json",
+  "strykerExit": 1,
+  "candidates": [
+    "reports/mutation/mutation.json"
+  ],
+  "endedAt": "2026-09-06T15:56:30.802Z"
+}

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "runId": "20260906T155605055Z_13e63eec",
+  "startedAt": "2026-09-06T15:56:05.077Z",
+  "commit": "13e63eece86c92501a0fe773b8783292ddca246f",
+  "branch": "main",
+  "plan": {
+    "ok": true,
+    "repo": "G:\\Treasure of Tarmin Clone",
+    "head": "13e63eece86c92501a0fe773b8783292ddca246f",
+    "config": "stryker.config.json",
+    "contextFingerprint": "sha256:0d51320050052f1fca993b30db6eb6e42abd85c75df91507399620573f70f91c",
+    "contextFiles": [
+      "package-lock.json",
+      "package.json",
+      "stryker.config.json",
+      "tsconfig.app.json",
+      "tsconfig.json",
+      "tsconfig.test.json",
+      "vite.config.ts",
+      "vitest.config.ts"
+    ],
+    "mode": "forced-refresh",
+    "targets": [],
+    "canonicalIncremental": "reports/mutation/stryker-incremental.json",
+    "reasons": [
+      "incremental cache exists without a comparable guardian ledger lineage"
+    ]
+  },
+  "strykerBinary": "node_modules/.bin/stryker.cmd"
+}
