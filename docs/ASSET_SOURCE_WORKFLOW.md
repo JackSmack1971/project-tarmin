@@ -88,3 +88,11 @@ scales it 4x with nearest-neighbor sampling into
 `public/assets/first-person/fp-hands-empty.png`. Fantasy FPS Hands remains
 pose-language reference only. `FIRST_PERSON_HANDS_DERIVATION.json` records the
 lineage and the policy that no torch or held-object gameplay art is fabricated.
+
+## Warden authored asset
+
+`public/assets/entities/ashbound-warden.svg` is hand-authored Project Tarmin
+pixel art, not a transformed Doomgeon creature. The Doomgeon Warden image is
+listed in `SOURCE_MANIFEST.json` as reference-only; silhouette study is limited
+to general readability principles. `WARDEN_ASSET_DERIVATION.json` records the
+palette, two-frame 32×48 contract, and runtime presentation-only policy.

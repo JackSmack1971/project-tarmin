@@ -1,0 +1,8 @@
+{
+  "outputs": ["public/assets/entities/ashbound-warden.svg"],
+  "sources": [
+    { "sourceId": "project-tarmin-authored", "entry": "hand-authored pixel geometry", "license": "Project Tarmin original", "transform": "Two original 32x48 crisp pixel-art frames composed from the project ash, iron, and ember palette." },
+    { "sourceId": "1-bit-doomgeon-kit", "entry": "enemy_ashbound_warden.png", "license": "CC0", "transform": "Reference-only study of silhouette readability, black-space distribution, limb separation, and contrast placement; no source pixels or creature geometry used." }
+  ],
+  "runtimePolicy": "The authored SVG is loaded as a presentation-only two-frame billboard. Frame timing is not simulation state or RNG, and the reference pack remains staging/reference-only."
+}
