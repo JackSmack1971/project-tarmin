@@ -528,3 +528,14 @@ scripts/check-control-plane-routes.mjs`, and `git diff --check` passed.
   #32 was opened and squash-merged to `main` as `92cd6d5`. Local `main` matches
   `origin/main`. Merged-main rerun passed typecheck, lint, 58 tests, build,
   acceptance/control-plane checks, diff checks, and all 6 Chromium tests.
+
+## Audio event cues
+
+- Change: extended the presentation-only native Web Audio adapter with distinct
+  encounter and pickup cues, wired to the existing `encounterStarted` and
+  `itemAcquired` events. Authoritative simulation, RNG, save state, and command
+  semantics remain unchanged.
+- Verification: focused action-cue unit/type checks and the seeded Chromium flow
+  passed. Chromium exercised encounter, attack, Warden defeat, loot pickup,
+  pause suppression, and item use with zero application console/page errors.
+- Acceptance: `harness/build/audio-event-cues-acceptance.md` rows E1-E5 passed.

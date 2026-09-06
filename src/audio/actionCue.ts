@@ -1,4 +1,4 @@
-export type ActionCueKind = "attack" | "use";
+export type ActionCueKind = "attack" | "use" | "encounter" | "pickup";
 
 export interface ActionCueProfile {
   readonly frequencyHz: number;
@@ -7,9 +7,10 @@ export interface ActionCueProfile {
 }
 
 export function actionCueProfile(kind: ActionCueKind): ActionCueProfile {
-  return kind === "attack"
-    ? { frequencyHz: 220, durationMs: 80, gain: 0.035 }
-    : { frequencyHz: 330, durationMs: 110, gain: 0.028 };
+  if (kind === "attack") return { frequencyHz: 220, durationMs: 80, gain: 0.035 };
+  if (kind === "use") return { frequencyHz: 330, durationMs: 110, gain: 0.028 };
+  if (kind === "encounter") return { frequencyHz: 150, durationMs: 180, gain: 0.04 };
+  return { frequencyHz: 440, durationMs: 70, gain: 0.032 };
 }
 
 type CueMode = "menu" | "active" | "paused" | "terminal";
@@ -37,7 +38,7 @@ export class ActionCue {
     const oscillator = this.context.createOscillator();
     const gain = this.context.createGain();
     const now = this.context.currentTime;
-    oscillator.type = kind === "attack" ? "square" : "triangle";
+    oscillator.type = kind === "attack" || kind === "encounter" ? "square" : "triangle";
     oscillator.frequency.setValueAtTime(profile.frequencyHz, now);
     gain.gain.setValueAtTime(profile.gain, now);
     gain.gain.linearRampToValueAtTime(0, now + profile.durationMs / 1000);

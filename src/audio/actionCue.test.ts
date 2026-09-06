@@ -10,5 +10,8 @@ describe("action cue profiles", () => {
     expect(attack.frequencyHz).not.toBe(use.frequencyHz);
     expect(attack.gain).toBeGreaterThan(0);
     expect(use.gain).toBeGreaterThan(0);
+    expect(actionCueProfile("encounter").frequencyHz).toBe(150);
+    expect(actionCueProfile("pickup").frequencyHz).toBe(440);
+    expect(actionCueProfile("encounter").durationMs).toBeGreaterThan(use.durationMs);
   });
 });

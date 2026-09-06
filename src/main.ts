@@ -89,6 +89,8 @@ window.addEventListener("tarmin-mode", (event) => {
 });
 window.addEventListener("tarmin-events", (event) => {
   const events = (event as CustomEvent<readonly { type: string }[]>).detail;
+  if (events.some((value) => value.type === "encounterStarted")) actionCue.play("encounter" satisfies ActionCueKind);
+  if (events.some((value) => value.type === "itemAcquired")) actionCue.play("pickup" satisfies ActionCueKind);
   if (events.some((value) => value.type === "attackAttempt")) actionCue.play("attack" satisfies ActionCueKind);
   if (events.some((value) => value.type === "itemUsed")) actionCue.play("use" satisfies ActionCueKind);
 });
