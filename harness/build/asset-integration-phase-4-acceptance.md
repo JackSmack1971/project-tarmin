@@ -8,7 +8,7 @@
 | TORCH4-04 | Flame animation is presentation-time only and reduced motion holds a stable frame | Browser renderer snapshot and reduced-motion capture | passed |
 | TORCH4-05 | Near torch-lit material, deep corridor, transition, encounter/post-defeat, and blocker readability remain acceptable | Chromium screenshots and visual review | passed |
 | TORCH4-06 | Required project checks pass | typecheck, lint, test, test:browser, build | passed |
-| TORCH4-07 | Docs, commit, PR, merge, and merged-main verification are complete | Git/remote inspection | pending |
+| TORCH4-07 | Docs, commit, PR, merge, and merged-main verification are complete | Git/remote inspection | passed — PR #30 squash-merged as `94cd3027fa7edd46ad92f49d66c3d5ee04352371`; local `main` and `origin/main` match |
 
 Browser evidence must record route, viewport, input/state, WebGL context,
 console/page errors, transition and reduced-motion observations, and screenshot

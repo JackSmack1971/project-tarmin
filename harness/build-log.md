@@ -422,6 +422,9 @@
   `phase-4-encounter.png`, `phase-4-post-defeat.png`, and
   `phase-4-reduced-motion.png`. Visual review retained portal/blocker edges,
   entity silhouette readability, dark apertures, and central HUD hierarchy.
+- Delivery: PR #30 was squash-merged to `main` as
+  `94cd3027fa7edd46ad92f49d66c3d5ee04352371`; local `main` and `origin/main`
+  were fast-forwarded and verified equal.
 
 ## Harness learning — control-plane route validation
 
