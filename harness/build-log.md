@@ -468,4 +468,7 @@ scripts/check-control-plane-routes.mjs`, and `git diff --check` passed.
   `phase-5-victory-1920.png`. Visual review confirmed hands enhance presence
   without obscuring portal geometry, encounters, or HUD; browser failures were
   zero.
-- Delivery: pending focused commit, PR, merge, and merged-main verification.
+- Delivery: commit `2be550e` was pushed on `feature/asset-integration-phase-5`; PR
+  #32 was opened and squash-merged to `main` as `92cd6d5`. Local `main` matches
+  `origin/main`. Merged-main rerun passed typecheck, lint, 58 tests, build,
+  acceptance/control-plane checks, diff checks, and all 6 Chromium tests.
