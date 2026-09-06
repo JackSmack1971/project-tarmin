@@ -397,3 +397,18 @@
   console errors or page errors were reported.
 - Provenance: `project-tarmin-asset-source-downloader/UI_ASSET_DERIVATION.json`
   records source/output hashes, transforms, and staging-only policy.
+
+## Harness learning — control-plane route validation
+
+- Friction: completed-task review found recurring documentation routing drift;
+  `AGENTS.md` referenced the absent `docs/OPEN_QUESTIONS.md`, following an
+  earlier stale version-control path mismatch. The document was subsequently
+  added to the local repository.
+- Remedy: restored `docs/OPEN_QUESTIONS.md` as the unresolved-decisions route
+  and retained `npm run check:control-plane`, which validates concrete Markdown
+  paths in the subsystem-routing block while ignoring prose warnings about
+  historical paths.
+- Verification: the checker detected an injected nonexistent route with a
+  nonzero exit, then passed against all 15 current routes after the temporary
+  line was removed. `npm run check:acceptance`, `node --check
+  scripts/check-control-plane-routes.mjs`, and `git diff --check` passed.
