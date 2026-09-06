@@ -35,6 +35,12 @@ The event punctuation pass adds a lower, longer encounter cue when a monster
 bars the passage and a brief higher pickup cue when loot enters the ring. Both
 are driven by existing simulation events and are silent outside an active run.
 
+The first ambient pass adds a sparse low-frequency stone-settling punctuation
+cue. It is presentation-only, starts only during active play, pauses with the
+run, and is disposed at menu or terminal states. It deliberately uses a long
+silence interval and low gain so silence remains the baseline rather than
+becoming an unbroken musical bed.
+
 ## Open Item
 
 Whether any additional systems beyond health warrant a dedicated audio cue (e.g. proximity dread cues for nearby monsters) is not yet decided and isn't blocking v1 — revisit once `docs/GAME_DESIGN.md` §6 (Controls & Hidden Mastery) is resolved, since some of those mechanics may turn out to be audio-gated in the original.

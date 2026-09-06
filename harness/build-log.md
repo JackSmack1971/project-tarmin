@@ -539,3 +539,19 @@ scripts/check-control-plane-routes.mjs`, and `git diff --check` passed.
   passed. Chromium exercised encounter, attack, Warden defeat, loot pickup,
   pause suppression, and item use with zero application console/page errors.
 - Acceptance: `harness/build/audio-event-cues-acceptance.md` rows E1-E5 passed.
+
+## Ambient soundscape
+
+- Change: added a presentation-only native Web Audio ambient adapter with one
+  low-gain stone-settling cue after an initial warm-up, followed by a six-second
+  silence interval. It starts only in active play, suspends while paused, and is
+  disposed at menu or terminal states. Simulation state, RNG, input, and the
+  existing health/action cues remain unchanged.
+- Verification: ambient unit profile test passed; focused Chromium lifecycle
+  flow passed with zero application console/page errors; typecheck, lint, full
+  Vitest (17 files, 64 tests), build, acceptance, control-plane, and diff checks
+  passed.
+- Full Chromium caveat: 10 of 11 tests passed; the existing seeded MVP flow
+  timed out at its first movement and reproduced with the ambient mode hookup
+  temporarily removed, so it is recorded as environmental/pre-existing rather
+  than attributed to this slice. Manual atmosphere review remains required.

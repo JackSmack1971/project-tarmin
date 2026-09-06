@@ -4,6 +4,7 @@ import { DUNGEON_PALETTE, paletteHex } from "./game/palette";
 import { createBrowserSeed, normalizeSeed } from "./game/seed";
 import { HealthCue } from "./audio/healthCue";
 import { ActionCue, type ActionCueKind } from "./audio/actionCue";
+import { AmbientCue } from "./audio/ambientCue";
 import "./style.css";
 
 document.documentElement.style.setProperty("--background-void", paletteHex(DUNGEON_PALETTE.backgroundVoid));
@@ -22,6 +23,7 @@ const game = new Phaser.Game({
 });
 const healthCue = new HealthCue();
 const actionCue = new ActionCue();
+const ambientCue = new AmbientCue();
 
 const ui = document.createElement("section");
 ui.className = "shell-ui";
@@ -77,8 +79,10 @@ window.addEventListener("tarmin-mode", (event) => {
   const mode = (event as CustomEvent<string>).detail;
   healthCue.setMode(mode === "active" ? "active" : mode === "paused" ? "paused" : mode === "menu" ? "menu" : "terminal");
   actionCue.setMode(mode === "active" ? "active" : mode === "paused" ? "paused" : mode === "menu" ? "menu" : "terminal");
+  ambientCue.setMode(mode === "active" ? "active" : mode === "paused" ? "paused" : mode === "menu" ? "menu" : "terminal");
   Object.defineProperty(window, "__TARMIN_AUDIO__", { configurable: true, get: () => healthCue.diagnostics() });
   Object.defineProperty(window, "__TARMIN_ACTION_AUDIO__", { configurable: true, get: () => actionCue.diagnostics() });
+  Object.defineProperty(window, "__TARMIN_AMBIENT_AUDIO__", { configurable: true, get: () => ambientCue.diagnostics() });
   const running = mode !== "menu";
   start.hidden = running; hud.hidden = !running; pausePanel.hidden = mode !== "paused"; (ui.querySelector("[data-pause-scrim]") as HTMLElement).hidden = mode !== "paused";
   terminalPanel.hidden = mode !== "defeated" && mode !== "victorious";
