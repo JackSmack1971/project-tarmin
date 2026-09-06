@@ -57,3 +57,11 @@ Fog and vignette are compositional treatments, not a second visibility system.
 They must preserve portal boundaries, closed-door outlines, active entity
 silhouettes, and interaction-critical HUD readability. The default stack stays
 small and low-cost: no blur, animated noise, or full-screen glow.
+
+The first-person presentation layer follows the world stack. It resolves the
+canonical left/right equipment references through `presentationId` metadata, then
+renders the supported empty-hands derivative above world geometry, entities, and
+fog at a fixed presentation depth. The HTML HUD remains above the canvas. Since
+held-object art is not yet in the approved runtime set, every equipped or empty
+state uses the same hands asset; no simulation, visibility, combat, save, or
+determinism contract changes for this layer.

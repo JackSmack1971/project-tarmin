@@ -139,7 +139,7 @@
       }
     ],
     "targets": [
-      "fp_hands_empty.png"
+      "public/assets/first-person/fp-hands-empty.png"
     ]
   },
   {
@@ -171,8 +171,7 @@
       }
     ],
     "targets": [
-      "fp_torch.png",
-      "fp_hands_empty.png (reference/raw material)"
+      "pose language reference only; no runtime output"
     ]
   },
   {

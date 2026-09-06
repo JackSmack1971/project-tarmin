@@ -439,4 +439,33 @@
 - Verification: the checker detected an injected nonexistent route with a
   nonzero exit, then passed against all 15 current routes after the temporary
   line was removed. `npm run check:acceptance`, `node --check
-  scripts/check-control-plane-routes.mjs`, and `git diff --check` passed.
+scripts/check-control-plane-routes.mjs`, and `git diff --check` passed.
+
+## Asset Integration Phase 5 — First-person embodiment
+
+- Change: added the presentation-only `resolveFirstPersonPresentation` resolver
+  under `src/renderer/firstPerson/`; it reads canonical left/right item instance
+  references and content `presentationId` values without creating a second
+  equipment model. `MainScene` composes the supported empty-hands asset above
+  world geometry/entities/fog at depth 1000, while the HTML HUD remains above
+  the canvas. Unsupported held-object art falls back to the same hands asset;
+  no torch item or weapon art was fabricated.
+- Asset/provenance: `derive_first_person_hands.ps1` transforms the approved CC0
+  Lo Fi First Person Hand source into a 232x144 nearest-neighbor palette
+  derivative at `public/assets/first-person/fp-hands-empty.png`. Fantasy FPS
+  Hands is recorded as pose-language reference only. Output SHA-256:
+  `FD0EB33388C614C8EE03E622630401FB4C9C4AEBF08E0B046C30E4A51C7EABFE`.
+- Checks: `npm run typecheck`, `npm run lint`, `npm test -- --run` (13 files,
+  58 tests), `npm run build`, `npm run check:acceptance`,
+  `npm run check:control-plane`, and `git diff --check` passed. `npm run
+  test:browser` passed all 6 Chromium tests.
+- Chromium: fresh Playwright Chromium exercised 1280x720, 1600x900, and
+  1920x1080 exploration; 1280x720 combat, pause, reduced motion, and victory;
+  and canonical resolver metadata for empty/equipped states. Screenshots:
+  `phase-5-exploration-1280.png`, `phase-5-exploration-1600.png`,
+  `phase-5-exploration-1920.png`, `phase-5-combat-1280.png`,
+  `phase-5-pause-1280.png`, `phase-5-pause-reduced-1280.png`, and
+  `phase-5-victory-1920.png`. Visual review confirmed hands enhance presence
+  without obscuring portal geometry, encounters, or HUD; browser failures were
+  zero.
+- Delivery: pending focused commit, PR, merge, and merged-main verification.

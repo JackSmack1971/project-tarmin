@@ -11,6 +11,7 @@ import { meshVertices, QUAD_INDICES } from "../renderer/meshGeometry";
 import { itemById } from "../content/items";
 import { monsterById } from "../content/monsters";
 import { DUNGEON_SURFACE_ATLAS } from "../renderer/assets/dungeonAtlas";
+import { resolveFirstPersonPresentation } from "../renderer/firstPerson/handPresentation";
 
 function screenFrame(frame: PortalFrame, viewport: { left: number; top: number; width: number; height: number }): PortalFrame {
   const pixels = frameToPixels(frame, viewport.width, viewport.height);
@@ -39,6 +40,7 @@ export class MainScene extends Phaser.Scene {
     this.load.image("archway-stone", "/assets/dungeon/archway-stone.png");
     this.load.image("torch-sconce", "/assets/dungeon/torch-sconce.png");
     this.load.image("torch-flame", "/assets/dungeon/torch-flame.png");
+    this.load.image("fp-hands-empty", "/assets/first-person/fp-hands-empty.png");
     this.load.image("ashbound-warden", "/assets/entities/ashbound-warden.svg");
     this.load.image("glass-mireling", "/assets/entities/glass-mireling.svg");
     this.load.image("gloam-scavenger", "/assets/entities/gloam-scavenger.svg");
@@ -237,6 +239,7 @@ export class MainScene extends Phaser.Scene {
         loot: this.state.loot,
         objective: this.state.objective,
         entities: entities.map((entity) => ({ id: entity.id, definitionId: entity.definitionId, depth: entity.depth, lightLevel: entity.lightLevel })),
+        firstPerson: resolveFirstPersonPresentation(this.state),
         atmosphere: { torchLight: true, torchSources: scene.features.filter((feature) => feature.kind === "torch-sconce").length, fogTreatment: true, colorGrade: true, vignette: true, reducedMotionIndependent: true }
       })
     });
@@ -261,6 +264,7 @@ export class MainScene extends Phaser.Scene {
     this.renderTorchLight(world, viewport);
     this.renderEntities(entities, viewport, billboardFrameAt(this.presentationTimeMs));
     this.renderFog(world, viewport);
+    this.renderFirstPersonHands(resolveFirstPersonPresentation(this.state));
 
     const debugDepths = [...new Set(primitives.map((primitive) => primitive.geometry.depth))];
     this.drawPerspectiveDebug(world, viewport, debugDepths.map((distance) => ({ distance, blocked: primitives.some((primitive) => primitive.geometry.depth === distance && primitive.geometry.surface === "front") })));
@@ -268,6 +272,15 @@ export class MainScene extends Phaser.Scene {
     world.lineStyle(2, DUNGEON_PALETTE.boundary, 0.9);
     world.strokeRect(viewport.left, viewport.top, viewport.width, viewport.height);
     window.dispatchEvent(new CustomEvent("tarmin-state", { detail: { floor: this.state.floor, turn: this.state.turn, health: this.state.playerHealth, maxHealth: this.state.playerMaxHealth, seed: this.state.seed, runStatus: this.state.runStatus, facing: this.state.player.facing, position: this.state.player.position, feedback: this.feedback, leftHand: this.itemName(this.state.leftHand), rightHand: this.itemName(this.state.rightHand), leftDetail: this.itemDetail(this.state.leftHand), rightDetail: this.itemDetail(this.state.rightHand), ring: this.state.ring.map((id) => this.itemName(id) ?? "UNKNOWN"), selectedRingIndex: this.state.selectedRingIndex, objective: { acquired: this.state.objective.acquired, complete: this.state.objective.complete, exit: this.state.objective.exit }, encounter: this.state.encounter ? { name: this.state.encounter.name, health: this.state.encounter.health, maxHealth: this.state.encounter.maxHealth } : null } }));
+  }
+
+  private renderFirstPersonHands(presentation: ReturnType<typeof resolveFirstPersonPresentation>): void {
+    const width = Math.min(this.scale.width * 0.38, 480);
+    const height = width * (36 / 58);
+    this.add.image(this.scale.width / 2, this.scale.height - (height / 2) + 4, presentation.assetId)
+      .setDisplaySize(width, height)
+      .setDepth(1000)
+      .setAlpha(0.94);
   }
 
   private renderFeatures(features: readonly ProjectedFeature[], viewport: { left: number; top: number; width: number; height: number }, frame: number): void {

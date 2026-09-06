@@ -40,6 +40,13 @@ scene and entity projections. Camera filters may grade or darken pixels, but
 cannot change projected geometry, canonical visibility, RNG, commands, encounters,
 or serialized state.
 
+The first-person embodiment layer is also presentation-only. `resolveFirstPersonPresentation`
+reads the canonical left/right item instance references and their content
+`presentationId` values; it does not create an equipment model. The Phaser adapter
+currently composes the approved empty-hands derivative above world geometry and
+fog. Unsupported held-object art falls back to that asset, while the resolved
+metadata remains available for a future held-object composer.
+
 Phase 15 keeps state-change rendering bounded to transient display objects and
 clears destroyed entity references before rebuilding. The per-frame update path
 only advances the presentation billboard frame; it does not project geometry or
