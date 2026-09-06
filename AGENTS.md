@@ -15,18 +15,24 @@ Read the smallest relevant set of repository context before implementing a task.
 1. Current explicit user instruction.
 2. This root `AGENTS.md` and any applicable deeper `AGENTS.md`.
 3. Approved entries in `docs/DECISIONS.md`.
-4. Applicable subsystem specifications in `docs/`.
-5. The active phase/build specification in `harness/build/`.
-6. `GOALS.md` for outcomes, scope, and non-goals.
-7. `PLANS.md` for phase ordering and roadmap.
-8. Relevant prior context in `harness/context/`.
-9. `harness/build-log.md` as verified implementation history.
-10. Existing implementation as evidence of current behavior.
+4. `docs/VISION.md` for product direction, target users, success criteria, and
+   non-goals.
+5. `docs/DESIGN.md` for the cross-cutting visual language, design tokens, and
+   UI presentation constraints.
+6. Applicable subsystem specifications in `docs/`.
+7. The active phase/build specification in `harness/build/`.
+8. `docs/GOALS.md` for outcomes, scope, and non-goals.
+9. `docs/PLANS.md` for phase ordering and roadmap.
+10. Relevant prior context in `harness/context/`.
+11. `harness/build-log.md` as verified implementation history.
+12. Existing implementation as evidence of current behavior.
 
 Existing code is not automatically intended behavior. Reference/inspirationmaterial is not a specification when it conflicts with an explicit repositoryrequirement.
 
 Before changing a subsystem, read its governing document:
 
+* product direction/scope → `docs/VISION.md`
+* visual language/design tokens/UI presentation → `docs/DESIGN.md`
 * architecture/boundaries → `docs/ARCHITECTURE.md`
 * RNG/state/save/replay → `docs/DETERMINISM_AND_SAVE.md`
 * pseudo-3D rendering → `docs/RENDERING_SPEC.md`
@@ -38,6 +44,9 @@ Before changing a subsystem, read its governing document:
 * testing/completion → `docs/TESTING_STRATEGY.md`, `docs/DEFINITION_OF_DONE.md`
 * browser/performance/accessibility → applicable files in `docs/`
 * unresolved/durable decisions → `docs/OPEN_QUESTIONS.md`, `docs/DECISIONS.md`
+
+Version-control policy → `docs/version-control.md`. The historical path
+`docs/engineering/version-control.md` is not present in this repository.
 
 If a deeper directory contains its own `AGENTS.md`, obey it for that subtree.Deeper instructions may specialize these rules but must not silently weaken rootarchitectural invariants.
 
@@ -218,7 +227,8 @@ If uncertainty is low-risk and reversible, choose the simplest reasonable option
 
 Keep this file a constitution and context router. Detailed subsystem specificationsbelong in their owned `docs/` files; bounded work belongs in `harness/build/`;reusable phase context belongs in `harness/context/`; append-only implementation andverification evidence belongs in `harness/build-log.md`.
 
-Do not duplicate detailed specifications here when the repository already has anowned document for them.
+Do not duplicate detailed specifications here when the repository already has anowned document for them. Product direction belongs in `docs/VISION.md`; visual
+language and design-token decisions belong in `docs/DESIGN.md`.
 
 ## Completion reporting
 
