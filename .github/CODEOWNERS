@@ -1,0 +1,25 @@
+# CODEOWNERS
+# Generated from repository evidence. Edit ownership sources, then regenerate.
+# Rules are ordered broad to specific because the last matching rule wins.
+
+# Repository fallback
+# This is a small personal repository with one verified repository owner and no eligible repository teams; a repository-wide fallback provides consistent review routing without creating team notification noise.
+* @JackSmack1971
+
+# Repository governance and toolchain
+# Repository control-plane instructions and project invariants.
+AGENTS.md @JackSmack1971
+package.json @JackSmack1971
+package-lock.json @JackSmack1971
+
+# Application and tests
+src/ @JackSmack1971
+tests/ @JackSmack1971
+scripts/ @JackSmack1971
+public/ @JackSmack1971
+
+# Documentation, harness, and asset tooling
+docs/ @JackSmack1971
+harness/ @JackSmack1971
+project-tarmin-asset-source-downloader/ @JackSmack1971
+.github/CODEOWNERS @JackSmack1971
