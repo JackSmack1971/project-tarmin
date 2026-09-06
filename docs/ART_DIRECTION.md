@@ -30,7 +30,7 @@ The first-person frame is deliberately claustrophobic and slightly irregular. Ne
 
 ## Entity silhouettes
 
-State-backed entities use original low-resolution pixel art with crisp nearest-neighbor sampling. The Ashbound Warden sheet is a compact two-frame silhouette: ash-gray skull and armor, ember-orange eyes and axe accents, and near-black outlines that remain readable against compressed portal materials. Near encounters may occupy a strong portion of the first portal; distance scaling must make farther entities smaller and dimmer without reducing them to an unreadable speck. Animation is a subtle alternating stance, never a gameplay timer or combat signal. Keep silhouettes subordinate to portal boundaries, blocker edges, and the combat HUD.
+State-backed entities use original low-resolution pixel art with crisp nearest-neighbor sampling. The authored Ashbound Warden sheet at `public/assets/entities/ashbound-warden.svg` is a two-frame 32×48-per-frame silhouette: an ash skull and layered iron armor, ember-orange eyes and axe accents, split greaves, and a near-black outline. The two stances shift the weapon from raised to lowered and preserve deliberate black-space gaps between limbs. `project-tarmin-asset-source-downloader/WARDEN_ASSET_DERIVATION.json` records that the Doomgeon creature is reference-only and contributes no runtime pixels or geometry. Near encounters may occupy a strong portion of the first portal; distance scaling must make farther entities smaller and dimmer without reducing them to an unreadable speck. Animation is a subtle alternating stance, never a gameplay timer or combat signal. Keep silhouettes subordinate to portal boundaries, blocker edges, and the combat HUD.
 
 ## Atmosphere and lighting pass
 

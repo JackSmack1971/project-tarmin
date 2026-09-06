@@ -1,18 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="48" viewBox="0 0 64 48" shape-rendering="crispEdges">
-  <g fill="#11140e" stroke="#090b07" stroke-width="1">
+  <!-- Original Project Tarmin Warden sprite. Two 32x48 presentation frames. -->
+  <g stroke="#090b07" stroke-width="1" stroke-linejoin="miter">
     <g transform="translate(0 0)">
-      <rect x="12" y="5" width="8" height="8" fill="#80725c"/><rect x="13" y="7" width="2" height="2" fill="#e46a3d"/><rect x="18" y="7" width="2" height="2" fill="#e46a3d"/>
-      <rect x="9" y="13" width="14" height="15" fill="#34382b"/><rect x="7" y="14" width="4" height="8" fill="#4c5038"/><rect x="21" y="14" width="4" height="8" fill="#4c5038"/>
-      <rect x="11" y="16" width="3" height="3" fill="#b25b36"/><rect x="18" y="16" width="3" height="3" fill="#b25b36"/><rect x="14" y="21" width="5" height="3" fill="#7e422d"/>
-      <rect x="10" y="27" width="5" height="13" fill="#4a4135"/><rect x="18" y="27" width="5" height="13" fill="#4a4135"/><rect x="8" y="39" width="8" height="3"/><rect x="18" y="39" width="8" height="3"/>
-      <rect x="24" y="22" width="2" height="18" fill="#6d4e35"/><rect x="23" y="19" width="6" height="5" fill="#9b5032"/><rect x="26" y="18" width="3" height="3" fill="#b86b42"/>
+      <path fill="#80725c" d="M12 4h9v2h3v8h-2v4h-3v2h-7v-2h-3v-4H8V8h3V6h1z"/>
+      <path fill="#b6aa8a" d="M13 6h7v2h2v5h-2v2h-7v-2h-2V9h2z"/>
+      <rect fill="#e46a3d" x="13" y="9" width="3" height="2"/><rect fill="#e46a3d" x="19" y="9" width="3" height="2"/>
+      <rect fill="#34382b" x="15" y="13" width="5" height="2"/>
+      <path fill="#34382b" d="M10 17h13l4 5-2 7H7l-2-6 5-6z"/>
+      <path fill="#4c5038" d="M8 18h4v8H6v-5zM21 18h4l3 4v4h-7z"/>
+      <path fill="#6d684c" d="M12 18h9v3h-9zM10 22h13v3H10z"/>
+      <rect fill="#b25b36" x="12" y="22" width="3" height="3"/><rect fill="#b25b36" x="19" y="22" width="3" height="3"/>
+      <path fill="#11140e" d="M14 26h7v4h-7z"/><rect fill="#9b5032" x="16" y="27" width="4" height="2"/>
+      <path fill="#4a4135" d="M9 30h7v10h-2v3H7v-3h2zM18 30h7v10h2v3h-9v-3h2z"/>
+      <path fill="#766852" d="M10 31h5v7h-5zM19 31h5v7h-5z"/>
+      <path fill="#11140e" d="M6 40h10v4H5v-2zM18 40h10v4H17v-2z"/>
+      <path fill="#6d4e35" d="M25 22h2v-8h2v8h-2v17h-2z"/>
+      <path fill="#9b5032" d="M25 12h3v-4h2v10h-2v2h-3z"/><path fill="#b86b42" d="M28 8h3v7h-3z"/>
+      <rect fill="#e46a3d" x="29" y="10" width="2" height="3"/>
     </g>
     <g transform="translate(32 0)">
-      <rect x="12" y="5" width="8" height="8" fill="#80725c"/><rect x="13" y="7" width="2" height="2" fill="#e46a3d"/><rect x="18" y="7" width="2" height="2" fill="#e46a3d"/>
-      <rect x="9" y="13" width="14" height="15" fill="#34382b"/><rect x="7" y="14" width="4" height="8" fill="#4c5038"/><rect x="21" y="14" width="4" height="8" fill="#4c5038"/>
-      <rect x="11" y="16" width="3" height="3" fill="#b25b36"/><rect x="18" y="16" width="3" height="3" fill="#b25b36"/><rect x="14" y="21" width="5" height="3" fill="#7e422d"/>
-      <rect x="8" y="27" width="5" height="13" fill="#4a4135"/><rect x="19" y="27" width="5" height="13" fill="#4a4135"/><rect x="6" y="39" width="8" height="3"/><rect x="20" y="39" width="8" height="3"/>
-      <rect x="24" y="22" width="2" height="18" fill="#6d4e35"/><rect x="23" y="19" width="6" height="5" fill="#9b5032"/><rect x="26" y="18" width="3" height="3" fill="#b86b42"/>
+      <path fill="#80725c" d="M12 4h9v2h3v8h-2v4h-3v2h-7v-2h-3v-4H8V8h3V6h1z"/>
+      <path fill="#b6aa8a" d="M13 6h7v2h2v5h-2v2h-7v-2h-2V9h2z"/>
+      <rect fill="#e46a3d" x="13" y="9" width="3" height="2"/><rect fill="#e46a3d" x="19" y="9" width="3" height="2"/>
+      <rect fill="#34382b" x="15" y="13" width="5" height="2"/>
+      <path fill="#34382b" d="M10 17h13l4 5-2 7H7l-2-6 5-6z"/>
+      <path fill="#4c5038" d="M8 18h4v8H6v-5zM21 18h4l3 4v4h-7z"/>
+      <path fill="#6d684c" d="M12 18h9v3h-9zM10 22h13v3H10z"/>
+      <rect fill="#b25b36" x="12" y="22" width="3" height="3"/><rect fill="#b25b36" x="19" y="22" width="3" height="3"/>
+      <path fill="#11140e" d="M14 26h7v4h-7z"/><rect fill="#9b5032" x="16" y="27" width="4" height="2"/>
+      <path fill="#4a4135" d="M8 30h7v10h-2v3H6v-3h3zM19 30h7v10h2v3h-9v-3h2z"/>
+      <path fill="#766852" d="M9 31h5v7H9zM20 31h5v7h-5z"/>
+      <path fill="#11140e" d="M5 40h10v4H4v-2zM19 40h10v4H18v-2z"/>
+      <path fill="#6d4e35" d="M25 19h2v20h-2z"/><path fill="#9b5032" d="M24 15h7v5h-2v3h-5z"/>
+      <path fill="#b86b42" d="M27 16h4v3h-4z"/><rect fill="#e46a3d" x="28" y="17" width="2" height="2"/>
     </g>
   </g>
 </svg>

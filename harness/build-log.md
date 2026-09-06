@@ -1,5 +1,31 @@
 # Build log
 
+## Asset Integration Phase 6 — Ashbound Warden production sprite
+
+- Scope: replace the placeholder Warden presentation while preserving the
+  existing 64×48 image / two 32×48 crop billboard contract, entity occlusion,
+  deterministic simulation, combat rules, loot, Star-Forged Seal objective, and
+  one-floor victory route.
+- Change: authored a new two-frame pixel-art Warden with ash/bone/iron/ember
+  palette clusters, near-black outline, separated greaves, and raised/lowered
+  axe stances. Added the asset contract test, acceptance matrix, and
+  `WARDEN_ASSET_DERIVATION.json`; the 1-Bit Doomgeon Warden remains
+  reference-only and contributes no runtime pixels or geometry. The renderer
+  and monster definition were unchanged.
+- Checks: `npm run typecheck`, `npm run lint`, `npm test` (14 files, 59 tests),
+  `npm run test:browser` (8 tests), `npm run build`, `npm run check:acceptance`,
+  `npm run check:control-plane`, and `git diff --check` passed. Build retains
+  the existing large Phaser vendor chunk warning behavior.
+- Browser: fresh Chromium at 1280×720, 1600×900, and 1920×1080 showed the
+  Warden approach/encounter, attack frame, defeat disappearance, Seal pickup,
+  and one-floor victory with zero application console/page errors. Evidence:
+  `harness/evidence/phase-6-warden-approach.png`,
+  `phase-6-warden-encounter.png`, `phase-6-warden-attack.png`,
+  `phase-6-warden-defeated.png`, `phase-6-warden-seal-victory.png`,
+  `phase-6-warden-1280.png`, `phase-6-warden-1600.png`, and
+  `phase-6-warden-1920.png`. Visual review found the silhouette readable
+  against the archway/material stack and subordinate to the combat HUD.
+
 ## Asset Integration Phase 2
 
 - Scope: promote transformed Old School Dungeon Crawler Pack architectural art while preserving the Phase 1 environment-atlas contract; add presentation-only archway projection for visible openings.
