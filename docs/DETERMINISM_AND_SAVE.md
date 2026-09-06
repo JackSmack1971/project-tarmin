@@ -19,6 +19,10 @@ player is at that exit and possesses the seal; otherwise it records victory.
 equal to a fresh run and new seeds produce a distinct seeded run.
 
 The simulation never calls `Math.random()` and remains framework-independent.
-The objective state raises `rulesVersion` to `3`. This MVP does not add save
-persistence or migrations; any future persisted saves must add an explicit
-migration path for this schema.
+The objective state raises `rulesVersion` to `3`. The browser checkpoint uses a
+separate `schemaVersion: 1` envelope around the canonical state. It is written
+after each playing command, loaded only when the envelope and required state
+shape are valid, and discarded for unsupported or malformed data. Defeat and
+victory clear the checkpoint; this implements the current working assumption in
+`docs/OPEN_QUESTIONS.md` that a checkpoint bridges sessions but does not survive
+the end of a run. Future schema changes require an explicit migration path.

@@ -32,7 +32,7 @@ window.addEventListener("pagehide", () => {
 
 const ui = document.createElement("section");
 ui.className = "shell-ui";
-ui.innerHTML = `<div class="start-panel" data-start><p class="eyebrow">AN ORIGINAL DUNGEON DESCENT</p><h1>THE UNDERCRYPT</h1><p class="lede">A torch, a sealed passage, and whatever waits below.</p><form><label for="seed">RUN SEED</label><input id="seed" name="seed" value="7391" autocomplete="off" inputmode="numeric"><div class="start-actions"><button type="submit">BEGIN DESCENT</button><button type="button" data-generate>GENERATE SEED</button></div></form><p class="hint">W / S move · A / D turn · Q / E ring · Esc pause</p></div>
+ui.innerHTML = `<div class="start-panel" data-start><p class="eyebrow">AN ORIGINAL DUNGEON DESCENT</p><h1>THE UNDERCRYPT</h1><p class="lede">A torch, a sealed passage, and whatever waits below.</p><form><label for="seed">RUN SEED</label><input id="seed" name="seed" value="7391" autocomplete="off" inputmode="numeric"><div class="start-actions"><button type="submit">BEGIN DESCENT</button><button type="button" data-generate>GENERATE SEED</button></div></form><button type="button" data-continue hidden>CONTINUE DESCENT</button><p class="hint">W / S move · A / D turn · Q / E ring · Esc pause</p></div>
 <div class="hud" data-hud hidden aria-label="Run information">
   <header class="hud-header"><div><span class="eyebrow">THE UNDERCRYPT</span><strong data-floor></strong></div><div class="location" data-location></div><div class="objective" data-objective></div><button type="button" class="pause-button" data-pause>PAUSE <span>ESC</span></button></header>
   <aside class="equipment equipment-left" aria-label="Left hand equipment"><span class="slot-label">LEFT HAND</span><strong data-left>EMPTY</strong><small data-left-detail>—</small></aside>
@@ -75,6 +75,7 @@ const motion = ui.querySelector("[data-motion]") as HTMLInputElement;
 const emit = (name: string, detail?: unknown): void => { window.dispatchEvent(new CustomEvent(name, { detail })); };
 ui.querySelector("form")?.addEventListener("submit", (event) => { event.preventDefault(); emit("tarmin-start", normalizeSeed(seed.value)); });
 ui.querySelector("[data-generate]")?.addEventListener("click", () => { const value = createBrowserSeed(); seed.value = String(value); emit("tarmin-start", value); });
+ui.querySelector("[data-continue]")?.addEventListener("click", () => emit("tarmin-continue"));
 ui.querySelector("[data-pause]")?.addEventListener("click", () => emit("tarmin-toggle-pause"));
 ui.querySelector("[data-resume]")?.addEventListener("click", () => emit("tarmin-toggle-pause"));
 ui.querySelector("[data-restart-same]")?.addEventListener("click", () => emit("tarmin-start", normalizeSeed(seed.value)));
@@ -120,4 +121,5 @@ window.addEventListener("tarmin-state", (event) => {
   if (detail.encounter) { encounterName.textContent = detail.encounter.name; encounterHealth.textContent = `${detail.encounter.health}/${detail.encounter.maxHealth} HP`; threatBar.style.width = `${Math.max(0, Math.min(100, detail.encounter.health / detail.encounter.maxHealth * 100))}%`; }
 });
 window.addEventListener("tarmin-start", () => { document.body.classList.add("in-run"); });
+window.addEventListener("tarmin-checkpoint", (event) => { (ui.querySelector("[data-continue]") as HTMLButtonElement).hidden = !(event as CustomEvent<boolean>).detail; });
 void game;

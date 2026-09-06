@@ -12,6 +12,7 @@ import { itemById } from "../content/items";
 import { monsterById } from "../content/monsters";
 import { DUNGEON_SURFACE_ATLAS } from "../renderer/assets/dungeonAtlas";
 import { resolveFirstPersonPresentation } from "../renderer/firstPerson/handPresentation";
+import { clearCheckpoint, loadCheckpoint, saveCheckpoint } from "../save/checkpoint";
 
 function screenFrame(frame: PortalFrame, viewport: { left: number; top: number; width: number; height: number }): PortalFrame {
   const pixels = frameToPixels(frame, viewport.width, viewport.height);
@@ -23,7 +24,7 @@ function portalViewport(width: number, height: number): { left: number; top: num
 }
 
 export class MainScene extends Phaser.Scene {
-  private state: GameState = renderFixtureFromLocation() ? createRenderFixture(renderFixtureFromLocation()!) : createInitialState();
+  private state: GameState = renderFixtureFromLocation() ? createRenderFixture(renderFixtureFromLocation()!) : loadCheckpoint() ?? createInitialState();
   private readonly perspectiveDebug = new URLSearchParams(window.location.search).get("perspectiveDebug") === "1";
   private mode: InputMode = this.state.runStatus === "defeated" || this.state.runStatus === "victorious" ? this.state.runStatus : renderFixtureFromLocation() ? "active" : "menu";
   private reducedMotion = false;
@@ -60,16 +61,27 @@ export class MainScene extends Phaser.Scene {
     this.inputController = new InputController({ target: window, emit: (command) => this.dispatch(command), getMode: () => this.mode, togglePause: () => this.togglePause() });
     this.inputController.attach();
     window.addEventListener("tarmin-start", this.onStart);
+    window.addEventListener("tarmin-continue", this.onContinue);
     window.addEventListener("tarmin-toggle-pause", this.onTogglePause);
     window.addEventListener("tarmin-motion", this.onMotion);
     this.publishMode();
     this.renderState();
+    this.publishCheckpointAvailability();
   }
 
   private readonly onStart = (event: Event): void => {
     const seed = (event as CustomEvent<number>).detail;
     this.state = restartRun(seed);
+    saveCheckpoint(this.state);
     this.feedback = `Seed ${seed} · the descent begins.`;
+    this.mode = "active";
+    this.publishMode(); this.renderState();
+  };
+  private readonly onContinue = (): void => {
+    const checkpoint = loadCheckpoint();
+    if (!checkpoint) return;
+    this.state = checkpoint;
+    this.feedback = "The descent resumes where the torch was left.";
     this.mode = "active";
     this.publishMode(); this.renderState();
   };
@@ -87,11 +99,14 @@ export class MainScene extends Phaser.Scene {
     if (this.mode !== "active") return;
     const result = executeCommand(this.state, command);
     this.state = result.state;
+    if (this.state.runStatus === "playing") saveCheckpoint(this.state);
+    else clearCheckpoint();
     this.feedback = this.feedbackFor(result.events);
     window.dispatchEvent(new CustomEvent("tarmin-events", { detail: result.events }));
     if (this.state.runStatus !== "playing") this.mode = this.state.runStatus;
     this.renderState();
     this.publishMode();
+    this.publishCheckpointAvailability();
     if (this.mode !== "active") return;
     if (!command.startsWith("move") && !command.startsWith("turn")) return;
     this.mode = "transitioning"; this.publishMode();
@@ -135,6 +150,10 @@ export class MainScene extends Phaser.Scene {
   }
 
   private publishMode(): void { window.dispatchEvent(new CustomEvent("tarmin-mode", { detail: this.mode })); }
+
+  private publishCheckpointAvailability(): void {
+    window.dispatchEvent(new CustomEvent("tarmin-checkpoint", { detail: loadCheckpoint() !== null }));
+  }
 
   private addDebugLabel(label: string, x: number, y: number, color = "#f4e7a1"): void {
     this.add.text(x, y, label, { color, fontFamily: "monospace", fontSize: "12px", backgroundColor: "#090b07", padding: { x: 3, y: 2 } }).setDepth(10);

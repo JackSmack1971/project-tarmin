@@ -136,7 +136,7 @@ No required environment variables or safe `.env.example` file were found. The br
 
 Use the committed `package-lock.json` with `npm install`. Pin a seed when reproducing gameplay behavior; the tests and acceptance records commonly use seed `7391`. Keep authoritative changes in `src/sim/`, keep Phaser-specific behavior in `src/game/`, and update the owning document under `docs/` when a contract changes. Record material implementation and browser evidence in `harness/build-log.md`.
 
-The current MVP does not implement persisted saves or save migrations. `GameState` is serializable and versioned (`rulesVersion: 3`), but future persistence must add an explicit migration path.
+The MVP stores one versioned checkpoint in browser `localStorage`, autosaved after each playing command. Continue resumes that checkpoint after a reload; defeat and victory clear it, so the checkpoint bridges sessions without undoing a run.
 
 ## Project direction
 
