@@ -30,12 +30,15 @@ export class MainScene extends Phaser.Scene {
   private presentationTimeMs = 0;
   private inputController!: InputController;
   private readonly entitySprites = new Map<string, Phaser.GameObjects.Image>();
+  private readonly flameSprites = new Map<string, Phaser.GameObjects.Image>();
 
   constructor() { super("main"); }
 
   preload(): void {
     this.load.image("dungeon-surfaces", DUNGEON_SURFACE_ATLAS.source);
     this.load.image("archway-stone", "/assets/dungeon/archway-stone.png");
+    this.load.image("torch-sconce", "/assets/dungeon/torch-sconce.png");
+    this.load.image("torch-flame", "/assets/dungeon/torch-flame.png");
     this.load.image("ashbound-warden", "/assets/entities/ashbound-warden.svg");
     this.load.image("glass-mireling", "/assets/entities/glass-mireling.svg");
     this.load.image("gloam-scavenger", "/assets/entities/gloam-scavenger.svg");
@@ -43,8 +46,10 @@ export class MainScene extends Phaser.Scene {
 
   update(time: number): void {
     this.presentationTimeMs = time;
-    const frame = billboardFrameAt(time);
-    this.entitySprites.forEach((sprite) => sprite.setCrop(frame * 32, 0, 32, 48));
+    const entityFrame = this.reducedMotion ? 0 : billboardFrameAt(time);
+    const flameFrame = this.reducedMotion ? 0 : Math.floor(time / 180) % 4;
+    this.entitySprites.forEach((sprite) => sprite.setCrop(entityFrame * 32, 0, 32, 48));
+    this.flameSprites.forEach((sprite) => sprite.setCrop(flameFrame * 32, 0, 32, 48));
   }
 
   create(): void {
@@ -199,6 +204,7 @@ export class MainScene extends Phaser.Scene {
 
   private renderState(): void {
     this.entitySprites.clear();
+    this.flameSprites.clear();
     this.children.removeAll(true);
     const { width, height } = this.scale;
     const viewport = portalViewport(width, height);
@@ -212,7 +218,7 @@ export class MainScene extends Phaser.Scene {
         position: this.state.player.position,
         facing: this.state.player.facing,
         visibleDepth: Math.max(...primitives.map((primitive) => primitive.geometry.depth), 0),
-        features: scene.features.map((feature) => ({ kind: feature.kind, depth: feature.depth, cell: feature.cell })),
+        features: scene.features.map((feature) => ({ kind: feature.kind, depth: feature.depth, surface: feature.surface, cell: feature.cell })),
         primitiveTypes: primitives.map((primitive) => `${primitive.geometry.depth}:${primitive.geometry.surface}:${primitive.kind}`),
         transition: this.mode === "transitioning",
         mode: this.mode,
@@ -231,7 +237,7 @@ export class MainScene extends Phaser.Scene {
         loot: this.state.loot,
         objective: this.state.objective,
         entities: entities.map((entity) => ({ id: entity.id, definitionId: entity.definitionId, depth: entity.depth, lightLevel: entity.lightLevel })),
-        atmosphere: { torchLight: true, fogTreatment: true, colorGrade: true, vignette: true, reducedMotionIndependent: true }
+        atmosphere: { torchLight: true, torchSources: scene.features.filter((feature) => feature.kind === "torch-sconce").length, fogTreatment: true, colorGrade: true, vignette: true, reducedMotionIndependent: true }
       })
     });
 
@@ -244,7 +250,7 @@ export class MainScene extends Phaser.Scene {
       if (primitive.geometry.surface === "front" && isOpening) mesh.setTint(shadeColor(0xffffff, 0.08));
     }
 
-    this.renderFeatures(scene.features, viewport);
+    this.renderFeatures(scene.features, viewport, this.reducedMotion ? 0 : Math.floor(this.presentationTimeMs / 180) % 4);
 
     const world = this.add.graphics();
     for (const primitive of primitives) {
@@ -264,17 +270,30 @@ export class MainScene extends Phaser.Scene {
     window.dispatchEvent(new CustomEvent("tarmin-state", { detail: { floor: this.state.floor, turn: this.state.turn, health: this.state.playerHealth, maxHealth: this.state.playerMaxHealth, seed: this.state.seed, runStatus: this.state.runStatus, facing: this.state.player.facing, position: this.state.player.position, feedback: this.feedback, leftHand: this.itemName(this.state.leftHand), rightHand: this.itemName(this.state.rightHand), leftDetail: this.itemDetail(this.state.leftHand), rightDetail: this.itemDetail(this.state.rightHand), ring: this.state.ring.map((id) => this.itemName(id) ?? "UNKNOWN"), selectedRingIndex: this.state.selectedRingIndex, objective: { acquired: this.state.objective.acquired, complete: this.state.objective.complete, exit: this.state.objective.exit }, encounter: this.state.encounter ? { name: this.state.encounter.name, health: this.state.encounter.health, maxHealth: this.state.encounter.maxHealth } : null } }));
   }
 
-  private renderFeatures(features: readonly ProjectedFeature[], viewport: { left: number; top: number; width: number; height: number }): void {
+  private renderFeatures(features: readonly ProjectedFeature[], viewport: { left: number; top: number; width: number; height: number }, frame: number): void {
     for (const feature of features) {
       const points = feature.quad.map((point) => ({ x: viewport.left + point.x * viewport.width, y: viewport.top + point.y * viewport.height }));
       const left = Math.min(...points.map((point) => point.x));
       const right = Math.max(...points.map((point) => point.x));
       const top = Math.min(...points.map((point) => point.y));
       const bottom = Math.max(...points.map((point) => point.y));
-      this.add.image((left + right) / 2, (top + bottom) / 2, "archway-stone")
+      if (feature.kind === "archway") {
+        this.add.image((left + right) / 2, (top + bottom) / 2, "archway-stone")
+          .setDisplaySize(right - left, bottom - top)
+          .setAlpha(feature.lightLevel)
+          .setDepth(50 - feature.depth);
+        continue;
+      }
+      this.add.image((left + right) / 2, (top + bottom) / 2, "torch-sconce")
         .setDisplaySize(right - left, bottom - top)
         .setAlpha(feature.lightLevel)
-        .setDepth(50 - feature.depth);
+        .setDepth(70 - feature.depth);
+      const flame = this.add.image((left + right) / 2, top + (bottom - top) * 0.3, "torch-flame")
+        .setCrop(frame * 32, 0, 32, 48)
+        .setDisplaySize((right - left) * 0.7, (bottom - top) * 0.75)
+        .setAlpha(feature.lightLevel)
+        .setDepth(80 - feature.depth);
+      this.flameSprites.set(`${feature.cell.x},${feature.cell.y}:${feature.surface ?? ""}`, flame);
     }
   }
 

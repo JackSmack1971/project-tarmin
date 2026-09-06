@@ -66,7 +66,7 @@
       "reason": "itch.io generates the free-file URL after the 'No thanks, just take me to the downloads' interaction."
     },
     "targets": [
-      "fx_torch_flame.png"
+      "fx_torch_flame.png (transformed public/assets/dungeon/torch-flame.png)"
     ]
   },
   {
@@ -123,7 +123,7 @@
       }
     ],
     "targets": [
-      "torch_sconce.png"
+      "torch_sconce.png (transformed public/assets/dungeon/torch-sconce.png)"
     ]
   },
   {

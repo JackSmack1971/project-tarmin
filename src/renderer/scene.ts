@@ -21,11 +21,12 @@ export interface ScenePrimitive {
 }
 
 export interface ProjectedFeature {
-  readonly kind: "archway";
+  readonly kind: "archway" | "torch-sconce";
   readonly depth: number;
   readonly cell: Point;
   readonly quad: PortalQuad;
   readonly lightLevel: number;
+  readonly surface?: "left" | "right";
 }
 
 export interface SceneDescription {

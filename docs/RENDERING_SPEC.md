@@ -15,6 +15,12 @@ frame for passage/open-door cells. Features are emitted only before the nearest 
 wall or closed door; they do not inspect hidden cells, add `MaterialId` values, or
 create spatial/gameplay state.
 
+The same layer may emit sparse `torch-sconce` features for deterministic visible
+side-wall anchors. Their quads are an inset of the already-emitted side-wall quad,
+so a sconce cannot reveal geometry or expand visibility. Phaser layers the static
+sconce derivative and a presentation-time flame crop above that wall; reduced motion
+holds the first flame frame.
+
 Material IDs are stable contracts, not artwork. The data-only material registry points to padded canonical 32×32 regions in the original Project Tarmin atlas at `public/assets/dungeon/dungeon-surfaces.png`. The production Phaser adapter loads that atlas once and renders every dungeon surface through a Mesh2D quad composed of two textured triangles. The four projected corners receive the four inset atlas-region UV corners, so the material follows the existing portal projection without introducing a second spatial model. Depth light is presentation-only Mesh2D tinting; it does not alter geometry or simulation. Variation is derived from seed, floor, source cell, and surface through a stable hash.
 
 Open passages use the darkness swatch, while closed doors use the deterministic timber/iron material identity and retain a boundary stroke for immediate blocker readability. Mesh2D uses nearest-neighbor pixel-art sampling through the game-wide `pixelArt` configuration. Graphics remains for borders and the opt-in perspective debug overlay only; production dungeon surfaces are not flat fill polygons.

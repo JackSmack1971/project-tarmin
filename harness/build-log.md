@@ -398,6 +398,31 @@
 - Provenance: `project-tarmin-asset-source-downloader/UI_ASSET_DERIVATION.json`
   records source/output hashes, transforms, and staging-only policy.
 
+## Asset Integration Phase 4 — visible torch source
+
+- Branch baseline: clean `main` before the phase. Scope stayed in the renderer
+  feature layer and promoted runtime derivatives; no `GameState`, command, RNG,
+  visibility, or inventory/equippable-torch changes were made.
+- Change: added deterministic sparse `torch-sconce` features anchored to visible
+  side-wall quads, plus static `torch-sconce.png` and four-frame
+  `torch-flame.png` derivatives. Flame crop uses presentation time only and
+  reduced motion holds frame 0. Raw archives remain in downloader staging.
+- Provenance: `project-tarmin-asset-source-downloader/TORCH_ASSET_DERIVATION.json`;
+  output SHA-256 values are `BAD1A2AED24FA526571385E7386293B3BC51185F94AB150A3E546B95756BF6BB`
+  (sconce) and `E485F6A315749FEE43719814CD94866C087E93C78A26BBE236F0DB1824B4DFAC`
+  (flame).
+- Verification: focused projection tests passed (7 tests), full Vitest passed
+  (12 files, 56 tests), typecheck/lint/build passed, `git diff --check` passed,
+  and serial full Chromium passed (5 tests). The dedicated Chromium flow used
+  1280×720 fresh pages, confirmed a WebGL context, captured near torch-lit
+  material, deep corridor, movement transition, encounter, post-defeat, and
+  reduced-motion states, and reported zero application console/page errors.
+- Evidence: `harness/evidence/phase-4-near-torch.png`,
+  `phase-4-deep-corridor.png`, `phase-4-movement-transition.png`,
+  `phase-4-encounter.png`, `phase-4-post-defeat.png`, and
+  `phase-4-reduced-motion.png`. Visual review retained portal/blocker edges,
+  entity silhouette readability, dark apertures, and central HUD hierarchy.
+
 ## Harness learning — control-plane route validation
 
 - Friction: completed-task review found recurring documentation routing drift;
