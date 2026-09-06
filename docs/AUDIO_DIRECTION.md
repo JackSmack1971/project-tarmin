@@ -12,6 +12,11 @@ Grounded in `GOALS.md` and `docs/GAME_DESIGN.md` §4 (Resource Tracking). Audio'
 - This audio cue should be perceivable without looking at the HUD, since the design intent (per `DESIGN.md`) is that "no numeric-only readout should be the sole vitality signal." Audio is not redundant with the bar — it's the channel that works when the player's eyes are on the corridor, not the HUD.
 - The cue should scale continuously (or in clear discrete steps) rather than firing only at a single "low health" threshold, so it functions as ongoing feedback, not a one-time alarm.
 
+The first implementation uses a native Web Audio sine pulse as a presentation
+adapter. It stays silent at full vitality, becomes faster/higher/louder as
+health falls, suspends while paused, and is disposed at run end. Unsupported
+audio contexts fail closed; no simulation state or RNG is involved.
+
 ## Ambient Soundscape: Sparse, No Music
 
 - No continuous musical score. Music would work against the "solitary ritual" identity `DESIGN.md` and `GOALS.md` both describe.
