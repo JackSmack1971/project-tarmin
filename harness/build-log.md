@@ -1,5 +1,18 @@
 # Build log
 
+## Audio health cue
+
+- Scope: implement the first load-bearing audio slice from `docs/AUDIO_DIRECTION.md`
+  without changing authoritative simulation, controls, or content.
+- Change: added a small native Web Audio adapter and pure health-to-profile
+  mapping. Full vitality is silent; damage drives a faster, higher, louder pulse.
+  Pause suspends the cue and menu/terminal modes dispose it. Unsupported browser
+  contexts degrade silently.
+- Verification: focused and full Vitest, typecheck, lint, browser acceptance,
+  build, acceptance/control-plane checks, and diff check pass. Chromium confirms
+  the cue diagnostic transitions from silent at 10/10 to active after deterministic
+  Warden retaliation and follows pause/resume with zero console/page errors.
+
 ## Asset Integration Phase 6 — Ashbound Warden production sprite
 
 - Scope: replace the placeholder Warden presentation while preserving the

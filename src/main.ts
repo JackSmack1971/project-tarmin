@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import { MainScene } from "./game/MainScene";
 import { DUNGEON_PALETTE, paletteHex } from "./game/palette";
 import { createBrowserSeed, normalizeSeed } from "./game/seed";
+import { HealthCue } from "./audio/healthCue";
 import "./style.css";
 
 document.documentElement.style.setProperty("--background-void", paletteHex(DUNGEON_PALETTE.backgroundVoid));
@@ -18,6 +19,7 @@ const game = new Phaser.Game({
   scene: MainScene,
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }
 });
+const healthCue = new HealthCue();
 
 const ui = document.createElement("section");
 ui.className = "shell-ui";
@@ -71,6 +73,8 @@ ui.querySelector("[data-restart-new]")?.addEventListener("click", () => { const 
 motion.addEventListener("change", () => emit("tarmin-motion", motion.checked));
 window.addEventListener("tarmin-mode", (event) => {
   const mode = (event as CustomEvent<string>).detail;
+  healthCue.setMode(mode === "active" ? "active" : mode === "paused" ? "paused" : mode === "menu" ? "menu" : "terminal");
+  Object.defineProperty(window, "__TARMIN_AUDIO__", { configurable: true, get: () => healthCue.diagnostics() });
   const running = mode !== "menu";
   start.hidden = running; hud.hidden = !running; pausePanel.hidden = mode !== "paused"; (ui.querySelector("[data-pause-scrim]") as HTMLElement).hidden = mode !== "paused";
   terminalPanel.hidden = mode !== "defeated" && mode !== "victorious";
@@ -85,6 +89,7 @@ window.addEventListener("tarmin-state", (event) => {
   location.textContent = `${detail.position.x},${detail.position.y} · FACING ${detail.facing.toUpperCase()}`;
   objective.textContent = detail.objective.complete ? "OBJECTIVE COMPLETE" : detail.objective.acquired ? `SEAL FOUND · EXIT ${detail.objective.exit.x},${detail.objective.exit.y}` : `FIND SEAL · EXIT ${detail.objective.exit.x},${detail.objective.exit.y}`;
   health.textContent = `${detail.health}/${detail.maxHealth}`;
+  healthCue.update(detail.health, detail.maxHealth);
   healthBar.style.width = `${Math.max(0, Math.min(100, detail.health / detail.maxHealth * 100))}%`;
   feedback.textContent = detail.feedback;
   left.textContent = detail.leftHand ?? "EMPTY"; right.textContent = detail.rightHand ?? "EMPTY";

@@ -12,3 +12,6 @@
 
 Human visual review is required for W2 and W6; automated tests do not replace
 silhouette, contrast, layering, or experiential review.
+
+This matrix closes the Ashbound Warden art slice. The next slice is the
+load-bearing procedural health cue described in `docs/AUDIO_DIRECTION.md`.
