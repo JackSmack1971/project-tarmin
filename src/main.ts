@@ -92,7 +92,7 @@ window.addEventListener("tarmin-state", (event) => {
   ringCount.textContent = `${detail.ring.length}/6`; ring.textContent = detail.ring.length ? detail.ring[detail.selectedRingIndex] ?? "EMPTY" : "EMPTY";
   ringItems.replaceChildren(...detail.ring.map((item, index) => { const marker = document.createElement("span"); marker.className = index === detail.selectedRingIndex ? "selected" : ""; marker.textContent = item.slice(0, 1); marker.setAttribute("aria-label", `${item}${index === detail.selectedRingIndex ? ", selected" : ""}`); return marker; }));
   combatCard.hidden = !detail.encounter;
-  if (detail.encounter) { encounterName.textContent = detail.encounter.name; encounterHealth.textContent = `${detail.encounter.health}/${detail.encounter.maxHealth} HP`; const threat = detail.encounter.health / detail.encounter.maxHealth * 100; threatBar.style.background = `linear-gradient(to right, var(--ember) ${threat}%, #402019 ${threat}%)`; }
+  if (detail.encounter) { encounterName.textContent = detail.encounter.name; encounterHealth.textContent = `${detail.encounter.health}/${detail.encounter.maxHealth} HP`; threatBar.style.width = `${Math.max(0, Math.min(100, detail.encounter.health / detail.encounter.maxHealth * 100))}%`; }
 });
 window.addEventListener("tarmin-start", () => { document.body.classList.add("in-run"); });
 void game;

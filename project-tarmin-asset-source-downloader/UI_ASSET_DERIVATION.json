@@ -1,0 +1,35 @@
+{
+  "id": "tarmin-interface-materials-v1",
+  "outputs": [
+    "public/assets/ui/panel-border.png",
+    "public/assets/ui/divider.png",
+    "public/assets/ui/panel-texture.png"
+  ],
+  "sources": [
+    {
+      "manifestSourceId": "fantasy-ui-borders",
+      "archive": "downloads/kenney_fantasy-ui-borders.zip",
+      "sourceEntries": [
+        "PNG/Default/Border/panel-border-000.png",
+        "PNG/Default/Divider/divider-000.png"
+      ],
+      "transform": "Recolor transparent white line art into the Project Tarmin iron/bronze palette; preserve the 48px border and 96x22 divider geometry as sliced interface primitives."
+    },
+    {
+      "manifestSourceId": "flare-windows",
+      "sourceFile": "downloads/flare_tekstuur.png",
+      "transform": "Crop and downsample a low-alpha 64x64 panel texture, remapped to muted stone/iron/bronze values; no source window frame or glow is promoted."
+    }
+  ],
+  "script": "derive_ui_assets.ps1",
+  "sourceSha256": {
+    "kenney_fantasy-ui-borders.zip": "59532DA3BD61195A425585455B40BAA6CBF1EDA8227C42ADCEF31A535A737769",
+    "flare_tekstuur.png": "FFA4B20E3AD9B4BF0C8BDA44FC6131B44492FF0724C66DB9B7F767C4116D2B3C"
+  },
+  "outputSha256": {
+    "panel-border.png": "6377B758A237896E2A94C6563038996D6DBD3B14465E75DC8F8D28FE4815AAD8",
+    "divider.png": "E1CE6052D22148D0724D5063441636B2340938C0CDFD9C79FE70A8D9D2E8CC17",
+    "panel-texture.png": "7A0E2A1968E931277ACE4B7AF4088A8E1A90D3E959D386681AE6FF0E7100804D"
+  },
+  "runtimePolicy": "Transformed runtime surfaces only; raw archives and source images remain staging-only."
+}

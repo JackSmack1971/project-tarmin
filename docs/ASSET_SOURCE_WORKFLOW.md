@@ -49,3 +49,13 @@ powershell -ExecutionPolicy Bypass -File .\download_all.ps1
 Use `-FullTextureResolutions` only when a larger source resolution is needed, and `-SkipPS1Fire` when the interactive itch.io download is not required. To add a source needed by the harness, update `download_all.ps1` and `download_all.sh` together, add its provenance and license record to both manifest formats and `LICENSES.md`, and update `EXPECTED_FILES.txt`. Keep the output idempotent: existing files are skipped, failed downloads are removed, and the final bundle is regenerated from the staging directory.
 
 Do not add copyrighted reference assets, copied original game expression, credentials, or unreviewed third-party files to runtime content. If a source's license or intended use is unclear, leave it in staging and record the uncertainty instead of promoting it.
+
+## Interface material derivation
+
+The interface primitives in `public/assets/ui/` are generated with
+`derive_ui_assets.ps1` from the approved CC0 Fantasy UI Borders and Flare
+windows staging files. The transform keeps only the border/divider geometry and
+a low-alpha panel texture, remaps all visible pixels to the Project Tarmin
+iron/bronze/stone palette, and deliberately excludes the source window frame and
+glow. `UI_ASSET_DERIVATION.json` records the source entries and runtime policy.
+Raw archives and source images remain staging-only.
