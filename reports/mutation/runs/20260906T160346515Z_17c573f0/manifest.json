@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "runId": "20260906T160346515Z_17c573f0",
+  "startedAt": "2026-09-06T16:03:46.542Z",
+  "commit": "17c573f05c22479d23ca576b6655709375ac4d3c",
+  "branch": "fix/mutation-guardian-windows",
+  "plan": {
+    "ok": true,
+    "repo": "G:\\Treasure of Tarmin Clone",
+    "head": "17c573f05c22479d23ca576b6655709375ac4d3c",
+    "config": "stryker.config.json",
+    "contextFingerprint": "sha256:0d51320050052f1fca993b30db6eb6e42abd85c75df91507399620573f70f91c",
+    "contextFiles": [
+      "package-lock.json",
+      "package.json",
+      "stryker.config.json",
+      "tsconfig.app.json",
+      "tsconfig.json",
+      "tsconfig.test.json",
+      "vite.config.ts",
+      "vitest.config.ts"
+    ],
+    "mode": "forced-refresh",
+    "targets": [],
+    "canonicalIncremental": "reports/mutation/stryker-incremental.json",
+    "reasons": [
+      "incremental cache exists without a comparable guardian ledger lineage"
+    ]
+  },
+  "strykerBinary": "node_modules/.bin/stryker.cmd"
+}

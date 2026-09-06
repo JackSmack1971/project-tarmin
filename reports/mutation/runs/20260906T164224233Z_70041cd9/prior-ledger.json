@@ -1,0 +1,267 @@
+{
+  "schemaVersion": 2,
+  "updatedAt": "2026-09-06T16:16:53.456Z",
+  "lastComparableRun": {
+    "runId": "20260906T161100751Z_04d38766",
+    "commit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+    "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+    "scopeKind": "configured",
+    "mutationScore": 0,
+    "runDir": "reports/mutation/runs/20260906T161100751Z_04d38766"
+  },
+  "files": {
+    "src/sim/state.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 588,
+      "noCoverage": 77,
+      "validMutants": 665
+    },
+    "src/game/seed.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 17,
+      "noCoverage": 2,
+      "validMutants": 19
+    },
+    "src/game/portalProjection.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 14,
+      "noCoverage": 6,
+      "validMutants": 20
+    },
+    "src/game/palette.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 0,
+      "noCoverage": 7,
+      "validMutants": 7
+    },
+    "src/game/renderFixtures.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 0,
+      "noCoverage": 109,
+      "validMutants": 109
+    },
+    "src/game/MainScene.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 0,
+      "noCoverage": 649,
+      "validMutants": 649
+    },
+    "src/renderer/perspective/perspectiveRenderer.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 163,
+      "noCoverage": 3,
+      "validMutants": 166
+    },
+    "src/renderer/meshGeometry.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 26,
+      "noCoverage": 1,
+      "validMutants": 27
+    },
+    "src/input/bindings.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 47,
+      "noCoverage": 14,
+      "validMutants": 61
+    },
+    "src/input/input-controller.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 28,
+      "noCoverage": 5,
+      "validMutants": 33
+    },
+    "src/content/registry.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 84,
+      "noCoverage": 6,
+      "validMutants": 90
+    },
+    "src/audio/healthCue.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 24,
+      "noCoverage": 91,
+      "validMutants": 115
+    },
+    "src/audio/actionCue.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 17,
+      "noCoverage": 66,
+      "validMutants": 83
+    },
+    "src/audio/ambientCue.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 2,
+      "noCoverage": 82,
+      "validMutants": 84
+    },
+    "src/main.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 0,
+      "noCoverage": 268,
+      "validMutants": 268
+    },
+    "src/save/checkpoint.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 94,
+      "noCoverage": 8,
+      "validMutants": 102
+    },
+    "src/sim/rng.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 11,
+      "noCoverage": 0,
+      "validMutants": 11
+    },
+    "src/renderer/materials.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 73,
+      "noCoverage": 0,
+      "validMutants": 73
+    },
+    "src/renderer/entities/entityProjection.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 116,
+      "noCoverage": 0,
+      "validMutants": 116
+    },
+    "src/renderer/firstPerson/handPresentation.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 17,
+      "noCoverage": 0,
+      "validMutants": 17
+    },
+    "src/content/monsters.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 21,
+      "noCoverage": 0,
+      "validMutants": 21
+    },
+    "src/content/items.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 40,
+      "noCoverage": 0,
+      "validMutants": 40
+    },
+    "src/renderer/assets/dungeonAtlas.ts": {
+      "lastComparableRunId": "20260906T161100751Z_04d38766",
+      "lastObservedAtCommit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+      "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+      "mutationScore": 0,
+      "killed": 0,
+      "timeout": 0,
+      "survived": 20,
+      "noCoverage": 0,
+      "validMutants": 20
+    }
+  }
+}

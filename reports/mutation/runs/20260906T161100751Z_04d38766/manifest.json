@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "runId": "20260906T161100751Z_04d38766",
+  "startedAt": "2026-09-06T16:11:00.788Z",
+  "commit": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+  "branch": "fix/mutation-guardian-windows",
+  "plan": {
+    "ok": true,
+    "repo": "G:\\Treasure of Tarmin Clone",
+    "head": "04d387663a8da42b7f08db1b05d256ccdc65c641",
+    "config": "stryker.config.json",
+    "contextFingerprint": "sha256:68f43c2b85212d626ed733d943231af966bc4467711b9b84df0beb36bb237f9b",
+    "contextFiles": [
+      "package-lock.json",
+      "package.json",
+      "stryker.config.json",
+      "tsconfig.app.json",
+      "tsconfig.json",
+      "tsconfig.test.json",
+      "vite.config.ts",
+      "vitest.config.ts"
+    ],
+    "mode": "forced-refresh",
+    "targets": [],
+    "canonicalIncremental": "reports/mutation/stryker-incremental.json",
+    "reasons": [
+      "configuration/dependency context fingerprint changed"
+    ]
+  },
+  "strykerBinary": "node_modules/.bin/stryker.cmd"
+}

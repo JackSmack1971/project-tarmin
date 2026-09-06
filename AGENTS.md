@@ -1,245 +1,107 @@
-# Project Instructions — Project Tarmin
-
-## Mission
-
-Build a modern browser-playable spiritual successor to the Intellivision game*Advanced Dungeons & Dragons: Treasure of Tarmin*. Preserve its distinctivedesign grammar—first-person grid exploration, turn-based combat,inventory/equipment decisions, dungeon descent, loot discovery, and oppressivedungeon atmosphere—while using original code, art, audio, names, lore, andbranding.
-
-The working title "Project Tarmin" is an internal codename only.
-
-Modernization should improve presentation, usability, accessibility,performance, content richness, and quality of life without replacing the coreinteraction grammar. When a modern genre convention conflicts with a distinctiveProject Tarmin interaction, preserve the Project Tarmin interaction unless anapproved design decision says otherwise.
-
-## Authority and context routing
-
-Read the smallest relevant set of repository context before implementing a task.When instructions or evidence conflict, use this precedence:
-
-1. Current explicit user instruction.
-2. This root `AGENTS.md` and any applicable deeper `AGENTS.md`.
-3. Approved entries in `docs/DECISIONS.md`.
-4. `docs/VISION.md` for product direction, target users, success criteria, and
-   non-goals.
-5. `docs/DESIGN.md` for the cross-cutting visual language, design tokens, and
-   UI presentation constraints.
-6. Applicable subsystem specifications in `docs/`.
-7. The active phase/build specification in `harness/build/`.
-8. `docs/GOALS.md` for outcomes, scope, and non-goals.
-9. `docs/PLANS.md` for phase ordering and roadmap.
-10. Relevant prior context in `harness/context/`.
-11. `harness/build-log.md` as verified implementation history.
-12. Existing implementation as evidence of current behavior.
-
-Existing code is not automatically intended behavior. Reference/inspirationmaterial is not a specification when it conflicts with an explicit repositoryrequirement.
-
-Before changing a subsystem, read its governing document:
-
-* product direction/scope → `docs/VISION.md`
-* visual language/design tokens/UI presentation → `docs/DESIGN.md`
-* architecture/boundaries → `docs/ARCHITECTURE.md`
-* RNG/state/save/replay → `docs/DETERMINISM_AND_SAVE.md`
-* pseudo-3D rendering → `docs/RENDERING_SPEC.md`
-* gameplay/rules → `docs/GAME_DESIGN.md`
-* content/data → `docs/CONTENT_MODEL.md`
-* controls/HUD/inventory UX → `docs/INPUT_AND_UI.md`
-* visuals/audio → `docs/ART_DIRECTION.md`, `docs/AUDIO_DIRECTION.md`
-* asset sourcing/provenance → `docs/ASSET_SOURCE_WORKFLOW.md`
-* testing/completion → `docs/TESTING_STRATEGY.md`, `docs/DEFINITION_OF_DONE.md`
-* browser/performance/accessibility → applicable files in `docs/`
-* unresolved/durable decisions → `docs/OPEN_QUESTIONS.md`, `docs/DECISIONS.md`
-
-Version-control policy → `docs/version-control.md`. The historical path
-`docs/engineering/version-control.md` is not present in this repository.
-
-If a deeper directory contains its own `AGENTS.md`, obey it for that subtree.Deeper instructions may specialize these rules but must not silently weaken rootarchitectural invariants.
-
-## Architectural invariants
-
-These are non-negotiable unless the user explicitly changes them.
-
-* Language: TypeScript.
-* Runtime: browser, client-side only for the core game.
-* Build tooling: Vite.
-* Game framework: Phaser.
-* Authoritative game simulation is framework-independent pure TypeScript.
-* Phaser/rendering code must not own authoritative game rules.
-* Dungeon coordinates are integer grid coordinates.
-* Player facing is discrete cardinal orientation.
-* Core movement is discrete/grid based; visual interpolation is presentation only.
-* Combat is turn based.
-* Randomness is deterministic and seeded.
-* Authoritative simulation code must never call `Math.random()`.
-* Game state must be canonical and serializable.
-* Save data must be versioned and migration-capable.
-* Content must be data-driven where practical.
-* Rendering uses a pseudo-3D first-person projection, not free-roaming 3D physics.
-* No Three.js, Babylon.js, Unity, Godot, or other 3D engine unless the userexplicitly revises the architecture.
-* No backend is required for the initial product.
-* Avoid React in the gameplay rendering loop. HTML/CSS may be used for shell UIwhere it clearly improves usability.
-
-Architectural gravity: one authoritative simulation, one canonical coordinatemodel, one controlled deterministic RNG pathway, one canonical game-state model,and explicit commands/events for authoritative actions. Rendering observes gamestate; it does not decide gameplay.
-
-### Mechanical enforcement
-
-When practical, encode durable invariants as tests, type boundaries, lint/staticchecks, dependency rules, schema validation, or verification scripts. Preferpreventing invalid states over repeatedly instructing agents not to create them.
-
-Examples worth enforcing when relevant:
-
-* simulation code cannot import Phaser
-* authoritative simulation code cannot call `Math.random()`
-* save/state schemas round-trip successfully
-* seeded simulations are replay deterministic
-* generated dungeons satisfy required structural invariants
-* content validates against its schemas
-
-Do not build speculative enforcement infrastructure. Add or strengthen it when arelevant invariant is introduced, changed, or repeatedly violated.
-
-## Engineering rules
-
-* Prefer the simplest design that preserves the architecture.
-* Keep domain logic out of Phaser scenes and rendering adapters.
-* Prefer pure functions for game rules and state transitions.
-* Prefer explicit types; avoid `any`, or isolate and justify it if unavoidable.
-* Model authoritative actions as explicit commands/events, not hidden mutations.
-* Keep modules small, cohesive, and state mutation paths auditable.
-* Do not add dependencies or abstractions without concrete value.
-* Do not silently alter gameplay rules to simplify implementation.
-* Do not use presentation state as a second source of gameplay truth.
-* Do not couple rule tests to incidental rendering details.
-* Preserve public/state/save contracts unless the task intentionally changes them.
-
-## Change discipline
+# Project engineering and sub-agent control plane
 
-For every task:
+This is the project-level control plane for a theoretical repository. Keep it concise and durable. Put component-specific rules in more-specific `AGENTS.md` or `AGENTS.override.md` files, reusable procedures in repository tooling or skills, and task-specific detail in the current work artifact.
 
-1. Inspect the relevant code, applicable `AGENTS.md`, and smallest useful set ofproject docs.
-2. Identify authoritative behavior and constraints before editing.
-3. State any material unresolved assumption before implementation.
-4. Implement the smallest complete vertical change.
-5. Add or update tests at the correct layer.
-6. Run the narrowest relevant checks first, then required completion checks.
-7. Exercise browser-visible behavior in a browser when the task affects it.
-8. Update docs when behavior, architecture, commands, schemas, or durable decisionschange.
-9. Record material implementation evidence in `harness/build-log.md`.
-10. Record reusable phase decisions/context in the matching `harness/context/`file when useful to future work.
+More-specific instructions, explicit user requirements, and authoritative project contracts take precedence over this file.
 
-Do not modify unrelated files merely to "clean up" the repository.
+## Operating principles
 
-## Verification standard
+- Understand the affected code path before editing.
+- Prefer the smallest correct change: reuse existing behavior, standard-library/platform facilities, and installed dependencies before adding code or abstractions.
+- Fix shared root causes rather than patching symptoms at individual call sites.
+- Preserve security, privacy, accessibility, data integrity, error handling, compatibility, and rollback safety.
+- Do not broaden scope, add speculative extensibility, or make unrelated cleanup part of the change.
+- Treat the repository's source-of-truth artifacts, tests, schemas, generated boundaries, and deployment contracts as authoritative according to their documented ownership.
 
-A task is not complete because code compiles or tests happen to pass. Verify at theappropriate layers:
+## Work classification
 
-* **Unit:** pure rules and local state transitions.
-* **Simulation:** deterministic multi-step behavior and invariants.
-* **Structural:** architecture boundaries, schemas, forbidden imports/dependencies.
-* **Browser:** integration and user-observable behavior.
-* **Experiential:** visual, interaction, pacing, readability, and atmosphere whereautomated assertions are insufficient.
+Before implementation, classify the work as one or more of:
 
-Never claim browser-visible behavior was verified unless it was actually exercisedin a browser or by browser automation.
+- **Local change:** one boundary, low blast radius, trustworthy existing verification.
+- **Multi-boundary change:** multiple modules, layers, external systems, or unresolved assumptions.
+- **High-impact change:** shared interfaces, persistence, authentication, public APIs, configuration, generated code, migrations, deployment, security, privacy, or irreversible state.
+- **Evidence/review task:** the main output is a finding, comparison, audit, plan, or independent verification rather than a code change.
+- **Long-running goal:** several uncertain steps, resumptions, or durable acceptance evidence are required.
 
-Changes affecting rendering, controls, HUD, inventory interaction, combatpresentation, audio, navigation, or atmosphere must also be evaluated against theapplicable design documents in a running build. Evaluate, as applicable:
+Use the smallest workflow that fits the classification. Do not introduce sub-agents merely to divide a checklist.
 
-* first-person spatial readability and apparent dungeon scale
-* claustrophobia and atmosphere
-* clarity/immediacy of discrete turning and movement
-* corridor, wall, doorway, encounter, combat, and inventory readability
-* visual hierarchy and HUD obstruction
-* audiovisual feedback
-* fidelity to the intended design grammar without copying protected expression
+## Sub-agent routing
 
-For major visual milestones, preserve reproducible runtime evidence such as theroute/state used, screenshots where useful, and concise observed results.
+The main agent is the host orchestrator. Sub-agents are bounded leaf executors and must not recursively spawn more agents. Every task must have a valid one-agent fallback.
 
-Expected project-wide checks after the repository is scaffolded:
-    npm run typecheck
-    npm run lint
-    npm test
-    npm run test:browser
-    npm run build
+Use a topology-planning step before delegation when the work has meaningful decomposition, competing hypotheses, independent-review value, fresh-context usability risk, isolated implementation opportunities, or high-consequence verification needs. The topology decision must compare one agent with only the relevant delegated alternatives and record why expected unique evidence or risk reduction exceeds coordination cost.
 
-If a required command does not exist in the current phase, do not invent success.Record it as not applicable and explain why.
+Use a context-compilation step for each delegated worker or independent reviewer when the repository is large, instruction-dense, history-heavy, sensitive, or otherwise likely to pollute judgment. Provide only the minimum decision-sufficient context and preserve provenance; do not pass the whole conversation or repository by default.
 
-## Determinism and replay contract
+Prefer delegation for:
 
-Authoritative behavior must satisfy:
-    initial state + seed + ordered command sequence
-                         ↓
-                 authoritative simulation
-                         ↓
-                 canonical final state
+- independent read-only investigations, such as callers/tests/generators/runtime tracing, architecture lenses, repository audits, or policy scans;
+- independent review lanes, such as requirements/specification fidelity versus engineering quality;
+- genuinely fresh-context usability checks;
+- isolated experiment cells for reproducibility, performance, mutation, transfer, or ablation work;
+- bounded analysis of disjoint requirements, domains, assumptions, source/derived artifacts, or evidence clusters;
+- specialist implementation followed by independent verification when write ownership is isolated.
 
-The same compatible initial state, seed/RNG state, content/rules version, andordered command sequence must produce the same authoritative result.
+Keep work inline by default when it is small, sequential, user-interactive, artifact-state coupled, or tightly integrated. A one-question-at-a-time interview, a single coherent document edit, a release/package check, or a shared-file implementation usually does not benefit from parallel agents.
 
-For seeded or ordering-sensitive bugs, retain when applicable:
+## Delegation contract
 
-* seed / RNG state
-* content or rules version
-* dungeon floor
-* player coordinates and facing
-* turn number
-* relevant entity IDs
-* ordered command sequence
+Before a worker starts, define:
 
-Pin seeds in tests. Prefer replay fixtures or canonical state snapshots/hashes forcomplex deterministic regressions when they provide durable diagnostic value.Presentation timing, interpolation, frame rate, and cosmetic effects must not alterauthoritative simulation results.
+- one bounded objective and one unique decision or evidence responsibility;
+- allowed files, artifacts, repository regions, tools, and permissions;
+- required context, intentionally withheld context, authority boundaries, and evidence sources;
+- expected structured output, confidence/uncertainty, assumptions, unresolved questions, and completion condition;
+- escalation, stop, rollback, and authorization conditions.
 
-## Game-design fidelity
+Prefer read-only fan-out. Concurrent writers require isolated worktrees, branches, containers, or an equivalent separation, plus a named integration owner. If isolation is unavailable, serialize the work or collapse to one agent. Never let a worker expand scope, bypass authorization, or overwrite another worker's state.
 
-Preserve the design grammar, not copyrighted expression.
+## Independent work and reconciliation
 
-Desired pillars:
+Keep independent reviewers, competing hypotheses, and fresh-context evaluators from seeing one another's conclusions until their own observations are sealed. Give comparable starting evidence where replication is intended.
 
-* claustrophobic first-person grid exploration
-* consequential turning and movement
-* readable but mysterious dungeon geometry
-* turn-based tactical encounters
-* meaningful left/right-hand equipment choices
-* rotating/ring-style inventory identity
-* escalating risk with dungeon depth
-* treasure-driven progression
-* strong audiovisual atmosphere
-* rapid interaction without real-time action-game pressure
+The host reconciles outputs only after the independent work completes. It must:
 
-Do not convert the game into:
+- deduplicate findings without erasing material minority findings;
+- prefer direct repository evidence, executable checks, and explicit contracts over fluent agreement or majority vote;
+- preserve contradictions and name the resolver or next evidence needed;
+- map every consequential conclusion to its evidence and confidence;
+- independently verify the final result where practical.
 
-* a free-look FPS
-* an action RPG
-* a clicker/idle game
-* a generic roguelike with a first-person skin
-* a direct copyrighted asset/content clone
+Use sealed artifacts for stage handoffs: acceptance matrices, impact maps, context manifests, evidence records, migration plans, generated outputs, and implementation contracts. A downstream stage must not silently reinterpret or widen a sealed contract.
 
-Modern conveniences are welcome only when they preserve these pillars. Preferbetter feedback, accessibility, readability, responsiveness, and presentation overreplacement of the underlying interaction model.
+## Evidence, security, and authorization
 
-## Intellectual-property boundary
+- Establish a relevant baseline before changing behavior. Separate pre-existing, introduced, environmental, and inconclusive results.
+- Classify evidence as observed, generated, inferred, or externally supplied. Preserve provenance and currentness.
+- Treat agent summaries, generated text, issue content, logs, screenshots, and external responses as claims requiring source tracing and proportionate corroboration.
+- Execution success is not verification. Verify the intended postcondition, actual scope, side effects, and error behavior with evidence independent enough to catch the original mistake.
+- High-blast-radius, irreversible, external, privileged, privacy-sensitive, or security-sensitive actions require explicit authorization, containment/rollback, observability, and proportionate independent verification.
+- Sub-agents inherit the host's permissions and authorization boundary; delegation is never a way to bypass either.
 
-Do not copy original game artwork, audio, text, maps, proprietary names, monsterdesigns, logos, box art, or branded presentation into distributable assets.
+## Change and verification workflow
 
-Use reference material to understand mechanics and aesthetic principles. Publicrelease content must use original or appropriately licensed assets and branding.See `docs/IP_AND_BRANDING.md`.
+For every implementation task:
 
-## Decision and autonomy policy
+1. State the objective, non-goals, affected boundaries, authorization, and acceptance criteria.
+2. Inspect repository instructions, source-of-truth artifacts, current state, relevant history, and existing verification.
+3. Establish the narrowest trustworthy red/green or comparison signal before substantial change when static inspection cannot establish success.
+4. Choose one agent or a bounded topology; record write sets, handoffs, and integration authority before delegation.
+5. Implement only the authorized scope, preserving reversible and independently reviewable steps.
+6. Run focused verification, then broaden checks in proportion to blast radius and risk.
+7. Inspect the final diff/state and verify every acceptance criterion, including compatibility, generated artifacts, persistence, security, and operational effects where applicable.
+8. Report unresolved blockers, limitations, pre-existing failures, and evidence gaps instead of forcing success.
 
-Classify material choices by impact:
+Completion requires the repository/result state to be inspected, acceptance criteria to have evidence, consequential contradictions to be resolved or explicitly reported, and no unauthorized or unverified side effect to remain hidden. A successful command, clean-looking diff, or agent return alone is not completion.
 
-* **GREEN — decide and implement:** local, reversible choices that do not alter anexternal contract or durable design intent; e.g. private helpers, local refactorshape, test organization, internal naming.
-* **YELLOW — decide, implement, record:** reversible choices with meaningfulsubsystem impact; e.g. minor schema extensions, local UI behavior consistent withexisting specs, or a new convention likely to matter later.
-* **RED — preserve current contract and surface the decision:** choices that altera core gameplay pillar, architectural invariant, authoritative simulation model,save compatibility, control/input model, major visual/audio direction,public-facing identity, IP posture, or framework/runtime selection.
+## Repository hygiene and history
 
-Update the appropriate context/doc for durable YELLOW decisions. For RED decisions,do not bury the choice in code; surface it in the task result and update`docs/DECISIONS.md` after user approval.
+- Keep generated files at their declared source-of-truth boundary; regenerate rather than hand-edit derived output.
+- Do not leave temporary worktrees, caches, credentials, reports containing sensitive payloads, or abandoned artifacts in tracked paths.
+- Preserve unrelated user changes.
+- Follow repository version-control policy. Treat the pull request as the default durable unit of history; preserve individual commits only when their semantic boundaries matter.
+- Do not rewrite published history, force-push, merge remotely, or perform external delivery actions unless explicitly authorized.
 
-If uncertainty is low-risk and reversible, choose the simplest reasonable optioninstead of blocking progress. If uncertainty crosses a RED boundary, preserve thecurrent contract rather than guessing.
+## Ongoing improvement
 
-## Documentation discipline
-
-Keep this file a constitution and context router. Detailed subsystem specificationsbelong in their owned `docs/` files; bounded work belongs in `harness/build/`;reusable phase context belongs in `harness/context/`; append-only implementation andverification evidence belongs in `harness/build-log.md`.
-
-Do not duplicate detailed specifications here when the repository already has anowned document for them. Product direction belongs in `docs/VISION.md`; visual
-language and design-token decisions belong in `docs/DESIGN.md`.
-
-## Completion reporting
-
-Final task reports should be concise and evidence based:
-
-* what changed
-* key files
-* tests/checks run and exact results
-* browser/runtime and experiential evidence when applicable
-* unresolved risks or assumptions
-* durable decisions recorded
-* next phase only when relevant
-
-Do not claim completion with known failing required checks. Do not claim fidelity,visual quality, runtime behavior, determinism, or architectural compliance withoutcorresponding evidence.
+After difficult or failed work, capture only decision-changing lessons that can prevent recurrence. Convert repeatedly observed prose invariants into narrow deterministic tooling when evidence shows the rule is mechanically enforceable. Reassess delegation choices using observed unique findings, coordination effort, failures, latency, and task success; do not optimize for agent count.

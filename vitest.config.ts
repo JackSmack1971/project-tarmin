@@ -2,6 +2,6 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    exclude: ["node_modules/**", "dist/**", "tests/browser/**"]
+    exclude: ["node_modules/**", "dist/**", ".stryker-tmp/**", "tests/browser/**"]
   }
 });

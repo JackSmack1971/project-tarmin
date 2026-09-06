@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "runId": "20260906T164224233Z_70041cd9",
+  "startedAt": "2026-09-06T16:42:24.273Z",
+  "commit": "70041cd9c853ff85012e4242dc01952a42421c10",
+  "branch": "main",
+  "plan": {
+    "ok": true,
+    "repo": "G:\\Treasure of Tarmin Clone",
+    "head": "70041cd9c853ff85012e4242dc01952a42421c10",
+    "config": "stryker.config.json",
+    "contextFingerprint": "sha256:5693805b67f8242a84790e50d639dd7b48400aabf8dd55cadde36594b895102e",
+    "contextFiles": [
+      "package-lock.json",
+      "package.json",
+      "stryker.config.json",
+      "tsconfig.app.json",
+      "tsconfig.json",
+      "tsconfig.test.json",
+      "vite.config.ts",
+      "vitest.config.ts"
+    ],
+    "mode": "forced-refresh",
+    "targets": [],
+    "canonicalIncremental": "reports/mutation/stryker-incremental.json",
+    "reasons": [
+      "previous comparable commit is not an ancestor of current HEAD",
+      "configuration/dependency context fingerprint changed"
+    ]
+  },
+  "strykerBinary": "node_modules/.bin/stryker.cmd"
+}

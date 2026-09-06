@@ -588,3 +588,17 @@ scripts/check-control-plane-routes.mjs`, and `git diff --check` passed.
 - Scope: presentation-only browser lifecycle cleanup; no new dependency, RNG,
   simulation state, or gameplay rule. Manual atmosphere review remains the
   appropriate follow-up for subjective soundscape quality.
+
+## Mutation guardian Windows execution recovery
+
+- Change: ignored Stryker's `.stryker-tmp/` sandbox and excluded it from Vitest
+  discovery so generated browser specs cannot be collected as unit tests.
+- Diagnosis: the Windows guardian invocation used a `.cmd` shim with
+  `shell:false`, and its piped Stryker output exceeded Node's default
+  `spawnSync` buffer. Both failures produced a null exit and no discoverable
+  mutation report; the project-local runner was otherwise valid.
+- Verification: the repaired guardian completed the configured full run with
+  Stryker 10.0.0, 2,796 mutants, exit 0, no RuntimeError/CompileError/Pending
+  statuses, and an advanced ledger. The conclusive score was 0% (1,402
+  survived; 1,394 no coverage). Final preflight, typecheck, lint, build, and
+  Vitest passed (18 files, 68 tests).
