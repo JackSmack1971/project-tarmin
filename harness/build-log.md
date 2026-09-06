@@ -1,5 +1,22 @@
 # Build log
 
+## Resource action audio
+
+- Scope: implement the next audio-direction slice after the load-bearing health
+  cue: short event-driven feedback for attack attempts and item use, without
+  changing simulation rules, resources, controls, or authoritative state.
+- Change: added a native Web Audio `ActionCue` adapter with pure attack/use
+  profiles. `MainScene` forwards its existing authoritative event list through a
+  presentation-only window event; pause suppresses playback and menu/terminal
+  modes dispose the context. No dependency, RNG, or simulation import was added.
+- Verification: focused audio tests passed (4 tests), full Vitest passed (16
+  files, 63 tests), typecheck/lint/build passed, acceptance and control-plane
+  checks passed, and `git diff --check` passed. Dedicated Chromium passed the
+  attack/item-use/pause flow with zero application console/page errors; the
+  full Chromium suite passed 10 tests in 3.7 minutes.
+- Acceptance: `harness/build/resource-action-audio-acceptance.md` rows R1-R5
+  passed.
+
 ## Audio health cue
 
 - Scope: implement the first load-bearing audio slice from `docs/AUDIO_DIRECTION.md`
@@ -511,3 +528,30 @@ scripts/check-control-plane-routes.mjs`, and `git diff --check` passed.
   #32 was opened and squash-merged to `main` as `92cd6d5`. Local `main` matches
   `origin/main`. Merged-main rerun passed typecheck, lint, 58 tests, build,
   acceptance/control-plane checks, diff checks, and all 6 Chromium tests.
+
+## Audio event cues
+
+- Change: extended the presentation-only native Web Audio adapter with distinct
+  encounter and pickup cues, wired to the existing `encounterStarted` and
+  `itemAcquired` events. Authoritative simulation, RNG, save state, and command
+  semantics remain unchanged.
+- Verification: focused action-cue unit/type checks and the seeded Chromium flow
+  passed. Chromium exercised encounter, attack, Warden defeat, loot pickup,
+  pause suppression, and item use with zero application console/page errors.
+- Acceptance: `harness/build/audio-event-cues-acceptance.md` rows E1-E5 passed.
+
+## Ambient soundscape
+
+- Change: added a presentation-only native Web Audio ambient adapter with one
+  low-gain stone-settling cue after an initial warm-up, followed by a six-second
+  silence interval. It starts only in active play, suspends while paused, and is
+  disposed at menu or terminal states. Simulation state, RNG, input, and the
+  existing health/action cues remain unchanged.
+- Verification: ambient unit profile test passed; focused Chromium lifecycle
+  flow passed with zero application console/page errors; typecheck, lint, full
+  Vitest (17 files, 64 tests), build, acceptance, control-plane, and diff checks
+  passed.
+- Full Chromium caveat: 10 of 11 tests passed; the existing seeded MVP flow
+  timed out at its first movement and reproduced with the ambient mode hookup
+  temporarily removed, so it is recorded as environmental/pre-existing rather
+  than attributed to this slice. Manual atmosphere review remains required.
